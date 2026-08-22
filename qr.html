@@ -1,0 +1,66 @@
+<meta charset="utf-8">
+<title>Sample Café QR</title>
+<style>
+:root{
+  --bg:#FFFFFF;
+  --text:#242220;
+  --text-muted:#757068;
+  --line:#E4E0DA;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.page{
+  width:100%;
+  max-width:380px;
+  padding:32px 24px;
+  text-align:center;
+}
+.demo-tag{
+  font-size:0.68rem;letter-spacing:0.14em;color:var(--text-muted);font-weight:700;
+}
+.store-name{
+  margin-top:8px;
+  font-size:1.4rem;font-weight:700;letter-spacing:0.02em;
+}
+.qr-frame{
+  margin:32px auto 0;
+  width:min(76vw, 280px);
+  aspect-ratio:1/1;
+  border:1px solid var(--line);
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.qr-frame img{width:100%;height:100%;object-fit:contain;}
+.instruction{
+  margin-top:28px;
+  font-size:1rem;
+  font-weight:600;
+  line-height:1.6;
+}
+.sub{
+  margin-top:8px;
+  font-size:0.82rem;
+  color:var(--text-muted);
+  line-height:1.6;
+}
+</style>
+
+<div class="page">
+  <div class="demo-tag">SAMPLE — GENERIC DEMO</div>
+  <div class="store-name">Sample Café</div>
+  <div class="qr-frame">
+    <img src="data:image/png;base64,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" alt="多言語メニューを開くQRコード" />
+  </div>
+  <div class="instruction">QRコードを読み取ってメニューを見る</div>
+  <div class="sub">日本語 / English / 中文 / 한국어に対応</div>
+</div>
