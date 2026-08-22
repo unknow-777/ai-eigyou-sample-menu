@@ -1,0 +1,486 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>メニュー管理(デモ)</title>
+<style>
+:root{
+  --bg:#FFFFFF; --text:#242220; --text-muted:#757068; --line:#E4E0DA;
+  --photo-bg:#F1EEE9; --accent:#242220; --danger:#B23B3B; --ok:#3B7A57;
+  --surface:#F7F5F2; --demo:#8A5A20;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+  padding-bottom:100px;
+}
+.page{max-width:520px;margin:0 auto;padding:20px 16px 40px;}
+h1{font-size:1.4rem;margin:0 0 4px;}
+.subtitle{color:var(--text-muted);font-size:0.9rem;margin:0 0 20px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.icon-btn{
+  background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;
+  font-size:0.85rem;color:var(--text-muted);cursor:pointer;font-family:inherit;
+}
+.demo-banner{
+  background:#FBF0E4;color:var(--demo);border:1px solid #EAD3AE;border-radius:12px;
+  padding:10px 14px;font-size:0.82rem;margin-bottom:16px;line-height:1.6;
+}
+.card{
+  display:flex;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;
+  margin-bottom:12px;align-items:center;background:var(--bg);
+}
+.card.unpublished{opacity:0.55;}
+.card-photo{
+  width:64px;height:64px;border-radius:10px;background:var(--photo-bg);flex-shrink:0;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+}
+.card-photo img{width:100%;height:100%;object-fit:cover;}
+.card-main{flex:1;min-width:0;}
+.card-name{font-weight:600;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-price{color:var(--text-muted);font-size:0.9rem;margin-top:2px;}
+.card-status{font-size:0.78rem;margin-top:4px;color:var(--text-muted);}
+.card-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.btn{
+  border:none;border-radius:10px;padding:9px 16px;font-size:0.92rem;cursor:pointer;font-family:inherit;
+  font-weight:600;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--line);}
+.btn-danger{background:#fff;color:var(--danger);border:1px solid var(--danger);}
+.btn-sm{padding:7px 12px;font-size:0.82rem;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-block{width:100%;}
+
+.fab{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  max-width:488px;width:calc(100% - 32px);
+  padding:15px;border-radius:999px;background:var(--accent);color:#fff;border:none;
+  font-size:1rem;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,0.18);cursor:pointer;font-family:inherit;
+}
+.empty{text-align:center;color:var(--text-muted);padding:60px 20px;}
+
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;}
+.field input[type=text], .field input[type=number], .field textarea, .field select{
+  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;
+  font-family:inherit;background:var(--bg);color:var(--text);
+}
+.field textarea{min-height:64px;resize:vertical;}
+.lang-group{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:16px;}
+.lang-group-title{font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.05em;}
+.lang-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.lang-row:last-child{margin-bottom:0;}
+.lang-badge{
+  width:34px;flex-shrink:0;font-size:0.75rem;color:var(--text-muted);text-align:center;
+  border:1px solid var(--line);border-radius:6px;padding:3px 0;
+}
+.lang-row input{flex:1;}
+
+.photo-picker{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.photo-preview{
+  width:88px;height:88px;border-radius:14px;background:var(--photo-bg);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;
+}
+.photo-preview img{width:100%;height:100%;object-fit:cover;}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--line);}
+.toggle-row span{font-size:0.95rem;}
+.switch{position:relative;width:48px;height:28px;flex-shrink:0;}
+.switch input{opacity:0;width:100%;height:100%;margin:0;position:absolute;cursor:pointer;}
+.switch .track{position:absolute;inset:0;background:var(--line);border-radius:999px;transition:background .15s;}
+.switch .knob{position:absolute;width:22px;height:22px;top:3px;left:3px;background:#fff;border-radius:50%;transition:transform .15s;box-shadow:0 1px 3px rgba(0,0,0,0.25);}
+.switch input:checked + .track{background:var(--ok);}
+.switch input:checked + .track + .knob{transform:translateX(20px);}
+
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  background:var(--text);color:#fff;padding:12px 20px;border-radius:12px;font-size:0.92rem;
+  max-width:90%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.2);z-index:50;
+}
+.toast.error{background:var(--danger);}
+.banner{padding:12px 14px;border-radius:12px;font-size:0.88rem;margin-bottom:16px;line-height:1.6;}
+.banner.error{background:#FBEAEA;color:var(--danger);border:1px solid #F0C4C4;}
+.hidden{display:none !important;}
+</style>
+
+<div class="page">
+  <div id="screenList">
+    <div class="topbar">
+      <div>
+        <h1>メニュー管理</h1>
+        <p class="subtitle" id="listSubtitle">&nbsp;</p>
+      </div>
+      <button type="button" class="icon-btn" id="resetBtn">デモをリセット</button>
+    </div>
+    <div class="demo-banner">これは営業用デモです。ここでの変更はこの画面の中だけに保存され、実際のメニューには反映されません。自由に試してください。</div>
+    <div id="listBody"></div>
+    <div id="listEmpty" class="empty hidden">商品がまだ登録されていません。<br>右下の「＋ 商品を追加」から始めましょう。</div>
+  </div>
+
+  <div id="screenEdit" class="hidden">
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="backBtn">← 一覧に戻る</button>
+    </div>
+    <h1 id="editTitle">商品を追加</h1>
+    <div id="editError" class="banner error hidden"></div>
+
+    <div class="photo-picker">
+      <div class="photo-preview" id="photoPreview">🍽</div>
+      <div>
+        <input type="file" accept="image/*" id="photoInput" style="display:none;" />
+        <button type="button" class="btn btn-secondary btn-sm" id="choosePhotoBtn">写真を選ぶ</button>
+        <div class="subtitle" id="photoStatus" style="margin:6px 0 0;">未選択(そのまま保存すると写真なしになります)</div>
+      </div>
+    </div>
+
+    <div class="lang-group">
+      <div class="lang-group-title">商品名</div>
+      <div class="lang-row"><span class="lang-badge">JA</span><input type="text" id="name_ja" /></div>
+      <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="name_en" placeholder="未入力なら日本語表示" /></div>
+      <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="name_zh" placeholder="未入力なら日本語表示" /></div>
+      <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="name_ko" placeholder="未入力なら日本語表示" /></div>
+    </div>
+
+    <div class="lang-group">
+      <div class="lang-group-title">説明文(任意)</div>
+      <div class="lang-row"><span class="lang-badge">JA</span><textarea id="desc_ja"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">EN</span><textarea id="desc_en" placeholder="未入力なら日本語表示"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">中文</span><textarea id="desc_zh" placeholder="未入力なら日本語表示"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">한국</span><textarea id="desc_ko" placeholder="未入力なら日本語表示"></textarea></div>
+    </div>
+
+    <div class="field">
+      <label for="priceInput">価格(円)</label>
+      <input type="number" id="priceInput" inputmode="numeric" min="0" step="1" />
+    </div>
+    <div class="field">
+      <label for="categoryInput">カテゴリ</label>
+      <select id="categoryInput"></select>
+    </div>
+
+    <div class="toggle-row">
+      <span>お客様に表示する(公開)</span>
+      <label class="switch">
+        <input type="checkbox" id="publishedInput" checked />
+        <span class="track"></span><span class="knob"></span>
+      </label>
+    </div>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
+      <button type="button" class="btn btn-primary btn-block" id="saveItemBtn">保存</button>
+      <button type="button" class="btn btn-danger btn-block hidden" id="deleteItemBtn">この商品を削除</button>
+    </div>
+  </div>
+
+  <div id="screenDeleteConfirm" class="hidden">
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="deleteCancelBtn">← 戻る</button>
+    </div>
+    <h1>本当に削除しますか？</h1>
+    <p class="subtitle" id="deleteConfirmName">&nbsp;</p>
+    <div class="banner error">削除すると元に戻せません(デモ内のみ)。「非公開」にすれば、削除せず一時的に隠すこともできます。</div>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+      <button type="button" class="btn btn-danger btn-block" id="deleteConfirmBtn">削除する</button>
+      <button type="button" class="btn btn-secondary btn-block" id="deleteBackBtn">やめておく</button>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="fab" id="addFab">＋ 商品を追加</button>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+"use strict";
+
+var STORAGE_KEY = "demo_menu_products_v1";
+var IMAGE_MAX_DIMENSION = 800;
+var IMAGE_QUALITY = 0.7;
+var MENU_PAGE = "menu-demo.html"; // デモ公開ページ(同じlocalStorageキーを参照)
+
+var DEFAULT_PRODUCTS = {
+  store_name: { ja: "Sample Café", en: "Sample Café", zh: "Sample Café", ko: "Sample Café" },
+  categories: [
+    { id: "drink", name: { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" } },
+    { id: "food", name: { ja: "フード", en: "Food", zh: "餐点", ko: "푸드" } },
+    { id: "sweets", name: { ja: "スイーツ", en: "Sweets", zh: "甜点", ko: "디저트" } }
+  ],
+  items: [
+    { id: "item-001", published: true, category: "drink",
+      name: { ja: "カフェラテ", en: "Café Latte", zh: "拿铁咖啡", ko: "카페라떼" },
+      description: { ja: "エスプレッソにミルクを合わせたコーヒー", en: "Espresso with steamed milk", zh: "浓缩咖啡加牛奶", ko: "에스프레소에 우유를 더한 커피" },
+      price: 550, image: "images/item-001-a1b2c3d4.webp" },
+    { id: "item-002", published: true, category: "drink",
+      name: { ja: "自家製レモンソーダ", en: "House Lemon Soda", zh: "自制柠檬苏打水", ko: "수제 레몬 소다" },
+      description: { ja: "", en: "", zh: "", ko: "" },
+      price: 480, image: "images/item-002-a1b2c3d4.webp" },
+    { id: "item-003", published: true, category: "food",
+      name: { ja: "本日のサンドイッチ", en: "Today's Sandwich", zh: "今日三明治", ko: "오늘의 샌드위치" },
+      description: { ja: "旬の野菜と自家製ソース", en: "Seasonal vegetables with house-made sauce", zh: "时令蔬菜配自制酱料", ko: "제철 채소와 수제 소스" },
+      price: 980, image: "images/item-003-a1b2c3d4.webp" },
+    { id: "item-004", published: true, category: "food",
+      name: { ja: "特製カレー", en: "House Curry", zh: "特制咖喱", ko: "스페셜 카레" },
+      description: { ja: "", en: "", zh: "", ko: "" },
+      price: 1200, image: "images/item-004-a1b2c3d4.webp" },
+    { id: "item-005", published: true, category: "sweets",
+      name: { ja: "焼きたてチーズケーキ", en: "Baked Cheesecake", zh: "现烤芝士蛋糕", ko: "구운 치즈케이크" },
+      description: { ja: "", en: "", zh: "", ko: "" },
+      price: 650, image: "images/item-005-a1b2c3d4.webp" }
+  ]
+};
+
+var state = { products: null, editingId: null, pendingImageDataUrl: null };
+
+function $(id) { return document.getElementById(id); }
+function show(id) { $(id).classList.remove("hidden"); }
+function hide(id) { $(id).classList.add("hidden"); }
+function toast(msg, isError) {
+  var t = $("toast");
+  t.textContent = msg;
+  t.className = "toast" + (isError ? " error" : "");
+  t.classList.remove("hidden");
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(function () { t.classList.add("hidden"); }, isError ? 4000 : 2200);
+}
+
+function loadProducts() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+}
+function saveProducts(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return true;
+  } catch (e) {
+    toast("この端末の保存容量が上限に達しました。「デモをリセット」を押してください。", true);
+    return false;
+  }
+}
+
+function randomHex(len) {
+  var bytes = new Uint8Array(len / 2);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+}
+
+/* ---------- 画像処理(デモ用: そのままdata URLとして保存) ---------- */
+function processImageFile(file) {
+  return new Promise(function (resolve, reject) {
+    if (!file.type || file.type.indexOf("image/") !== 0) { reject(new Error("画像ファイルを選んでください。")); return; }
+    if (file.size > 20 * 1024 * 1024) { reject(new Error("ファイルが大きすぎます(20MBまで)。")); return; }
+    var reader = new FileReader();
+    reader.onerror = function () { reject(new Error("写真を読み込めませんでした。")); };
+    reader.onload = function () {
+      var img = new Image();
+      img.onerror = function () { reject(new Error("写真を読み込めませんでした。")); };
+      img.onload = function () {
+        var w = img.naturalWidth, h = img.naturalHeight;
+        var scale = Math.min(1, IMAGE_MAX_DIMENSION / Math.max(w, h));
+        var outW = Math.max(1, Math.round(w * scale));
+        var outH = Math.max(1, Math.round(h * scale));
+        var canvas = document.createElement("canvas");
+        canvas.width = outW; canvas.height = outH;
+        canvas.getContext("2d").drawImage(img, 0, 0, outW, outH);
+        var dataUrl;
+        try { dataUrl = canvas.toDataURL("image/webp", IMAGE_QUALITY); }
+        catch (e) { dataUrl = canvas.toDataURL("image/jpeg", IMAGE_QUALITY); }
+        resolve(dataUrl);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---------- 一覧 ---------- */
+function renderList() {
+  var body = $("listBody");
+  body.innerHTML = "";
+  var items = state.products.items || [];
+  $("listSubtitle").textContent = items.length + "件の商品(デモ)";
+  if (items.length === 0) { show("listEmpty"); return; }
+  hide("listEmpty");
+
+  items.forEach(function (it) {
+    var card = document.createElement("div");
+    card.className = "card" + (it.published === false ? " unpublished" : "");
+
+    var photo = document.createElement("div");
+    photo.className = "card-photo";
+    if (it.image) {
+      var img = document.createElement("img");
+      img.src = it.image;
+      img.onerror = function () { photo.innerHTML = ""; photo.textContent = "🍽"; };
+      photo.appendChild(img);
+    } else { photo.textContent = "🍽"; }
+
+    var main = document.createElement("div");
+    main.className = "card-main";
+    var name = document.createElement("div");
+    name.className = "card-name";
+    name.textContent = (it.name && it.name.ja) || "(名称未設定)";
+    var price = document.createElement("div");
+    price.className = "card-price";
+    var priceNum = Number(it.price);
+    price.textContent = isFinite(priceNum) ? "¥" + priceNum.toLocaleString("en-US") : "価格未設定";
+    var status = document.createElement("div");
+    status.className = "card-status";
+    status.textContent = it.published === false ? "非公開" : "公開中";
+    main.appendChild(name); main.appendChild(price); main.appendChild(status);
+
+    var actions = document.createElement("div");
+    actions.className = "card-actions";
+    var editBtn = document.createElement("button");
+    editBtn.type = "button"; editBtn.className = "btn btn-secondary btn-sm";
+    editBtn.textContent = "編集";
+    editBtn.addEventListener("click", function () { openEdit(it.id); });
+    actions.appendChild(editBtn);
+
+    card.appendChild(photo); card.appendChild(main); card.appendChild(actions);
+    body.appendChild(card);
+  });
+}
+
+function showScreen(name) {
+  ["List", "Edit", "DeleteConfirm"].forEach(function (s) {
+    var el = document.getElementById("screen" + s);
+    if (el) el.classList.add("hidden");
+  });
+  document.getElementById("screen" + name).classList.remove("hidden");
+  $("addFab").classList.toggle("hidden", name !== "List");
+}
+
+function fillCategoryOptions(selectedId) {
+  var sel = $("categoryInput");
+  sel.innerHTML = "";
+  (state.products.categories || []).forEach(function (cat) {
+    var opt = document.createElement("option");
+    opt.value = cat.id;
+    opt.textContent = (cat.name && cat.name.ja) || cat.id;
+    if (cat.id === selectedId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function openEdit(itemId) {
+  state.editingId = itemId || null;
+  state.pendingImageDataUrl = null;
+  hide("editError");
+  var item = itemId ? (state.products.items || []).find(function (i) { return i.id === itemId; }) : null;
+
+  $("editTitle").textContent = item ? "商品を編集" : "商品を追加";
+  fillCategoryOptions(item ? item.category : (state.products.categories[0] && state.products.categories[0].id));
+  $("name_ja").value = item ? item.name.ja || "" : "";
+  $("name_en").value = item ? item.name.en || "" : "";
+  $("name_zh").value = item ? item.name.zh || "" : "";
+  $("name_ko").value = item ? item.name.ko || "" : "";
+  $("desc_ja").value = item ? item.description.ja || "" : "";
+  $("desc_en").value = item ? item.description.en || "" : "";
+  $("desc_zh").value = item ? item.description.zh || "" : "";
+  $("desc_ko").value = item ? item.description.ko || "" : "";
+  $("priceInput").value = item ? item.price : "";
+  $("publishedInput").checked = item ? item.published !== false : true;
+
+  var preview = $("photoPreview");
+  preview.innerHTML = "";
+  if (item && item.image) {
+    var img = document.createElement("img");
+    img.src = item.image;
+    img.onerror = function () { preview.innerHTML = ""; preview.textContent = "🍽"; };
+    preview.appendChild(img);
+    $("photoStatus").textContent = "現在の写真(変更する場合のみ選び直してください)";
+  } else {
+    preview.textContent = "🍽";
+    $("photoStatus").textContent = "未選択(そのまま保存すると写真なしになります)";
+  }
+  $("deleteItemBtn").classList.toggle("hidden", !item);
+  showScreen("Edit");
+}
+
+$("backBtn").addEventListener("click", function () { showScreen("List"); });
+$("choosePhotoBtn").addEventListener("click", function () { $("photoInput").click(); });
+$("photoInput").addEventListener("change", function (e) {
+  var file = e.target.files && e.target.files[0];
+  if (!file) return;
+  $("photoStatus").textContent = "処理中…";
+  processImageFile(file).then(function (dataUrl) {
+    state.pendingImageDataUrl = dataUrl;
+    var preview = $("photoPreview");
+    preview.innerHTML = "";
+    var img = document.createElement("img");
+    img.src = dataUrl;
+    preview.appendChild(img);
+    $("photoStatus").textContent = "新しい写真を選択しました";
+  }).catch(function (err) {
+    toast(err.message || "写真の処理に失敗しました。", true);
+  });
+});
+
+function validateForm() {
+  if (!$("name_ja").value.trim()) return "商品名(日本語)を入力してください。";
+  var price = $("priceInput").value;
+  if (price === "" || isNaN(Number(price)) || Number(price) < 0) return "価格を正しく入力してください。";
+  return null;
+}
+
+$("saveItemBtn").addEventListener("click", function () {
+  var errMsg = validateForm();
+  if (errMsg) { $("editError").textContent = errMsg; show("editError"); return; }
+  hide("editError");
+
+  var id = state.editingId || ("item-" + Date.now().toString(36) + "-" + randomHex(4));
+  var existing = state.editingId ? (state.products.items || []).find(function (i) { return i.id === id; }) : null;
+  var newItem = {
+    id: id,
+    published: $("publishedInput").checked,
+    category: $("categoryInput").value,
+    name: { ja: $("name_ja").value.trim(), en: $("name_en").value.trim(), zh: $("name_zh").value.trim(), ko: $("name_ko").value.trim() },
+    description: { ja: $("desc_ja").value.trim(), en: $("desc_en").value.trim(), zh: $("desc_zh").value.trim(), ko: $("desc_ko").value.trim() },
+    price: Number($("priceInput").value),
+    image: state.pendingImageDataUrl ? state.pendingImageDataUrl : (existing ? existing.image : null),
+  };
+
+  var items = state.products.items || [];
+  var idx = items.findIndex(function (i) { return i.id === id; });
+  if (idx >= 0) items[idx] = newItem; else items.push(newItem);
+  state.products.items = items;
+
+  if (saveProducts(state.products)) {
+    toast("保存しました。(デモ内のみ)");
+    showScreen("List");
+    renderList();
+  }
+});
+
+$("deleteItemBtn").addEventListener("click", function () {
+  var item = (state.products.items || []).find(function (i) { return i.id === state.editingId; });
+  $("deleteConfirmName").textContent = item ? (item.name.ja || item.id) : "";
+  showScreen("DeleteConfirm");
+});
+$("deleteBackBtn").addEventListener("click", function () { showScreen("Edit"); });
+$("deleteCancelBtn").addEventListener("click", function () { showScreen("Edit"); });
+$("deleteConfirmBtn").addEventListener("click", function () {
+  state.products.items = (state.products.items || []).filter(function (i) { return i.id !== state.editingId; });
+  if (saveProducts(state.products)) {
+    toast("削除しました。(デモ内のみ)");
+    showScreen("List");
+    renderList();
+  }
+});
+
+$("resetBtn").addEventListener("click", function () {
+  if (!confirm("デモの内容を初期状態に戻します。よろしいですか？")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state.products = loadProducts();
+  toast("デモをリセットしました。");
+  renderList();
+});
+
+$("addFab").addEventListener("click", function () { openEdit(null); });
+
+state.products = loadProducts();
+renderList();
+</script>

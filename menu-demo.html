@@ -84,7 +84,7 @@ body{
 </style>
 
 <div class="page">
-  <div id="demoTag" class="demo-tag" hidden></div>
+  <div id="demoTag" class="demo-tag">SAMPLE — 管理画面と連動するデモです</div>
   <div class="store-name" id="storeName">&nbsp;</div>
 
   <div id="loadingState" class="state-box">
@@ -258,29 +258,27 @@ function buildLangTabs() {
   });
 }
 
+var DEMO_STORAGE_KEY = "demo_menu_products_v1";
+
 function loadProducts() {
   showLoading();
-  // キャッシュで古いメニューが残り続けないよう、毎回タイムスタンプを付けて取得する
-  var url = "products.json?t=" + Date.now();
-  fetch(url, { cache: "no-store" })
-    .then(function (res) {
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      return res.json();
-    })
-    .then(function (data) {
-      if (!data || !Array.isArray(data.items)) throw new Error("invalid products.json");
+  // デモ版: admin-demo.htmlと同じlocalStorageを参照する(実際の店舗版はproducts.jsonをfetchする)
+  setTimeout(function () {
+    try {
+      var raw = localStorage.getItem(DEMO_STORAGE_KEY);
+      var data = raw ? JSON.parse(raw) : null;
+      if (!data || !Array.isArray(data.items)) throw new Error("no demo data");
       PRODUCTS = data;
       buildLangTabs();
       render("ja");
       showMenu();
-    })
-    .catch(function (err) {
-      console.error("products.json load failed:", err);
+    } catch (err) {
+      console.error("demo products load failed:", err);
       showError();
-    });
+    }
+  }, 300);
 }
 
 document.getElementById("retryBtn").addEventListener("click", loadProducts);
-
 loadProducts();
 </script>
