@@ -67,7 +67,11 @@ h1{font-size:1.7rem;margin:0 0 4px;}
 .field input[type=text], .field input[type=number], .field textarea, .field select{
   width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;font-size:1.08rem;
   font-family:inherit;background:var(--bg);color:var(--text);
+  box-sizing:border-box;line-height:1.3;-webkit-appearance:none;appearance:none;
 }
+.field input[type=number]::-webkit-inner-spin-button,
+.field input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.field input[type=number]{-moz-appearance:textfield;}
 .field textarea{min-height:64px;resize:vertical;}
 .lang-group{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:16px;}
 .lang-group-title{font-size:0.88rem;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.05em;}
@@ -77,6 +81,7 @@ h1{font-size:1.7rem;margin:0 0 4px;}
   width:38px;flex-shrink:0;font-size:0.82rem;color:var(--text-muted);text-align:center;
   border:1px solid var(--line);border-radius:6px;padding:3px 0;
 }
+.auto-translate-note{font-size:0.8rem;color:var(--text-muted);margin-top:8px;}
 .lang-row input{flex:1;}
 
 .photo-picker{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
@@ -142,22 +147,24 @@ h1{font-size:1.7rem;margin:0 0 4px;}
     <div class="lang-group">
       <div class="lang-group-title">商品名</div>
       <div class="lang-row"><span class="lang-badge">JA</span><input type="text" id="name_ja" /></div>
-      <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="name_en" placeholder="未入力なら日本語表示" /></div>
-      <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="name_zh" placeholder="未入力なら日本語表示" /></div>
-      <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="name_ko" placeholder="未入力なら日本語表示" /></div>
+      <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="name_en" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="name_zh" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="name_ko" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
     </div>
 
     <div class="lang-group">
       <div class="lang-group-title">説明文(任意)</div>
       <div class="lang-row"><span class="lang-badge">JA</span><textarea id="desc_ja"></textarea></div>
-      <div class="lang-row"><span class="lang-badge">EN</span><textarea id="desc_en" placeholder="未入力なら日本語表示"></textarea></div>
-      <div class="lang-row"><span class="lang-badge">中文</span><textarea id="desc_zh" placeholder="未入力なら日本語表示"></textarea></div>
-      <div class="lang-row"><span class="lang-badge">한국</span><textarea id="desc_ko" placeholder="未入力なら日本語表示"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">EN</span><textarea id="desc_en" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">中文</span><textarea id="desc_zh" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">한국</span><textarea id="desc_ko" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
     </div>
 
     <div class="field">
       <label for="priceInput">価格(円)</label>
-      <input type="number" id="priceInput" inputmode="numeric" min="0" step="1" />
+      <input type="text" id="priceInput" inputmode="numeric" pattern="[0-9]*" autocomplete="off" />
     </div>
     <div class="field">
       <label for="categoryInput">カテゴリ</label>
@@ -269,6 +276,32 @@ function randomHex(len) {
   var bytes = new Uint8Array(len / 2);
   crypto.getRandomValues(bytes);
   return Array.from(bytes).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+}
+
+/* ---------- 自動翻訳(未入力の言語だけ、日本語から自動で埋める) ---------- */
+var AUTO_TRANSLATE_LANGPAIRS = { en: "en", zh: "zh-CN", ko: "ko" };
+function translateFromJa(text, targetCode) {
+  if (!text) return Promise.resolve("");
+  var url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(text) + "&langpair=" + encodeURIComponent("ja|" + targetCode);
+  return fetch(url)
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      return (data && data.responseData && data.responseData.translatedText) || "";
+    })
+    .catch(function () { return ""; });
+}
+function fillMissingTranslations(fields) {
+  var result = { ja: fields.ja || "", en: fields.en || "", zh: fields.zh || "", ko: fields.ko || "" };
+  if (!result.ja) return Promise.resolve(result);
+  var tasks = [];
+  Object.keys(AUTO_TRANSLATE_LANGPAIRS).forEach(function (key) {
+    if (!result[key]) {
+      tasks.push(translateFromJa(result.ja, AUTO_TRANSLATE_LANGPAIRS[key]).then(function (t) {
+        if (t) result[key] = t;
+      }));
+    }
+  });
+  return Promise.all(tasks).then(function () { return result; });
 }
 
 /* ---------- 画像処理(デモ用: そのままdata URLとして保存) ---------- */
@@ -448,16 +481,32 @@ $("saveItemBtn").addEventListener("click", function () {
     image: state.pendingImageDataUrl ? state.pendingImageDataUrl : (existing ? existing.image : null),
   };
 
-  var items = state.products.items || [];
-  var idx = items.findIndex(function (i) { return i.id === id; });
-  if (idx >= 0) items[idx] = newItem; else items.push(newItem);
-  state.products.items = items;
+  $("saveItemBtn").disabled = true;
+  $("saveItemBtn").textContent = "保存中…";
 
-  if (saveProducts(state.products)) {
-    toast("保存しました。(デモ内のみ)");
-    showScreen("List");
-    renderList();
-  }
+  Promise.all([
+    fillMissingTranslations(newItem.name),
+    fillMissingTranslations(newItem.description),
+  ]).catch(function () { return [newItem.name, newItem.description]; })
+    .then(function (results) {
+      newItem.name = results[0];
+      newItem.description = results[1];
+
+      var items = state.products.items || [];
+      var idx = items.findIndex(function (i) { return i.id === id; });
+      if (idx >= 0) items[idx] = newItem; else items.push(newItem);
+      state.products.items = items;
+
+      if (saveProducts(state.products)) {
+        toast("保存しました。(デモ内のみ)");
+        showScreen("List");
+        renderList();
+      }
+    })
+    .finally(function () {
+      $("saveItemBtn").disabled = false;
+      $("saveItemBtn").textContent = "保存";
+    });
 });
 
 $("deleteItemBtn").addEventListener("click", function () {
