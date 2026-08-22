@@ -1,0 +1,135 @@
+<meta charset="utf-8">
+<title>Sample Café Menu</title>
+<style>
+:root{
+  --bg:#FFFFFF;
+  --text:#242220;
+  --text-muted:#757068;
+  --line:#E4E0DA;
+  --photo-bg:#F1EEE9;
+  --price:#242220;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',
+    'PingFang SC','Noto Sans SC','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  min-height:100dvh;
+}
+.page{max-width:420px;margin:0 auto;padding:32px 22px 56px;}
+.demo-tag{
+  text-align:center;font-size:0.68rem;letter-spacing:0.14em;color:var(--text-muted);
+  font-weight:700;margin-bottom:6px;
+}
+.store-name{text-align:center;font-size:1.35rem;font-weight:700;letter-spacing:0.02em;}
+.lang-tabs{display:flex;justify-content:center;gap:18px;margin-top:18px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+.lang-tab{background:none;border:none;padding:4px 2px 8px;font-size:0.92rem;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;font-family:inherit;}
+.lang-tab[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--text);font-weight:600;}
+.lang-tab:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+.category{margin-top:30px;margin-bottom:4px;font-size:0.78rem;letter-spacing:0.12em;color:var(--text-muted);}
+.item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+.item:last-child{border-bottom:none;}
+.item-photo{
+  width:44px;height:44px;border-radius:8px;background:var(--photo-bg);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;
+}
+.item-main{flex:1;min-width:0;}
+.item-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.item-name{font-size:0.98rem;line-height:1.5;}
+.item-price{font-variant-numeric:tabular-nums;color:var(--price);font-weight:600;font-size:0.95rem;white-space:nowrap;}
+.item-desc{margin-top:2px;font-size:0.8rem;color:var(--text-muted);line-height:1.5;}
+.note{margin-top:32px;font-size:0.74rem;color:var(--text-muted);line-height:1.7;text-align:center;}
+</style>
+
+<div class="page">
+  <div class="demo-tag">SAMPLE — GENERIC DEMO</div>
+  <div class="store-name">Sample Café</div>
+
+  <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
+  <div id="menuBody"></div>
+  <p class="note" id="noteText"></p>
+</div>
+
+<script>
+var PHOTO_ICONS = { sample_latte:"☕", sample_lemon_soda:"🍋", sample_sandwich:"🥪", sample_curry:"🍛", sample_cheesecake:"🍰" };
+
+var DATA = {
+  categories: {
+    drink:  { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" },
+    food:   { ja: "フード", en: "Food", zh: "餐点", ko: "푸드" },
+    sweets: { ja: "スイーツ", en: "Sweets", zh: "甜点", ko: "디저트" }
+  },
+  items: [
+    { id:"sample_latte", category:"drink", price_jpy:550,
+      name:{ ja:"カフェラテ", en:"Café Latte", zh:"拿铁咖啡", ko:"카페라떼" },
+      desc:{ ja:"エスプレッソにミルクを合わせたコーヒー", en:"Espresso with steamed milk", zh:"浓缩咖啡加牛奶", ko:"에스프레소에 우유를 더한 커피" } },
+    { id:"sample_lemon_soda", category:"drink", price_jpy:480,
+      name:{ ja:"自家製レモンソーダ", en:"House Lemon Soda", zh:"自制柠檬苏打水", ko:"수제 레몬 소다" },
+      desc:{ ja:"", en:"", zh:"", ko:"" } },
+    { id:"sample_sandwich", category:"food", price_jpy:980,
+      name:{ ja:"本日のサンドイッチ", en:"Today's Sandwich", zh:"今日三明治", ko:"오늘의 샌드위치" },
+      desc:{ ja:"旬の野菜と自家製ソース", en:"Seasonal vegetables with house-made sauce", zh:"时令蔬菜配自制酱料", ko:"제철 채소와 수제 소스" } },
+    { id:"sample_curry", category:"food", price_jpy:1200,
+      name:{ ja:"特製カレー", en:"House Curry", zh:"特制咖喱", ko:"스페셜 카레" },
+      desc:{ ja:"", en:"", zh:"", ko:"" } },
+    { id:"sample_cheesecake", category:"sweets", price_jpy:650,
+      name:{ ja:"焼きたてチーズケーキ", en:"Baked Cheesecake", zh:"现烤芝士蛋糕", ko:"구운 치즈케이크" },
+      desc:{ ja:"", en:"", zh:"", ko:"" } }
+  ]
+};
+
+var LANGS = [
+  { code:"ja", label:"日本語" }, { code:"en", label:"English" },
+  { code:"zh", label:"中文" }, { code:"ko", label:"한국어" }
+];
+
+var NOTE = {
+  ja: "これは営業用の汎用サンプルです(架空店舗)。契約後、実際のメニュー・写真・店舗情報で専用版を制作します。",
+  en: "This is a generic sales demo (fictional shop). A store-specific version is made after contract.",
+  zh: "这是通用销售样本(虚构店铺)。签约后将根据实际菜单、照片与店铺信息制作专属版本。",
+  ko: "이것은 영업용 범용 샘플입니다(가상 매장). 계약 후 실제 메뉴·사진·매장 정보로 전용판을 제작합니다."
+};
+
+
+function render(lang){
+  document.querySelectorAll(".lang-tab").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.lang===lang ? "true":"false"); });
+  var body = document.getElementById("menuBody");
+  body.innerHTML = "";
+  Object.keys(DATA.categories).forEach(function(catKey){
+    var catDiv = document.createElement("div");
+    catDiv.className = "category";
+    catDiv.textContent = DATA.categories[catKey][lang];
+    body.appendChild(catDiv);
+    DATA.items.filter(function(it){ return it.category===catKey; }).forEach(function(it){
+      var row = document.createElement("div");
+      row.className = "item";
+      var descText = it.desc[lang];
+      row.innerHTML =
+        '<div class="item-photo"></div>' +
+        '<div class="item-main">' +
+          '<div class="item-top"><span class="item-name"></span><span class="item-price"></span></div>' +
+          (descText ? '<div class="item-desc"></div>' : '') +
+        '</div>';
+      row.querySelector(".item-photo").textContent = PHOTO_ICONS[it.id] || "🍽";
+      row.querySelector(".item-name").textContent = it.name[lang];
+      row.querySelector(".item-price").textContent = "¥" + it.price_jpy.toLocaleString("en-US");
+      if (descText) row.querySelector(".item-desc").textContent = descText;
+      body.appendChild(row);
+    });
+  });
+  document.getElementById("noteText").textContent = NOTE[lang];
+  window.scrollTo(0, 0);
+}
+
+var tabsEl = document.getElementById("langTabs");
+LANGS.forEach(function(l){
+  var btn = document.createElement("button");
+  btn.className = "lang-tab"; btn.type = "button"; btn.dataset.lang = l.code;
+  btn.textContent = l.label;
+  btn.setAttribute("aria-pressed", l.code==="ja" ? "true":"false");
+  btn.addEventListener("click", function(){ render(l.code); });
+  tabsEl.appendChild(btn);
+});
+render("ja");
+window.scrollTo(0, 0);
+</script>
