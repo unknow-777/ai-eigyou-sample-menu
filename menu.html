@@ -2,6 +2,7 @@
 <title>Sample Café Menu</title>
 <style>
 :root{
+  --page-bg:#F4F2EE;
   --bg:#FFFFFF;
   --text:#242220;
   --text-muted:#757068;
@@ -11,15 +12,22 @@
 }
 *{box-sizing:border-box;}
 body{
-  margin:0; background:var(--bg); color:var(--text);
+  margin:0; background:var(--page-bg); color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',
     'PingFang SC','Noto Sans SC','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  min-height:100dvh;
 }
 .page{
   max-width:420px;
   width:100%;
   margin:0 auto;
-  padding:32px 22px 40px;
+  padding:32px 16px 48px;
+}
+.card{
+  background:var(--bg);
+  padding:28px 22px 32px;
+  border-radius:18px;
+  border:1px solid var(--line);
 }
 .foot-mark{
   margin-top:36px;
@@ -66,16 +74,16 @@ body{
 </style>
 
 <div class="page">
-  <div class="demo-tag">SAMPLE — GENERIC DEMO</div>
-  <div class="store-name">Sample Café</div>
+  <div class="card">
+    <div class="demo-tag">SAMPLE — GENERIC DEMO</div>
+    <div class="store-name">Sample Café</div>
 
-  <div class="menu-scroll">
     <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
     <div id="menuBody"></div>
     <p class="note" id="noteText"></p>
-  </div>
 
-  <div class="foot-mark"><span>Sample Café</span></div>
+    <div class="foot-mark"><span>Sample Café</span></div>
+  </div>
 </div>
 
 <script>
