@@ -81,6 +81,29 @@ body{
   margin-top:14px;padding:10px 22px;border:1px solid var(--text);border-radius:999px;
   background:none;color:var(--text);font-size:1rem;cursor:pointer;font-family:inherit;
 }
+.demo-hero{
+  text-align:center;padding-bottom:24px;margin-bottom:28px;border-bottom:1px solid var(--line);
+}
+.demo-eyebrow{
+  font-size:0.72rem;letter-spacing:0.18em;color:var(--text-muted);font-weight:700;margin-bottom:14px;
+}
+.demo-headline{
+  font-size:1.6rem;font-weight:700;line-height:1.5;margin:0 0 18px;letter-spacing:0.01em;
+  text-wrap:balance;
+}
+.lang-pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.lang-pill{
+  font-size:0.86rem;padding:6px 15px;border-radius:999px;border:1px solid var(--line);
+  color:var(--text-muted);background:var(--photo-bg);font-weight:600;
+}
+.demo-subline{
+  font-size:0.94rem;color:var(--text-muted);line-height:1.7;margin:0 auto 18px;max-width:320px;
+}
+.demo-cta{
+  display:inline-flex;align-items:center;gap:6px;font-size:0.98rem;font-weight:700;
+  color:#fff;background:var(--text);text-decoration:none;padding:13px 26px;border-radius:999px;
+}
+.demo-cta:active{opacity:0.85;}
 .admin-link{
   display:inline-block;margin:14px auto 0;text-align:center;font-size:0.95rem;
   color:var(--text-muted);text-decoration:underline;
@@ -89,9 +112,18 @@ body{
 </style>
 
 <div class="page">
-  <div id="demoTag" class="demo-tag">SAMPLE — 管理画面と連動するデモです</div>
+  <div class="demo-hero">
+    <div class="demo-eyebrow">サンプルデモ</div>
+    <h1 class="demo-headline">QRひとつで、外国人のお客様にも<br>伝わるメニュー。</h1>
+    <div class="lang-pills">
+      <span class="lang-pill">日本語</span><span class="lang-pill">English</span><span class="lang-pill">中文</span><span class="lang-pill">한국어</span>
+    </div>
+    <p class="demo-subline">店舗スタッフは管理画面から商品・価格・写真をいつでも変更できます。</p>
+    <a class="demo-cta" href="demo-admin.html">管理画面デモを試す →</a>
+  </div>
+
+  <div id="demoTag" class="demo-tag" hidden></div>
   <div class="store-name" id="storeName">&nbsp;</div>
-  <div class="admin-link-wrap"><a class="admin-link" href="demo-admin.html">店舗の方はこちら(管理画面デモ)</a></div>
 
   <div id="loadingState" class="state-box">
     <div class="spinner"></div>
@@ -299,21 +331,23 @@ var DEFAULT_PRODUCTS = {
 
 function loadProducts() {
   showLoading();
-  // デモ版: admin-demo.htmlと同じlocalStorageを参照する(実際の店舗版はproducts.jsonをfetchする)
+  // 営業デモ: 何が起きても必ずメニューを表示する(エラー画面は出さない)。
+  // demo-admin.htmlと同じlocalStorageがあれば最新の編集内容を使い、
+  // 無い/壊れている/読み込みに失敗した場合は必ず内蔵のサンプルデータへフォールバックする。
   setTimeout(function () {
+    var data = DEFAULT_PRODUCTS;
     try {
       var raw = localStorage.getItem(DEMO_STORAGE_KEY);
-      var data = raw ? JSON.parse(raw) : null;
-      if (!data || !Array.isArray(data.items)) data = DEFAULT_PRODUCTS;
-      PRODUCTS = data;
-      buildLangTabs();
-      render("ja");
-      showMenu();
+      var parsed = raw ? JSON.parse(raw) : null;
+      if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) data = parsed;
     } catch (err) {
-      console.error("demo products load failed:", err);
-      showError();
+      console.error("demo products load failed, falling back to built-in sample data:", err);
     }
-  }, 300);
+    PRODUCTS = data;
+    buildLangTabs();
+    render("ja");
+    showMenu();
+  }, 250);
 }
 
 document.getElementById("retryBtn").addEventListener("click", loadProducts);
