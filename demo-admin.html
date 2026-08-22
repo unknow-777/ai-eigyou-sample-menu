@@ -205,6 +205,11 @@ h1{font-size:1.7rem;margin:0 0 4px;}
 <script>
 "use strict";
 
+// この画面(ページ)を開いた瞬間は必ず最上部から表示する。
+// 通常読み込みだけでなく、ブラウザの「戻る」操作でbfcacheから復元された場合も対象。
+try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
+
 var STORAGE_KEY = "demo_menu_products_v1";
 var IMAGE_MAX_DIMENSION = 800;
 var IMAGE_QUALITY = 0.7;
@@ -389,6 +394,7 @@ function showScreen(name) {
   });
   document.getElementById("screen" + name).classList.remove("hidden");
   $("addFab").classList.toggle("hidden", name !== "List");
+  window.scrollTo(0, 0); // 画面(スクリーン)切り替え時は必ず最上部から表示する
 }
 
 function fillCategoryOptions(selectedId) {
