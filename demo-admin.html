@@ -14,41 +14,43 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;
   padding-bottom:100px;
 }
-.page{max-width:520px;margin:0 auto;padding:20px 16px 40px;}
-h1{font-size:1.4rem;margin:0 0 4px;}
-.subtitle{color:var(--text-muted);font-size:0.9rem;margin:0 0 20px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.page{max-width:600px;margin:0 auto;padding:20px 16px 40px;}
+h1{font-size:1.7rem;margin:0 0 4px;}
+.subtitle{color:var(--text-muted);font-size:1rem;margin:0 0 20px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;}
+.topbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .icon-btn{
-  background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;
-  font-size:0.85rem;color:var(--text-muted);cursor:pointer;font-family:inherit;
+  background:none;border:1px solid var(--line);border-radius:10px;padding:9px 14px;
+  font-size:0.95rem;color:var(--text-muted);cursor:pointer;font-family:inherit;
+  text-decoration:none;display:inline-block;
 }
 .demo-banner{
   background:#FBF0E4;color:var(--demo);border:1px solid #EAD3AE;border-radius:12px;
-  padding:10px 14px;font-size:0.82rem;margin-bottom:16px;line-height:1.6;
+  padding:10px 14px;font-size:0.9rem;margin-bottom:16px;line-height:1.6;
 }
 .card{
-  display:flex;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;
-  margin-bottom:12px;align-items:center;background:var(--bg);
+  display:flex;gap:16px;padding:16px;border:1px solid var(--line);border-radius:14px;
+  margin-bottom:14px;align-items:center;background:var(--bg);
 }
 .card.unpublished{opacity:0.55;}
 .card-photo{
-  width:64px;height:64px;border-radius:10px;background:var(--photo-bg);flex-shrink:0;
-  overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+  width:96px;height:96px;border-radius:12px;background:var(--photo-bg);flex-shrink:0;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem;
 }
 .card-photo img{width:100%;height:100%;object-fit:cover;}
 .card-main{flex:1;min-width:0;}
-.card-name{font-weight:600;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.card-price{color:var(--text-muted);font-size:0.9rem;margin-top:2px;}
-.card-status{font-size:0.78rem;margin-top:4px;color:var(--text-muted);}
+.card-name{font-weight:600;font-size:1.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-price{color:var(--text-muted);font-size:1.02rem;margin-top:3px;}
+.card-status{font-size:0.88rem;margin-top:5px;color:var(--text-muted);}
 .card-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
 .btn{
-  border:none;border-radius:10px;padding:9px 16px;font-size:0.92rem;cursor:pointer;font-family:inherit;
+  border:none;border-radius:10px;padding:10px 18px;font-size:1rem;cursor:pointer;font-family:inherit;
   font-weight:600;
 }
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--line);}
 .btn-danger{background:#fff;color:var(--danger);border:1px solid var(--danger);}
-.btn-sm{padding:7px 12px;font-size:0.82rem;}
+.btn-sm{padding:8px 14px;font-size:0.9rem;}
 .btn:disabled{opacity:0.5;cursor:not-allowed;}
 .btn-block{width:100%;}
 
@@ -61,26 +63,26 @@ h1{font-size:1.4rem;margin:0 0 4px;}
 .empty{text-align:center;color:var(--text-muted);padding:60px 20px;}
 
 .field{margin-bottom:16px;}
-.field label{display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;}
+.field label{display:block;font-size:0.92rem;color:var(--text-muted);margin-bottom:6px;}
 .field input[type=text], .field input[type=number], .field textarea, .field select{
-  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;
+  width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;font-size:1.08rem;
   font-family:inherit;background:var(--bg);color:var(--text);
 }
 .field textarea{min-height:64px;resize:vertical;}
 .lang-group{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:16px;}
-.lang-group-title{font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.05em;}
+.lang-group-title{font-size:0.88rem;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.05em;}
 .lang-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .lang-row:last-child{margin-bottom:0;}
 .lang-badge{
-  width:34px;flex-shrink:0;font-size:0.75rem;color:var(--text-muted);text-align:center;
+  width:38px;flex-shrink:0;font-size:0.82rem;color:var(--text-muted);text-align:center;
   border:1px solid var(--line);border-radius:6px;padding:3px 0;
 }
 .lang-row input{flex:1;}
 
-.photo-picker{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.photo-picker{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
 .photo-preview{
-  width:88px;height:88px;border-radius:14px;background:var(--photo-bg);overflow:hidden;
-  display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;
+  width:132px;height:132px;border-radius:16px;background:var(--photo-bg);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:2.6rem;flex-shrink:0;
 }
 .photo-preview img{width:100%;height:100%;object-fit:cover;}
 
@@ -111,7 +113,10 @@ h1{font-size:1.4rem;margin:0 0 4px;}
         <h1>メニュー管理</h1>
         <p class="subtitle" id="listSubtitle">&nbsp;</p>
       </div>
-      <button type="button" class="icon-btn" id="resetBtn">デモをリセット</button>
+      <div class="topbar-left">
+        <a class="icon-btn" href="menu.html">← トップページ</a>
+        <button type="button" class="icon-btn" id="resetBtn">デモをリセット</button>
+      </div>
     </div>
     <div class="demo-banner">これは営業用デモです。ここでの変更はこの画面の中だけに保存され、実際のメニューには反映されません。自由に試してください。</div>
     <div id="listBody"></div>
