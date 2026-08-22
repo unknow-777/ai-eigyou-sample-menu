@@ -81,10 +81,14 @@ body{
   margin-top:14px;padding:10px 22px;border:1px solid var(--text);border-radius:999px;
   background:none;color:var(--text);font-size:1rem;cursor:pointer;font-family:inherit;
 }
+.admin-link{
+  display:block;margin-top:18px;text-align:center;font-size:0.95rem;
+  color:var(--text-muted);text-decoration:underline;
+}
 </style>
 
 <div class="page">
-  <div id="demoTag" class="demo-tag" hidden></div>
+  <div id="demoTag" class="demo-tag">SAMPLE — GENERIC DEMO</div>
   <div class="store-name" id="storeName">&nbsp;</div>
 
   <div id="loadingState" class="state-box">
@@ -102,6 +106,7 @@ body{
     <div id="menuBody"></div>
     <p class="note" id="noteText"></p>
     <div class="foot-mark"><span id="footStoreName"></span></div>
+    <a class="admin-link" href="demo-admin.html">店舗の方はこちら(管理画面デモ)</a>
   </div>
 </div>
 
