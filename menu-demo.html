@@ -76,8 +76,16 @@ body{
 .faq-q{font-size:0.92rem;font-weight:700;margin-bottom:5px;}
 .faq-a{font-size:0.88rem;color:var(--text-muted);line-height:1.65;}
 
-.price-model{font-size:1rem;font-weight:700;margin-bottom:6px;}
-.price-note{font-size:0.9rem;color:var(--text-muted);line-height:1.7;}
+.price-amount{font-size:1.9rem;font-weight:700;margin-bottom:10px;font-variant-numeric:tabular-nums;}
+.price-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.price-tag{
+  font-size:0.82rem;padding:5px 13px;border-radius:999px;border:1px solid var(--line);
+  color:var(--text-muted);font-weight:600;
+}
+.price-note{font-size:0.88rem;color:var(--text-muted);line-height:1.7;}
+.price-includes{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);}
+.price-includes-title{font-size:0.86rem;font-weight:700;margin-bottom:10px;}
+.price-includes-list{margin:0;padding:0;list-style:none;font-size:0.88rem;color:var(--text-muted);line-height:2;}
 
 .contact-text{font-size:0.94rem;line-height:1.8;color:var(--text);}
 </style>
@@ -156,11 +164,23 @@ body{
     </div>
   </div>
 
-  <!-- TODO(人間側): 正式価格が決まり次第、下記に金額を追記してください(例: 買い切り ¥XX,XXX)。 -->
   <div class="section">
-    <div class="section-title">料金について</div>
-    <div class="price-model">買い切り型を予定(月額費用なし)</div>
-    <div class="price-note">初期費用・詳細な料金は、お問い合わせ時にご案内します。</div>
+    <div class="section-title">料金</div>
+    <div class="price-amount">19,800円(税込)</div>
+    <div class="price-tags">
+      <span class="price-tag">買い切り</span>
+      <span class="price-tag">月額費用 0円</span>
+    </div>
+    <div class="price-note">初期費用としてこちらの金額のみ。以降の月額利用料はかかりません。</div>
+    <div class="price-includes">
+      <div class="price-includes-title">含まれるもの</div>
+      <ul class="price-includes-list">
+        <li>多言語QRメニュー(日本語/English/中文/한국어)</li>
+        <li>店舗用管理画面</li>
+        <li>店舗自身でのメニュー更新(商品名・価格・説明・写真・カテゴリ・公開設定)</li>
+        <li>QRコード用データ</li>
+      </ul>
+    </div>
   </div>
 
   <div class="section">
