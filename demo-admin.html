@@ -2,6 +2,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>メニュー管理(デモ)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#FFFFFF; --text:#242220; --text-muted:#757068; --line:#E4E0DA;
@@ -11,7 +14,7 @@
 *{box-sizing:border-box;}
 body{
   margin:0; background:var(--bg); color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+  font-family:'Noto Sans JP','Noto Sans SC','Noto Sans KR','Noto Sans',-apple-system,system-ui,sans-serif;
   padding-bottom:100px;
 }
 .page{max-width:600px;margin:0 auto;padding:20px 16px 40px;}
@@ -119,7 +122,7 @@ h1{font-size:1.7rem;margin:0 0 4px;}
         <p class="subtitle" id="listSubtitle">&nbsp;</p>
       </div>
       <div class="topbar-left">
-        <a class="icon-btn" href="menu-demo.html">→ メニューで確認する</a>
+        <a class="icon-btn" href="menu-demo-view.html">→ メニューで確認する</a>
         <button type="button" class="icon-btn" id="resetBtn">デモをリセット</button>
       </div>
     </div>
@@ -213,7 +216,7 @@ window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
 var STORAGE_KEY = "demo_menu_products_v1";
 var IMAGE_MAX_DIMENSION = 800;
 var IMAGE_QUALITY = 0.7;
-var MENU_PAGE = "menu-demo.html"; // デモ公開ページ(同じlocalStorageキーを参照)
+var MENU_PAGE = "menu-demo-view.html"; // デモ公開ページ(同じlocalStorageキーを参照)
 
 var DEFAULT_PRODUCTS = {
   store_name: { ja: "Sample Café", en: "Sample Café", zh: "Sample Café", ko: "Sample Café" },
