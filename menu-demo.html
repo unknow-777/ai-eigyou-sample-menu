@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>多言語QRメニュー デモ</title>
+<title>多言語QRメニュー 体験デモ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,19 +13,18 @@
   --photo-bg:#F1EEE9;
 }
 *{box-sizing:border-box;}
-html,body{height:100%;}
 body{
   margin:0; background:var(--bg); color:var(--text);
   font-family:'Noto Sans JP','Noto Sans',-apple-system,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
-  display:flex; align-items:center; justify-content:center;
-  padding:32px 20px;
 }
-.card{
+.wrap{
   width:100%;
   max-width:420px;
-  text-align:center;
+  margin:0 auto;
+  padding:40px 20px 56px;
 }
+.hero{text-align:center;}
 .eyebrow{
   font-size:0.72rem;letter-spacing:0.18em;color:var(--text-muted);font-weight:700;margin-bottom:16px;
 }
@@ -39,7 +38,10 @@ body{
   color:var(--text-muted);background:var(--photo-bg);font-weight:600;
 }
 .subline{
-  font-size:0.94rem;color:var(--text-muted);line-height:1.75;margin:0 auto 32px;max-width:320px;
+  font-size:0.94rem;color:var(--text-muted);line-height:1.75;margin:0 auto 10px;max-width:320px;
+}
+.benefit-line{
+  font-size:0.92rem;color:var(--text);line-height:1.7;margin:0 auto 32px;max-width:320px;font-weight:600;
 }
 .cta-group{display:flex;flex-direction:column;gap:12px;}
 .cta{
@@ -50,31 +52,104 @@ body{
 .cta-primary{color:#fff;background:var(--text);}
 .cta-secondary{color:var(--text);background:var(--bg);border:1px solid var(--line);}
 .cta:active{opacity:0.85;}
-.cta-sub{
-  display:block;font-size:0.74rem;font-weight:400;color:var(--text-muted);margin-top:2px;
+.footnote{margin-top:24px;text-align:center;font-size:0.78rem;color:var(--text-muted);}
+
+.section{margin-top:48px;padding-top:32px;border-top:1px solid var(--line);}
+.section-title{
+  font-size:0.72rem;letter-spacing:0.14em;color:var(--text-muted);font-weight:700;margin-bottom:18px;
 }
-.cta-primary .cta-sub{color:rgba(255,255,255,0.72);}
-.footnote{margin-top:28px;font-size:0.78rem;color:var(--text-muted);}
+
+.merit-list{display:flex;flex-direction:column;gap:18px;}
+.merit-item-title{font-size:1rem;font-weight:700;margin-bottom:4px;}
+.merit-item-desc{font-size:0.9rem;color:var(--text-muted);line-height:1.6;}
+
+.steps{display:flex;flex-direction:column;gap:14px;}
+.step{display:flex;gap:14px;align-items:flex-start;}
+.step-num{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--text);color:#fff;
+  font-size:0.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.step-text{font-size:0.94rem;line-height:1.7;padding-top:2px;}
+
+.faq-item{margin-bottom:16px;}
+.faq-item:last-child{margin-bottom:0;}
+.faq-q{font-size:0.92rem;font-weight:700;margin-bottom:5px;}
+.faq-a{font-size:0.88rem;color:var(--text-muted);line-height:1.65;}
 </style>
 
-<div class="card">
-  <div class="eyebrow">サンプルデモ</div>
-  <h1 class="headline">QRひとつで、<br>外国人のお客様にも<br>伝わるメニュー。</h1>
-  <div class="lang-pills">
-    <span class="lang-pill">日本語</span><span class="lang-pill">English</span><span class="lang-pill">中文</span><span class="lang-pill">한국어</span>
-  </div>
-  <p class="subline">QRコードから4言語のメニューを表示。商品・価格・写真は、店舗スタッフが管理画面からいつでも変更できます。</p>
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">店舗向け 体験デモ</div>
+    <h1 class="headline">QRひとつで、<br>外国人のお客様にも<br>伝わるメニュー。</h1>
+    <div class="lang-pills">
+      <span class="lang-pill">日本語</span><span class="lang-pill">English</span><span class="lang-pill">中文</span><span class="lang-pill">한국어</span>
+    </div>
+    <p class="subline">QRコードから4言語のメニューを表示。商品・価格・写真は、店舗スタッフが管理画面からいつでも変更できます。</p>
+    <p class="benefit-line">外国語メニューの作り直しや、スタッフによる説明の負担を減らします。</p>
 
-  <div class="cta-group">
-    <a class="cta cta-primary" href="menu-demo-view.html">
-      <span>お客様用メニューを体験する →</span>
-    </a>
-    <a class="cta cta-secondary" href="demo-admin.html">
-      <span>管理画面を体験する →</span>
-    </a>
+    <div class="cta-group">
+      <a class="cta cta-primary" href="menu-demo-view.html">
+        <span>お客様用メニューを体験する →</span>
+      </a>
+      <a class="cta cta-secondary" href="demo-admin.html">
+        <span>管理画面を体験する →</span>
+      </a>
+    </div>
+
+    <div class="footnote">これは体験デモです。実際の店舗データは含まれません。</div>
   </div>
 
-  <div class="footnote">これは営業用のサンプルデモです。実際の店舗データは含まれません。</div>
+  <div class="section">
+    <div class="section-title">導入メリット</div>
+    <div class="merit-list">
+      <div>
+        <div class="merit-item-title">外国人のお客様にも伝わる</div>
+        <div class="merit-item-desc">4言語から選択して、料理名・説明・価格を確認できます。</div>
+      </div>
+      <div>
+        <div class="merit-item-title">自分で更新できる</div>
+        <div class="merit-item-desc">価格や商品内容、写真を管理画面からいつでも変更できます。</div>
+      </div>
+      <div>
+        <div class="merit-item-title">QRからすぐ使える</div>
+        <div class="merit-item-desc">お客様側は新しいアプリのインストールが不要です。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">利用開始まで</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">店舗名・商品・価格・写真などのメニュー情報をご用意いただきます</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">店舗専用のQRコードを発行します</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">店内にQRコードを設置し、ご利用開始です</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">よくある質問</div>
+    <div class="faq-item">
+      <div class="faq-q">Q. スマートフォンから変更できますか？</div>
+      <div class="faq-a">はい。お使いのスマートフォンのブラウザから管理画面を開いて、いつでも変更できます。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q. QRコードはどうやって使いますか？</div>
+      <div class="faq-a">お客様がQRコードを読み取ると、多言語対応のメニュー画面が表示されます。印刷して店内に設置してご利用いただけます。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q. メニュー変更時にQRコードの再発行は必要ですか？</div>
+      <div class="faq-a">不要です。商品情報を変更しても、QRコード自体は変わらずそのままお使いいただけます。</div>
+    </div>
+  </div>
 </div>
 
 <script>
