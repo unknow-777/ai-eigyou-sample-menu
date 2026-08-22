@@ -2,7 +2,6 @@
 <title>Sample Café Menu</title>
 <style>
 :root{
-  --page-bg:#F4F2EE;
   --bg:#FFFFFF;
   --text:#242220;
   --text-muted:#757068;
@@ -12,29 +11,22 @@
 }
 *{box-sizing:border-box;}
 body{
-  margin:0; background:var(--page-bg); color:var(--text);
+  margin:0; background:var(--bg); color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',
     'PingFang SC','Noto Sans SC','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
-  min-height:100dvh;
 }
 .page{
-  max-width:420px;
+  max-width:560px;
   width:100%;
   margin:0 auto;
-  padding:32px 16px 48px;
-}
-.card{
-  background:var(--bg);
-  padding:28px 22px 32px;
-  border-radius:18px;
-  border:1px solid var(--line);
+  padding:44px 26px 56px;
 }
 .foot-mark{
-  margin-top:36px;
-  padding-top:20px;
+  margin-top:48px;
+  padding-top:26px;
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   color:var(--line);
 }
 .foot-mark::before,.foot-mark::after{
@@ -44,46 +36,44 @@ body{
   background:var(--line);
 }
 .foot-mark span{
-  font-size:0.68rem;
+  font-size:0.85rem;
   letter-spacing:0.14em;
   color:var(--text-muted);
   white-space:nowrap;
 }
 .demo-tag{
-  text-align:center;font-size:0.68rem;letter-spacing:0.14em;color:var(--text-muted);
-  font-weight:700;margin-bottom:6px;
+  text-align:center;font-size:0.85rem;letter-spacing:0.14em;color:var(--text-muted);
+  font-weight:700;margin-bottom:10px;
 }
-.store-name{text-align:center;font-size:1.35rem;font-weight:700;letter-spacing:0.02em;}
-.lang-tabs{display:flex;justify-content:center;gap:18px;margin-top:18px;padding-bottom:10px;border-bottom:1px solid var(--line);}
-.lang-tab{background:none;border:none;padding:4px 2px 8px;font-size:0.92rem;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;font-family:inherit;}
+.store-name{text-align:center;font-size:2.4rem;font-weight:700;letter-spacing:0.02em;}
+.lang-tabs{display:flex;justify-content:center;gap:16px;margin-top:28px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:nowrap;}
+.lang-tab{background:none;border:none;padding:6px 2px 12px;font-size:1.05rem;color:var(--text-muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;}
 .lang-tab[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--text);font-weight:600;}
 .lang-tab:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
-.category{margin-top:30px;margin-bottom:4px;font-size:0.78rem;letter-spacing:0.12em;color:var(--text-muted);}
-.item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+.category{margin-top:44px;margin-bottom:8px;font-size:1.1rem;letter-spacing:0.1em;color:var(--text-muted);}
+.item{display:flex;gap:20px;padding:24px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
 .item:last-child{border-bottom:none;}
 .item-photo{
-  width:44px;height:44px;border-radius:8px;background:var(--photo-bg);
-  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;
+  width:76px;height:76px;border-radius:14px;background:var(--photo-bg);
+  display:flex;align-items:center;justify-content:center;font-size:2.1rem;flex-shrink:0;
 }
 .item-main{flex:1;min-width:0;}
-.item-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
-.item-name{font-size:0.98rem;line-height:1.5;}
-.item-price{font-variant-numeric:tabular-nums;color:var(--price);font-weight:600;font-size:0.95rem;white-space:nowrap;}
-.item-desc{margin-top:2px;font-size:0.8rem;color:var(--text-muted);line-height:1.5;}
-.note{margin-top:32px;font-size:0.74rem;color:var(--text-muted);line-height:1.7;text-align:center;}
+.item-top{display:flex;justify-content:space-between;align-items:baseline;gap:14px;}
+.item-name{font-size:1.5rem;line-height:1.5;}
+.item-price{font-variant-numeric:tabular-nums;color:var(--price);font-weight:600;font-size:1.5rem;white-space:nowrap;}
+.item-desc{margin-top:6px;font-size:1.05rem;color:var(--text-muted);line-height:1.5;}
+.note{margin-top:44px;font-size:1rem;color:var(--text-muted);line-height:1.7;text-align:center;}
 </style>
 
 <div class="page">
-  <div class="card">
-    <div class="demo-tag">SAMPLE — GENERIC DEMO</div>
-    <div class="store-name">Sample Café</div>
+  <div class="demo-tag">SAMPLE — GENERIC DEMO</div>
+  <div class="store-name">Sample Café</div>
 
-    <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
-    <div id="menuBody"></div>
-    <p class="note" id="noteText"></p>
+  <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
+  <div id="menuBody"></div>
+  <p class="note" id="noteText"></p>
 
-    <div class="foot-mark"><span>Sample Café</span></div>
-  </div>
+  <div class="foot-mark"><span>Sample Café</span></div>
 </div>
 
 <script>
