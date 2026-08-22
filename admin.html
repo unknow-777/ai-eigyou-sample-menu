@@ -255,6 +255,11 @@ h1{font-size:1.7rem;margin:0 0 4px;}
 <script>
 "use strict";
 
+// この画面(ページ)を開いた瞬間は必ず最上部から表示する。
+// 通常読み込みだけでなく、ブラウザの「戻る」操作でbfcacheから復元された場合も対象。
+try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
+
 /* ---------- 基本設定 ---------- */
 var GITHUB_API = "https://api.github.com";
 var STORAGE_KEY_TOKEN = "menu_admin_token_v1";
@@ -542,6 +547,7 @@ function showScreen(name) {
   var target = document.getElementById("screen" + name.charAt(0).toUpperCase() + name.slice(1));
   if (target) target.classList.remove("hidden");
   $("addFab").classList.toggle("hidden", name !== "list");
+  window.scrollTo(0, 0); // 画面(スクリーン)切り替え時は必ず最上部から表示する
 }
 
 $("saveTokenBtn").addEventListener("click", function () {
