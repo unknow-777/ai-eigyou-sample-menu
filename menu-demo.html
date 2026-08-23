@@ -54,6 +54,13 @@ body{
 .cta:active{opacity:0.85;}
 .footnote{margin-top:24px;text-align:center;font-size:0.78rem;color:var(--text-muted);}
 
+.type-links-title{font-size:0.82rem;color:var(--text-muted);margin:22px 0 10px;}
+.type-links{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.type-link{
+  font-size:0.86rem;font-weight:600;padding:8px 16px;border-radius:999px;
+  border:1px solid var(--line);color:var(--text);text-decoration:none;background:var(--bg);
+}
+
 .section{margin-top:48px;padding-top:32px;border-top:1px solid var(--line);}
 .section-title{
   font-size:0.72rem;letter-spacing:0.14em;color:var(--text-muted);font-weight:700;margin-bottom:18px;
@@ -107,6 +114,15 @@ body{
       <a class="cta cta-secondary" href="demo-admin.html">
         <span>管理画面を体験する →</span>
       </a>
+    </div>
+
+    <div class="type-links-title">業種別サンプルをすぐに見る</div>
+    <div class="type-links">
+      <a class="type-link" href="menu-demo-view.html?type=cafe">カフェ</a>
+      <a class="type-link" href="menu-demo-view.html?type=izakaya">居酒屋</a>
+      <a class="type-link" href="menu-demo-view.html?type=restaurant">レストラン</a>
+      <a class="type-link" href="menu-demo-view.html?type=ramen">ラーメン店</a>
+      <a class="type-link" href="menu-demo-view.html?type=yakiniku">焼肉店</a>
     </div>
 
     <div class="footnote">実際の店舗データは含まれません。</div>
