@@ -26,22 +26,17 @@ body{
   margin:0 auto;
   padding:36px 18px 64px;
 }
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;}
+.topbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.icon-btn{
+  background:none;border:1px solid var(--line);border-radius:10px;padding:9px 14px;
+  font-size:0.95rem;color:var(--text-muted);cursor:pointer;font-family:inherit;
+  text-decoration:none;display:inline-block;
+}
 .demo-badge{
-  position:fixed; top:14px; right:14px; z-index:10;
   font-size:0.66rem; letter-spacing:0.12em; font-weight:700; color:var(--text-muted);
   background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:5px 11px;
-}
-.back-link{
-  position:fixed; top:14px; left:14px; z-index:10;
-  font-size:0.78rem; font-weight:600; color:var(--text-muted);
-  background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:5px 13px;
-  text-decoration:none;
-}
-.admin-link{
-  position:fixed; top:52px; right:14px; z-index:10;
-  font-size:0.78rem; font-weight:600; color:var(--text-muted);
-  background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:5px 13px;
-  text-decoration:none;
+  display:inline-block;
 }
 .store-name{text-align:center;font-size:2.6rem;font-weight:700;letter-spacing:0.01em;margin-top:8px;}
 .lang-tabs{display:flex;justify-content:center;gap:10px;margin-top:28px;padding-bottom:18px;border-bottom:1px solid var(--line);flex-wrap:nowrap;}
@@ -83,10 +78,14 @@ body{
 }
 </style>
 
-<a class="back-link" href="menu-demo.html">← TOPページ</a>
-<div class="demo-badge">DEMO</div>
-<a class="admin-link" href="demo-admin.html">管理画面へ →</a>
 <div class="page">
+  <div class="topbar">
+    <a class="icon-btn" href="menu-demo.html">← TOPページ</a>
+    <div class="topbar-left">
+      <div class="demo-badge">DEMO</div>
+      <a class="icon-btn" href="demo-admin.html">管理画面へ →</a>
+    </div>
+  </div>
   <div class="store-name" id="storeName">&nbsp;</div>
 
   <div id="loadingState" class="state-box">
