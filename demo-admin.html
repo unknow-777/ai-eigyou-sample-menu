@@ -158,7 +158,10 @@ h1{font-size:1.7rem;margin:0 0 4px;}
       <div class="photo-preview" id="photoPreview">🍽</div>
       <div>
         <input type="file" accept="image/*" id="photoInput" style="display:none;" />
-        <button type="button" class="btn btn-secondary btn-sm" id="choosePhotoBtn">写真を選ぶ</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-secondary btn-sm" id="choosePhotoBtn">写真を選ぶ</button>
+          <button type="button" class="btn btn-secondary btn-sm hidden" id="adjustPhotoBtn">位置を調整</button>
+        </div>
         <div class="subtitle" id="photoStatus" style="margin:6px 0 0;">未選択(そのまま保存すると写真なしになります)</div>
       </div>
     </div>
@@ -351,6 +354,26 @@ function fillMissingTranslations(fields) {
 }
 
 /* ---------- 画像処理(デモ用: 選択→範囲調整(トリミング)→data URLとして保存) ---------- */
+function currentPhotoSrc() {
+  if (state.pendingImageDataUrl) return state.pendingImageDataUrl;
+  var existing = state.editingId ? (state.products.items || []).find(function (i) { return i.id === state.editingId; }) : null;
+  return existing && existing.image ? existing.image : null;
+}
+
+function updateAdjustPhotoBtn() {
+  var btn = $("adjustPhotoBtn");
+  btn.classList.toggle("hidden", !currentPhotoSrc());
+}
+
+function loadImageFromUrl(url) {
+  return new Promise(function (resolve, reject) {
+    var img = new Image();
+    img.onerror = function () { reject(new Error("現在の写真を読み込めませんでした。")); };
+    img.onload = function () { resolve(img); };
+    img.src = url;
+  });
+}
+
 function loadImageFromFile(file) {
   return new Promise(function (resolve, reject) {
     if (!file.type || file.type.indexOf("image/") !== 0) { reject(new Error("画像ファイルを選んでください。")); return; }
@@ -451,6 +474,7 @@ function confirmCrop() {
   previewImg.src = dataUrl;
   preview.appendChild(previewImg);
   $("photoStatus").textContent = "新しい写真を選択しました";
+  updateAdjustPhotoBtn();
   showScreen("Edit");
 }
 
@@ -594,17 +618,27 @@ function openEdit(itemId) {
     img.src = item.image;
     img.onerror = function () { preview.innerHTML = ""; preview.textContent = "🍽"; };
     preview.appendChild(img);
-    $("photoStatus").textContent = "現在の写真(変更する場合のみ選び直してください)";
+    $("photoStatus").textContent = "現在の写真(「位置を調整」で範囲を変更、「写真を選ぶ」で別の写真に差し替え)";
   } else {
     preview.textContent = "🍽";
     $("photoStatus").textContent = "未選択(そのまま保存すると写真なしになります)";
   }
+  updateAdjustPhotoBtn();
   $("deleteItemBtn").classList.toggle("hidden", !item);
   showScreen("Edit");
 }
 
 $("backBtn").addEventListener("click", function () { showScreen("List"); });
 $("choosePhotoBtn").addEventListener("click", function () { $("photoInput").click(); });
+$("adjustPhotoBtn").addEventListener("click", function () {
+  var src = currentPhotoSrc();
+  if (!src) return;
+  loadImageFromUrl(src).then(function (img) {
+    openCropScreen(img);
+  }).catch(function (err) {
+    toast(err.message || "写真を読み込めませんでした。", true);
+  });
+});
 $("photoInput").addEventListener("change", function (e) {
   var file = e.target.files && e.target.files[0];
   var inputEl = e.target;
