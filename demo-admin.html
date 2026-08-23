@@ -94,6 +94,21 @@ h1{font-size:1.7rem;margin:0 0 4px;}
 }
 .photo-preview img{width:100%;height:100%;object-fit:cover;}
 
+.crop-stage{display:flex;justify-content:center;margin:24px 0 8px;}
+.crop-viewport{
+  width:280px;height:280px;border-radius:16px;overflow:hidden;position:relative;
+  background:#000;touch-action:none;cursor:grab;
+}
+.crop-viewport.dragging{cursor:grabbing;}
+.crop-viewport img{
+  position:absolute;top:0;left:0;transform-origin:top left;
+  user-select:none;-webkit-user-drag:none;pointer-events:none;
+}
+.crop-hint{text-align:center;font-size:0.86rem;color:var(--text-muted);margin-bottom:4px;}
+.crop-controls{display:flex;align-items:center;gap:12px;padding:0 4px;margin-top:14px;}
+.crop-controls input[type=range]{flex:1;}
+.crop-zoom-icon{font-size:1.15rem;color:var(--text-muted);width:20px;text-align:center;flex-shrink:0;}
+
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--line);}
 .toggle-row span{font-size:0.95rem;}
 .switch{position:relative;width:48px;height:28px;flex-shrink:0;}
@@ -186,6 +201,28 @@ h1{font-size:1.7rem;margin:0 0 4px;}
     <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
       <button type="button" class="btn btn-primary btn-block" id="saveItemBtn">保存</button>
       <button type="button" class="btn btn-danger btn-block hidden" id="deleteItemBtn">この商品を削除</button>
+    </div>
+  </div>
+
+  <div id="screenCrop" class="hidden">
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="cropBackBtn">← キャンセル</button>
+    </div>
+    <h1>写真の範囲を調整</h1>
+    <p class="crop-hint">ドラッグで位置を、スライダーで拡大・縮小を調整できます。</p>
+    <div class="crop-stage">
+      <div class="crop-viewport" id="cropViewport">
+        <img id="cropImage" alt="" draggable="false" />
+      </div>
+    </div>
+    <div class="crop-controls">
+      <span class="crop-zoom-icon">－</span>
+      <input type="range" id="cropZoom" min="100" max="300" value="100" step="1" />
+      <span class="crop-zoom-icon">＋</span>
+    </div>
+    <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px;">
+      <button type="button" class="btn btn-primary btn-block" id="cropConfirmBtn">この範囲で使う</button>
+      <button type="button" class="btn btn-secondary btn-block" id="cropCancelBtn">キャンセル</button>
     </div>
   </div>
 
@@ -313,8 +350,8 @@ function fillMissingTranslations(fields) {
   return Promise.all(tasks).then(function () { return result; });
 }
 
-/* ---------- 画像処理(デモ用: そのままdata URLとして保存) ---------- */
-function processImageFile(file) {
+/* ---------- 画像処理(デモ用: 選択→範囲調整(トリミング)→data URLとして保存) ---------- */
+function loadImageFromFile(file) {
   return new Promise(function (resolve, reject) {
     if (!file.type || file.type.indexOf("image/") !== 0) { reject(new Error("画像ファイルを選んでください。")); return; }
     if (file.size > 20 * 1024 * 1024) { reject(new Error("ファイルが大きすぎます(20MBまで)。")); return; }
@@ -323,24 +360,142 @@ function processImageFile(file) {
     reader.onload = function () {
       var img = new Image();
       img.onerror = function () { reject(new Error("写真を読み込めませんでした。")); };
-      img.onload = function () {
-        var w = img.naturalWidth, h = img.naturalHeight;
-        var scale = Math.min(1, IMAGE_MAX_DIMENSION / Math.max(w, h));
-        var outW = Math.max(1, Math.round(w * scale));
-        var outH = Math.max(1, Math.round(h * scale));
-        var canvas = document.createElement("canvas");
-        canvas.width = outW; canvas.height = outH;
-        canvas.getContext("2d").drawImage(img, 0, 0, outW, outH);
-        var dataUrl;
-        try { dataUrl = canvas.toDataURL("image/webp", IMAGE_QUALITY); }
-        catch (e) { dataUrl = canvas.toDataURL("image/jpeg", IMAGE_QUALITY); }
-        resolve(dataUrl);
-      };
+      img.onload = function () { resolve(img); };
       img.src = reader.result;
     };
     reader.readAsDataURL(file);
   });
 }
+
+/* ---------- トリミング画面(1:1固定・ドラッグで位置、スライダーで拡大縮小) ---------- */
+var cropState = {
+  img: null, naturalW: 0, naturalH: 0, baseScale: 1, zoom: 1,
+  offsetX: 0, offsetY: 0, frameSize: 280, dragging: false,
+  startX: 0, startY: 0, startOffsetX: 0, startOffsetY: 0,
+};
+
+function cropScaledSize() {
+  return {
+    w: cropState.naturalW * cropState.baseScale * cropState.zoom,
+    h: cropState.naturalH * cropState.baseScale * cropState.zoom,
+  };
+}
+
+function clampCropOffsets(scaledW, scaledH) {
+  var minX = cropState.frameSize - scaledW, maxX = 0;
+  var minY = cropState.frameSize - scaledH, maxY = 0;
+  cropState.offsetX = Math.min(maxX, Math.max(minX, cropState.offsetX));
+  cropState.offsetY = Math.min(maxY, Math.max(minY, cropState.offsetY));
+}
+
+function renderCropTransform() {
+  var size = cropScaledSize();
+  clampCropOffsets(size.w, size.h);
+  var img = $("cropImage");
+  img.style.width = size.w + "px";
+  img.style.height = size.h + "px";
+  img.style.transform = "translate(" + cropState.offsetX + "px," + cropState.offsetY + "px)";
+}
+
+function openCropScreen(img) {
+  cropState.img = img;
+  cropState.naturalW = img.naturalWidth;
+  cropState.naturalH = img.naturalHeight;
+  cropState.baseScale = Math.max(
+    cropState.frameSize / cropState.naturalW,
+    cropState.frameSize / cropState.naturalH
+  );
+  cropState.zoom = 1;
+  var size = cropScaledSize();
+  cropState.offsetX = (cropState.frameSize - size.w) / 2;
+  cropState.offsetY = (cropState.frameSize - size.h) / 2;
+  $("cropImage").src = img.src;
+  $("cropZoom").value = 100;
+  renderCropTransform();
+  showScreen("Crop");
+}
+
+function applyCropZoom(percent) {
+  var newZoom = percent / 100;
+  var oldSize = cropScaledSize();
+  // 拡大・縮小してもフレーム中心が指す画像上の位置は変えない
+  var centerXRatio = oldSize.w > 0 ? (cropState.frameSize / 2 - cropState.offsetX) / oldSize.w : 0.5;
+  var centerYRatio = oldSize.h > 0 ? (cropState.frameSize / 2 - cropState.offsetY) / oldSize.h : 0.5;
+  cropState.zoom = newZoom;
+  var newSize = cropScaledSize();
+  cropState.offsetX = cropState.frameSize / 2 - centerXRatio * newSize.w;
+  cropState.offsetY = cropState.frameSize / 2 - centerYRatio * newSize.h;
+  renderCropTransform();
+}
+
+function confirmCrop() {
+  var size = cropScaledSize();
+  var displayScale = size.w / cropState.naturalW;
+  var sx = -cropState.offsetX / displayScale;
+  var sy = -cropState.offsetY / displayScale;
+  var sSize = cropState.frameSize / displayScale;
+  var outSize = Math.min(IMAGE_MAX_DIMENSION, Math.max(200, Math.round(sSize)));
+
+  var canvas = document.createElement("canvas");
+  canvas.width = outSize; canvas.height = outSize;
+  canvas.getContext("2d").drawImage(cropState.img, sx, sy, sSize, sSize, 0, 0, outSize, outSize);
+
+  var dataUrl;
+  try { dataUrl = canvas.toDataURL("image/webp", IMAGE_QUALITY); }
+  catch (e) { dataUrl = canvas.toDataURL("image/jpeg", IMAGE_QUALITY); }
+
+  state.pendingImageDataUrl = dataUrl;
+  var preview = $("photoPreview");
+  preview.innerHTML = "";
+  var previewImg = document.createElement("img");
+  previewImg.src = dataUrl;
+  preview.appendChild(previewImg);
+  $("photoStatus").textContent = "新しい写真を選択しました";
+  showScreen("Edit");
+}
+
+function cropPointFromEvent(e) {
+  return { x: e.clientX, y: e.clientY };
+}
+
+(function setupCropInteractions() {
+  var viewport = $("cropViewport");
+
+  function onDown(e) {
+    cropState.dragging = true;
+    var p = cropPointFromEvent(e);
+    cropState.startX = p.x; cropState.startY = p.y;
+    cropState.startOffsetX = cropState.offsetX; cropState.startOffsetY = cropState.offsetY;
+    viewport.classList.add("dragging");
+    if (viewport.setPointerCapture && e.pointerId != null) {
+      try { viewport.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+  }
+  function onMove(e) {
+    if (!cropState.dragging) return;
+    var p = cropPointFromEvent(e);
+    cropState.offsetX = cropState.startOffsetX + (p.x - cropState.startX);
+    cropState.offsetY = cropState.startOffsetY + (p.y - cropState.startY);
+    renderCropTransform();
+  }
+  function onUp() {
+    cropState.dragging = false;
+    viewport.classList.remove("dragging");
+  }
+
+  viewport.addEventListener("pointerdown", onDown);
+  viewport.addEventListener("pointermove", onMove);
+  viewport.addEventListener("pointerup", onUp);
+  viewport.addEventListener("pointercancel", onUp);
+  viewport.addEventListener("pointerleave", onUp);
+
+  $("cropZoom").addEventListener("input", function (e) {
+    applyCropZoom(Number(e.target.value));
+  });
+  $("cropConfirmBtn").addEventListener("click", confirmCrop);
+  $("cropBackBtn").addEventListener("click", function () { showScreen("Edit"); });
+  $("cropCancelBtn").addEventListener("click", function () { showScreen("Edit"); });
+})();
 
 /* ---------- 一覧 ---------- */
 function renderList() {
@@ -392,7 +547,7 @@ function renderList() {
 }
 
 function showScreen(name) {
-  ["List", "Edit", "DeleteConfirm"].forEach(function (s) {
+  ["List", "Edit", "DeleteConfirm", "Crop"].forEach(function (s) {
     var el = document.getElementById("screen" + s);
     if (el) el.classList.add("hidden");
   });
@@ -452,18 +607,14 @@ $("backBtn").addEventListener("click", function () { showScreen("List"); });
 $("choosePhotoBtn").addEventListener("click", function () { $("photoInput").click(); });
 $("photoInput").addEventListener("change", function (e) {
   var file = e.target.files && e.target.files[0];
+  var inputEl = e.target;
   if (!file) return;
-  $("photoStatus").textContent = "処理中…";
-  processImageFile(file).then(function (dataUrl) {
-    state.pendingImageDataUrl = dataUrl;
-    var preview = $("photoPreview");
-    preview.innerHTML = "";
-    var img = document.createElement("img");
-    img.src = dataUrl;
-    preview.appendChild(img);
-    $("photoStatus").textContent = "新しい写真を選択しました";
+  loadImageFromFile(file).then(function (img) {
+    openCropScreen(img);
   }).catch(function (err) {
     toast(err.message || "写真の処理に失敗しました。", true);
+  }).finally(function () {
+    inputEl.value = ""; // 同じファイルを選び直せるようにする
   });
 });
 
