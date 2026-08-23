@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sample Café Menu</title>
+<title id="pageTitle">Sample Menu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -39,6 +39,21 @@ body{
   display:inline-block;
 }
 .store-name{text-align:center;font-size:2.6rem;font-weight:700;letter-spacing:0.01em;margin-top:8px;}
+
+.type-switch-wrap{margin-top:22px;text-align:center;}
+.type-switch-label{
+  font-size:0.66rem;letter-spacing:0.14em;font-weight:700;color:var(--text-muted);
+  text-transform:uppercase;margin-bottom:9px;
+}
+.type-switch{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.type-pill{
+  font-size:0.86rem;font-weight:600;padding:8px 16px;border-radius:999px;
+  border:1px solid var(--line);background:var(--bg);color:var(--text-muted);
+  cursor:pointer;font-family:inherit;
+}
+.type-pill[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text);}
+.type-pill:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+
 .lang-tabs{display:flex;justify-content:center;gap:10px;margin-top:28px;padding-bottom:18px;border-bottom:1px solid var(--line);flex-wrap:nowrap;}
 .lang-tab{background:none;border:none;padding:6px 2px 12px;font-size:1.32rem;color:var(--text-muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;}
 .lang-tab[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--text);font-weight:700;}
@@ -87,6 +102,11 @@ body{
     </div>
   </div>
   <div class="store-name" id="storeName">&nbsp;</div>
+
+  <div class="type-switch-wrap">
+    <div class="type-switch-label">業種別サンプルを見る</div>
+    <div class="type-switch" id="typeSwitch" role="group" aria-label="業種サンプル"></div>
+  </div>
 
   <div id="loadingState" class="state-box">
     <div class="spinner"></div>
@@ -169,7 +189,9 @@ function render(lang) {
     b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
   });
 
-  document.getElementById("storeName").textContent = textOrFallback(PRODUCTS.store_name, lang) || "Menu";
+  var storeNameText = textOrFallback(PRODUCTS.store_name, lang) || "Menu";
+  document.getElementById("storeName").textContent = storeNameText;
+  document.getElementById("pageTitle").textContent = storeNameText + " Menu";
 
   var body = document.getElementById("menuBody");
   body.innerHTML = "";
@@ -198,11 +220,11 @@ function render(lang) {
         img.loading = "lazy";
         img.onerror = function () {
           photo.innerHTML = "";
-          photo.textContent = "🍽";
+          photo.textContent = it.icon || "🍽";
         };
         photo.appendChild(img);
       } else {
-        photo.textContent = "🍽";
+        photo.textContent = it.icon || "🍽";
       }
       row.appendChild(photo);
 
@@ -255,36 +277,182 @@ function buildLangTabs() {
 
 var DEMO_STORAGE_KEY = "demo_menu_products_v1";
 
-var DEFAULT_PRODUCTS = {
-  store_name: { ja: "Sample Café", en: "Sample Café", zh: "Sample Café", ko: "Sample Café" },
-  categories: [
-    { id: "drink", name: { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" } },
-    { id: "food", name: { ja: "フード", en: "Food", zh: "餐点", ko: "푸드" } },
-    { id: "sweets", name: { ja: "スイーツ", en: "Sweets", zh: "甜点", ko: "디저트" } }
-  ],
-  items: [
-    { id: "item-001", published: true, category: "drink",
-      name: { ja: "カフェラテ", en: "Café Latte", zh: "拿铁咖啡", ko: "카페라떼" },
-      description: { ja: "エスプレッソにミルクを合わせたコーヒー", en: "Espresso with steamed milk", zh: "浓缩咖啡加牛奶", ko: "에스프레소에 우유를 더한 커피" },
-      price: 550, image: "images/item-001-a1b2c3d4.webp" },
-    { id: "item-002", published: true, category: "drink",
-      name: { ja: "自家製レモンソーダ", en: "House Lemon Soda", zh: "自制柠檬苏打水", ko: "수제 레몬 소다" },
-      description: { ja: "", en: "", zh: "", ko: "" },
-      price: 480, image: "images/item-002-a1b2c3d4.webp" },
-    { id: "item-003", published: true, category: "food",
-      name: { ja: "本日のサンドイッチ", en: "Today's Sandwich", zh: "今日三明治", ko: "오늘의 샌드위치" },
-      description: { ja: "旬の野菜と自家製ソース", en: "Seasonal vegetables with house-made sauce", zh: "时令蔬菜配自制酱料", ko: "제철 채소와 수제 소스" },
-      price: 980, image: "images/item-003-a1b2c3d4.webp" },
-    { id: "item-004", published: true, category: "food",
-      name: { ja: "特製カレー", en: "House Curry", zh: "特制咖喱", ko: "스페셜 카레" },
-      description: { ja: "", en: "", zh: "", ko: "" },
-      price: 1200, image: "images/item-004-a1b2c3d4.webp" },
-    { id: "item-005", published: true, category: "sweets",
-      name: { ja: "焼きたてチーズケーキ", en: "Baked Cheesecake", zh: "现烤芝士蛋糕", ko: "구운 치즈케이크" },
-      description: { ja: "", en: "", zh: "", ko: "" },
-      price: 650, image: "images/item-005-a1b2c3d4.webp" }
-  ]
+// 業種ごとのサンプルメニュー一式。カフェ以外は実写真を用意していないため、
+// 写真の代わりにitem.iconの絵文字を表示する(item-photoの分岐で自動的に処理される)。
+var SAMPLE_SETS = {
+  cafe: {
+    label: "カフェ",
+    products: {
+      store_name: { ja: "Sample Café", en: "Sample Café", zh: "Sample Café", ko: "Sample Café" },
+      categories: [
+        { id: "drink", name: { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" } },
+        { id: "food", name: { ja: "フード", en: "Food", zh: "餐点", ko: "푸드" } },
+        { id: "sweets", name: { ja: "スイーツ", en: "Sweets", zh: "甜点", ko: "디저트" } }
+      ],
+      items: [
+        { id: "item-001", published: true, category: "drink",
+          name: { ja: "カフェラテ", en: "Café Latte", zh: "拿铁咖啡", ko: "카페라떼" },
+          description: { ja: "エスプレッソにミルクを合わせたコーヒー", en: "Espresso with steamed milk", zh: "浓缩咖啡加牛奶", ko: "에스프레소에 우유를 더한 커피" },
+          price: 550, image: "images/item-001-a1b2c3d4.webp" },
+        { id: "item-002", published: true, category: "drink",
+          name: { ja: "自家製レモンソーダ", en: "House Lemon Soda", zh: "自制柠檬苏打水", ko: "수제 레몬 소다" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 480, image: "images/item-002-a1b2c3d4.webp" },
+        { id: "item-003", published: true, category: "food",
+          name: { ja: "本日のサンドイッチ", en: "Today's Sandwich", zh: "今日三明治", ko: "오늘의 샌드위치" },
+          description: { ja: "旬の野菜と自家製ソース", en: "Seasonal vegetables with house-made sauce", zh: "时令蔬菜配自制酱料", ko: "제철 채소와 수제 소스" },
+          price: 980, image: "images/item-003-a1b2c3d4.webp" },
+        { id: "item-004", published: true, category: "food",
+          name: { ja: "特製カレー", en: "House Curry", zh: "特制咖喱", ko: "스페셜 카레" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 1200, image: "images/item-004-a1b2c3d4.webp" },
+        { id: "item-005", published: true, category: "sweets",
+          name: { ja: "焼きたてチーズケーキ", en: "Baked Cheesecake", zh: "现烤芝士蛋糕", ko: "구운 치즈케이크" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 650, image: "images/item-005-a1b2c3d4.webp" }
+      ]
+    }
+  },
+
+  izakaya: {
+    label: "居酒屋",
+    products: {
+      store_name: { ja: "Sample 居酒屋", en: "Sample Izakaya", zh: "Sample 居酒屋", ko: "Sample 이자카야" },
+      categories: [
+        { id: "otoshi", name: { ja: "お通し・前菜", en: "Starters", zh: "小菜・前菜", ko: "안주・전채" } },
+        { id: "yakimono", name: { ja: "焼き物・揚げ物", en: "Grilled & Fried", zh: "烧烤・炸物", ko: "구이・튀김" } },
+        { id: "drink", name: { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" } }
+      ],
+      items: [
+        { id: "item-101", published: true, category: "otoshi", icon: "🫛",
+          name: { ja: "枝豆", en: "Edamame", zh: "毛豆", ko: "에다마메" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 400, image: null },
+        { id: "item-102", published: true, category: "otoshi", icon: "🍳",
+          name: { ja: "出汁巻き玉子", en: "Dashi Rolled Omelette", zh: "高汤煎蛋卷", ko: "다시마키 계란말이" },
+          description: { ja: "だしの効いたふわふわ玉子焼き", en: "Fluffy Japanese omelette with dashi broth", zh: "松软的日式高汤煎蛋", ko: "육수가 스며든 폭신한 계란말이" },
+          price: 480, image: null },
+        { id: "item-103", published: true, category: "yakimono", icon: "🍗",
+          name: { ja: "鶏の唐揚げ", en: "Fried Chicken (Karaage)", zh: "日式炸鸡块", ko: "가라아게" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 580, image: null },
+        { id: "item-104", published: true, category: "yakimono", icon: "🍢",
+          name: { ja: "焼き鳥盛り合わせ(5本)", en: "Yakitori Assortment (5 skewers)", zh: "烤鸡肉串拼盘(5串)", ko: "야키토리 모둠(5꼬치)" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 780, image: null },
+        { id: "item-105", published: true, category: "drink", icon: "🍺",
+          name: { ja: "生ビール", en: "Draft Beer", zh: "生啤酒", ko: "생맥주" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 550, image: null }
+      ]
+    }
+  },
+
+  restaurant: {
+    label: "レストラン",
+    products: {
+      store_name: { ja: "Sample Restaurant", en: "Sample Restaurant", zh: "Sample Restaurant", ko: "Sample Restaurant" },
+      categories: [
+        { id: "appetizer", name: { ja: "前菜", en: "Appetizers", zh: "前菜", ko: "애피타이저" } },
+        { id: "main", name: { ja: "メイン", en: "Main Dishes", zh: "主菜", ko: "메인" } },
+        { id: "dessert", name: { ja: "デザート・ドリンク", en: "Dessert & Drinks", zh: "甜点・饮品", ko: "디저트・음료" } }
+      ],
+      items: [
+        { id: "item-201", published: true, category: "appetizer", icon: "🍅",
+          name: { ja: "カプレーゼ", en: "Caprese Salad", zh: "卡布里沙拉", ko: "카프레제 샐러드" },
+          description: { ja: "トマトとモッツァレラのシンプルサラダ", en: "Tomato and mozzarella salad", zh: "番茄配马苏里拉的简单沙拉", ko: "토마토와 모짜렐라 샐러드" },
+          price: 780, image: null },
+        { id: "item-202", published: true, category: "main", icon: "🍝",
+          name: { ja: "本日のパスタ", en: "Today's Pasta", zh: "今日意面", ko: "오늘의 파스타" },
+          description: { ja: "季節の食材を使ったシェフのおすすめ", en: "Chef's recommendation with seasonal ingredients", zh: "使用当季食材的主厨推荐", ko: "제철 재료를 사용한 셰프 추천" },
+          price: 1280, image: null },
+        { id: "item-203", published: true, category: "main", icon: "🍗",
+          name: { ja: "骨付き鶏もも肉のロースト", en: "Roasted Chicken Leg", zh: "烤带骨鸡腿肉", ko: "닭다리살 로스트" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 1680, image: null },
+        { id: "item-204", published: true, category: "dessert", icon: "🍮",
+          name: { ja: "ティラミス", en: "Tiramisu", zh: "提拉米苏", ko: "티라미수" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 650, image: null },
+        { id: "item-205", published: true, category: "dessert", icon: "🍷",
+          name: { ja: "グラスワイン(赤/白)", en: "Glass of Wine (Red/White)", zh: "杯装红酒/白酒", ko: "글라스 와인(레드/화이트)" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 700, image: null }
+      ]
+    }
+  },
+
+  ramen: {
+    label: "ラーメン店",
+    products: {
+      store_name: { ja: "Sample らーめん", en: "Sample Ramen", zh: "Sample 拉面", ko: "Sample 라멘" },
+      categories: [
+        { id: "ramen", name: { ja: "ラーメン", en: "Ramen", zh: "拉面", ko: "라멘" } },
+        { id: "side", name: { ja: "サイドメニュー", en: "Side Dishes", zh: "配菜", ko: "사이드 메뉴" } }
+      ],
+      items: [
+        { id: "item-301", published: true, category: "ramen", icon: "🍜",
+          name: { ja: "醤油ラーメン", en: "Shoyu Ramen", zh: "酱油拉面", ko: "쇼유 라멘" },
+          description: { ja: "鶏ガラベースのあっさり醤油スープ", en: "Light soy-sauce soup with chicken broth base", zh: "鸡骨清爽酱油汤底", ko: "닭육수 베이스의 깔끔한 간장 라멘" },
+          price: 850, image: null },
+        { id: "item-302", published: true, category: "ramen", icon: "🍜",
+          name: { ja: "味噌ラーメン", en: "Miso Ramen", zh: "味噌拉面", ko: "미소 라멘" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 900, image: null },
+        { id: "item-303", published: true, category: "side", icon: "🍚",
+          name: { ja: "半チャーハン", en: "Half Fried Rice", zh: "半份炒饭", ko: "미니 볶음밥" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 400, image: null },
+        { id: "item-304", published: true, category: "side", icon: "🥟",
+          name: { ja: "餃子(5個)", en: "Gyoza (5pcs)", zh: "煎饺(5个)", ko: "교자(5개)" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 350, image: null },
+        { id: "item-305", published: true, category: "side", icon: "🍥",
+          name: { ja: "替え玉", en: "Extra Noodles", zh: "加面", ko: "면 사리 추가" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 150, image: null }
+      ]
+    }
+  },
+
+  yakiniku: {
+    label: "焼肉店",
+    products: {
+      store_name: { ja: "Sample 焼肉", en: "Sample Yakiniku", zh: "Sample 烤肉", ko: "Sample 야키니쿠" },
+      categories: [
+        { id: "meat", name: { ja: "カルビ・ロース", en: "Short Rib & Loin", zh: "五花肉・里脊肉", ko: "갈비・로스" } },
+        { id: "side", name: { ja: "サイドメニュー", en: "Side Dishes", zh: "配菜", ko: "사이드 메뉴" } },
+        { id: "drink", name: { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" } }
+      ],
+      items: [
+        { id: "item-401", published: true, category: "meat", icon: "🥩",
+          name: { ja: "特選カルビ", en: "Premium Short Rib", zh: "特选牛五花", ko: "특선 갈비" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 1980, image: null },
+        { id: "item-402", published: true, category: "meat", icon: "🥩",
+          name: { ja: "上ロース", en: "Prime Loin", zh: "上等里脊肉", ko: "특상 로스" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 1780, image: null },
+        { id: "item-403", published: true, category: "side", icon: "🍲",
+          name: { ja: "石焼ビビンバ", en: "Stone-pot Bibimbap", zh: "石锅拌饭", ko: "돌솥 비빔밥" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 980, image: null },
+        { id: "item-404", published: true, category: "side", icon: "🥬",
+          name: { ja: "サンチュ・野菜盛り合わせ", en: "Lettuce & Vegetable Platter", zh: "生菜蔬菜拼盘", ko: "쌈채소 모둠" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 480, image: null },
+        { id: "item-405", published: true, category: "drink", icon: "🍺",
+          name: { ja: "生ビール", en: "Draft Beer", zh: "生啤酒", ko: "생맥주" },
+          description: { ja: "", en: "", zh: "", ko: "" },
+          price: 550, image: null }
+      ]
+    }
+  }
 };
+
+var TYPE_ORDER = ["cafe", "izakaya", "restaurant", "ramen", "yakiniku"];
+var DEFAULT_TYPE = "cafe";
+var currentType = DEFAULT_TYPE;
 
 // 営業デモは外部通信に一切依存しない構成にする(外部サービスが落ちていてもデモ体験自体は必ず成立させるため)。
 // 優先順位: 1. localStorage(demo-admin.htmlでこの端末上で編集済みならその内容) → 2. 内蔵DEFAULT_PRODUCTS。
@@ -301,17 +469,69 @@ function readLocalDemoData() {
   return null;
 }
 
-function renderProducts(data) {
-  PRODUCTS = data;
-  buildLangTabs();
-  render("ja");
+function buildTypeSwitch() {
+  var wrap = document.getElementById("typeSwitch");
+  wrap.innerHTML = "";
+  TYPE_ORDER.forEach(function (typeKey) {
+    var btn = document.createElement("button");
+    btn.className = "type-pill";
+    btn.type = "button";
+    btn.dataset.type = typeKey;
+    btn.textContent = SAMPLE_SETS[typeKey].label;
+    btn.setAttribute("aria-pressed", typeKey === currentType ? "true" : "false");
+    btn.addEventListener("click", function () { selectType(typeKey); });
+    wrap.appendChild(btn);
+  });
+}
+
+function updateTypeSwitchState() {
+  document.querySelectorAll(".type-pill").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.type === currentType ? "true" : "false");
+  });
+}
+
+// カフェのみdemo-admin.htmlでの編集内容(localStorage)を反映する。
+// 他の業種サンプルは常に内蔵データを表示する(編集機能は今後の対応)。
+function dataForType(typeKey) {
+  if (typeKey === "cafe") {
+    return readLocalDemoData() || SAMPLE_SETS.cafe.products;
+  }
+  return SAMPLE_SETS[typeKey].products;
+}
+
+function selectType(typeKey) {
+  if (!SAMPLE_SETS[typeKey]) typeKey = DEFAULT_TYPE;
+  currentType = typeKey;
+  updateTypeSwitchState();
+
+  try {
+    var url = new URL(window.location.href);
+    url.searchParams.set("type", typeKey);
+    window.history.replaceState(null, "", url);
+  } catch (err) {}
+
+  PRODUCTS = dataForType(typeKey);
+  render(currentLang);
   showMenu();
+}
+
+function initialTypeFromUrl() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var t = params.get("type");
+    if (t && SAMPLE_SETS[t]) return t;
+  } catch (err) {}
+  return DEFAULT_TYPE;
 }
 
 function loadProducts() {
   try {
-    var data = readLocalDemoData() || DEFAULT_PRODUCTS;
-    renderProducts(data);
+    currentType = initialTypeFromUrl();
+    buildTypeSwitch();
+    PRODUCTS = dataForType(currentType);
+    buildLangTabs();
+    render("ja");
+    showMenu();
   } catch (err) {
     console.error("[demo] fatal: failed to render even built-in sample data:", err);
     showError();
