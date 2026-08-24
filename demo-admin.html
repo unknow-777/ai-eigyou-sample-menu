@@ -4,7 +4,7 @@
 <title>メニュー管理(デモ)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#FFFFFF; --text:#242220; --text-muted:#757068; --line:#E4E0DA;
@@ -14,7 +14,7 @@
 *{box-sizing:border-box;}
 body{
   margin:0; background:var(--bg); color:var(--text);
-  font-family:'Noto Sans JP','Noto Sans SC','Noto Sans KR','Noto Sans',-apple-system,system-ui,sans-serif;
+  font-family:'Noto Sans JP','Noto Sans SC','Noto Sans TC','Noto Sans KR','Noto Sans',-apple-system,system-ui,sans-serif;
   padding-bottom:100px;
 }
 .page{max-width:600px;margin:0 auto;padding:20px 16px 40px;}
@@ -170,18 +170,20 @@ h1{font-size:1.7rem;margin:0 0 4px;}
       <div class="lang-group-title">商品名</div>
       <div class="lang-row"><span class="lang-badge">JA</span><input type="text" id="name_ja" /></div>
       <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="name_en" placeholder="未入力なら日本語から自動翻訳" /></div>
-      <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="name_zh" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="lang-row"><span class="lang-badge">简体</span><input type="text" id="name_zh_hans" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="lang-row"><span class="lang-badge">繁體</span><input type="text" id="name_zh_hant" placeholder="未入力なら日本語から自動翻訳" /></div>
       <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="name_ko" placeholder="未入力なら日本語から自動翻訳" /></div>
-      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。簡体字・繁体字は別々に翻訳されます。</div>
     </div>
 
     <div class="lang-group">
       <div class="lang-group-title">説明文(任意)</div>
       <div class="lang-row"><span class="lang-badge">JA</span><textarea id="desc_ja"></textarea></div>
       <div class="lang-row"><span class="lang-badge">EN</span><textarea id="desc_en" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
-      <div class="lang-row"><span class="lang-badge">中文</span><textarea id="desc_zh" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">简体</span><textarea id="desc_zh_hans" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+      <div class="lang-row"><span class="lang-badge">繁體</span><textarea id="desc_zh_hant" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
       <div class="lang-row"><span class="lang-badge">한국</span><textarea id="desc_ko" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
-      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。簡体字・繁体字は別々に翻訳されます。</div>
     </div>
 
     <div class="field">
@@ -259,33 +261,34 @@ var IMAGE_MAX_DIMENSION = 800;
 var IMAGE_QUALITY = 0.7;
 var MENU_PAGE = "menu-demo-view.html"; // デモ公開ページ(同じlocalStorageキーを参照)
 
+// 中国語は簡体字(zh-Hans)・繁体字(zh-Hant)を別データとして保持する(単純な文字変換ではなく個別の訳文)。
 var DEFAULT_PRODUCTS = {
-  store_name: { ja: "Sample Café", en: "Sample Café", zh: "Sample Café", ko: "Sample Café" },
+  store_name: { ja: "Sample Café", en: "Sample Café", "zh-Hans": "Sample Café", "zh-Hant": "Sample Café", ko: "Sample Café" },
   categories: [
-    { id: "drink", name: { ja: "ドリンク", en: "Drinks", zh: "饮品", ko: "음료" } },
-    { id: "food", name: { ja: "フード", en: "Food", zh: "餐点", ko: "푸드" } },
-    { id: "sweets", name: { ja: "スイーツ", en: "Sweets", zh: "甜点", ko: "디저트" } }
+    { id: "drink", name: { ja: "ドリンク", en: "Drinks", "zh-Hans": "饮品", "zh-Hant": "飲品", ko: "음료" } },
+    { id: "food", name: { ja: "フード", en: "Food", "zh-Hans": "餐点", "zh-Hant": "餐點", ko: "푸드" } },
+    { id: "sweets", name: { ja: "スイーツ", en: "Sweets", "zh-Hans": "甜点", "zh-Hant": "甜點", ko: "디저트" } }
   ],
   items: [
     { id: "item-001", published: true, category: "drink",
-      name: { ja: "カフェラテ", en: "Café Latte", zh: "拿铁咖啡", ko: "카페라떼" },
-      description: { ja: "エスプレッソにミルクを合わせたコーヒー", en: "Espresso with steamed milk", zh: "浓缩咖啡加牛奶", ko: "에스프레소에 우유를 더한 커피" },
+      name: { ja: "カフェラテ", en: "Café Latte", "zh-Hans": "拿铁咖啡", "zh-Hant": "拿鐵咖啡", ko: "카페라떼" },
+      description: { ja: "エスプレッソにミルクを合わせたコーヒー", en: "Espresso with steamed milk", "zh-Hans": "浓缩咖啡加牛奶", "zh-Hant": "濃縮咖啡加牛奶", ko: "에스프레소에 우유를 더한 커피" },
       price: 550, image: "images/item-001-a1b2c3d4.webp" },
     { id: "item-002", published: true, category: "drink",
-      name: { ja: "自家製レモンソーダ", en: "House Lemon Soda", zh: "自制柠檬苏打水", ko: "수제 레몬 소다" },
-      description: { ja: "", en: "", zh: "", ko: "" },
+      name: { ja: "自家製レモンソーダ", en: "House Lemon Soda", "zh-Hans": "自制柠檬苏打水", "zh-Hant": "自製檸檬蘇打水", ko: "수제 레몬 소다" },
+      description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
       price: 480, image: "images/item-002-a1b2c3d4.webp" },
     { id: "item-003", published: true, category: "food",
-      name: { ja: "本日のサンドイッチ", en: "Today's Sandwich", zh: "今日三明治", ko: "오늘의 샌드위치" },
-      description: { ja: "旬の野菜と自家製ソース", en: "Seasonal vegetables with house-made sauce", zh: "时令蔬菜配自制酱料", ko: "제철 채소와 수제 소스" },
+      name: { ja: "本日のサンドイッチ", en: "Today's Sandwich", "zh-Hans": "今日三明治", "zh-Hant": "今日三明治", ko: "오늘의 샌드위치" },
+      description: { ja: "旬の野菜と自家製ソース", en: "Seasonal vegetables with house-made sauce", "zh-Hans": "时令蔬菜配自制酱料", "zh-Hant": "時令蔬菜配自製醬料", ko: "제철 채소와 수제 소스" },
       price: 980, image: "images/item-003-a1b2c3d4.webp" },
     { id: "item-004", published: true, category: "food",
-      name: { ja: "特製カレー", en: "House Curry", zh: "特制咖喱", ko: "스페셜 카레" },
-      description: { ja: "", en: "", zh: "", ko: "" },
+      name: { ja: "特製カレー", en: "House Curry", "zh-Hans": "特制咖喱", "zh-Hant": "特製咖哩", ko: "스페셜 카레" },
+      description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
       price: 1200, image: "images/item-004-a1b2c3d4.webp" },
     { id: "item-005", published: true, category: "sweets",
-      name: { ja: "焼きたてチーズケーキ", en: "Baked Cheesecake", zh: "现烤芝士蛋糕", ko: "구운 치즈케이크" },
-      description: { ja: "", en: "", zh: "", ko: "" },
+      name: { ja: "焼きたてチーズケーキ", en: "Baked Cheesecake", "zh-Hans": "现烤芝士蛋糕", "zh-Hant": "現烤起司蛋糕", ko: "구운 치즈케이크" },
+      description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
       price: 650, image: "images/item-005-a1b2c3d4.webp" }
   ]
 };
@@ -327,8 +330,10 @@ function randomHex(len) {
   return Array.from(bytes).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
 }
 
-/* ---------- 自動翻訳(未入力の言語だけ、日本語から自動で埋める) ---------- */
-var AUTO_TRANSLATE_LANGPAIRS = { en: "en", zh: "zh-CN", ko: "ko" };
+/* ---------- 自動翻訳(未入力の言語だけ、日本語から自動で埋める) ----------
+   簡体字(zh-Hans)・繁体字(zh-Hant)はそれぞれ別の翻訳先(zh-CN/zh-TW)へ個別に翻訳する
+   (簡体字の結果を繁体字へ文字変換するのではなく、両方を独立して取得する)。 */
+var AUTO_TRANSLATE_LANGPAIRS = { en: "en", "zh-Hans": "zh-CN", "zh-Hant": "zh-TW", ko: "ko" };
 function translateFromJa(text, targetCode) {
   if (!text) return Promise.resolve("");
   var url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(text) + "&langpair=" + encodeURIComponent("ja|" + targetCode);
@@ -340,7 +345,11 @@ function translateFromJa(text, targetCode) {
     .catch(function () { return ""; });
 }
 function fillMissingTranslations(fields) {
-  var result = { ja: fields.ja || "", en: fields.en || "", zh: fields.zh || "", ko: fields.ko || "" };
+  var result = {
+    ja: fields.ja || "", en: fields.en || "",
+    "zh-Hans": fields["zh-Hans"] || "", "zh-Hant": fields["zh-Hant"] || "",
+    ko: fields.ko || "",
+  };
   if (!result.ja) return Promise.resolve(result);
   var tasks = [];
   Object.keys(AUTO_TRANSLATE_LANGPAIRS).forEach(function (key) {
@@ -602,11 +611,13 @@ function openEdit(itemId) {
   fillCategoryOptions(item ? item.category : (state.products.categories[0] && state.products.categories[0].id));
   $("name_ja").value = item ? item.name.ja || "" : "";
   $("name_en").value = item ? item.name.en || "" : "";
-  $("name_zh").value = item ? item.name.zh || "" : "";
+  $("name_zh_hans").value = item ? item.name["zh-Hans"] || "" : "";
+  $("name_zh_hant").value = item ? item.name["zh-Hant"] || "" : "";
   $("name_ko").value = item ? item.name.ko || "" : "";
   $("desc_ja").value = item ? item.description.ja || "" : "";
   $("desc_en").value = item ? item.description.en || "" : "";
-  $("desc_zh").value = item ? item.description.zh || "" : "";
+  $("desc_zh_hans").value = item ? item.description["zh-Hans"] || "" : "";
+  $("desc_zh_hant").value = item ? item.description["zh-Hant"] || "" : "";
   $("desc_ko").value = item ? item.description.ko || "" : "";
   $("priceInput").value = item ? item.price : "";
   $("publishedInput").checked = item ? item.published !== false : true;
@@ -670,8 +681,16 @@ $("saveItemBtn").addEventListener("click", function () {
     id: id,
     published: $("publishedInput").checked,
     category: $("categoryInput").value,
-    name: { ja: $("name_ja").value.trim(), en: $("name_en").value.trim(), zh: $("name_zh").value.trim(), ko: $("name_ko").value.trim() },
-    description: { ja: $("desc_ja").value.trim(), en: $("desc_en").value.trim(), zh: $("desc_zh").value.trim(), ko: $("desc_ko").value.trim() },
+    name: {
+      ja: $("name_ja").value.trim(), en: $("name_en").value.trim(),
+      "zh-Hans": $("name_zh_hans").value.trim(), "zh-Hant": $("name_zh_hant").value.trim(),
+      ko: $("name_ko").value.trim(),
+    },
+    description: {
+      ja: $("desc_ja").value.trim(), en: $("desc_en").value.trim(),
+      "zh-Hans": $("desc_zh_hans").value.trim(), "zh-Hant": $("desc_zh_hant").value.trim(),
+      ko: $("desc_ko").value.trim(),
+    },
     price: Number($("priceInput").value),
     image: state.pendingImageDataUrl ? state.pendingImageDataUrl : (existing ? existing.image : null),
   };
