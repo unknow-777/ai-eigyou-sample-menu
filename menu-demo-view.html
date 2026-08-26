@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title id="pageTitle">Sample Menu</title>
+<title id="pageTitle">MELA! サンプル</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,6 +13,8 @@
   --photo-bg:#F1EEE9;
   --price:#242220;
   --danger:#B23B3B;
+  --brand:#2540E8;
+  --brand-soft:#EEF0FE;
 }
 *{box-sizing:border-box;}
 body{
@@ -20,13 +22,71 @@ body{
   font-family:'Noto Sans JP','Noto Sans SC','Noto Sans TC','Noto Sans KR','Noto Sans',-apple-system,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
+a{color:var(--brand);}
 .page{
   width:100%;
   max-width:640px;
   margin:0 auto;
-  padding:36px 18px 64px;
+  padding:0 18px 64px;
 }
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;}
+
+/* ===== Hero (営業用マーケティング部分。currentLangに関わらず日本語固定) ===== */
+.hero{padding:28px 0 8px;text-align:center;}
+.hero-logo-wrap{
+  width:64px;height:64px;margin:0 auto 18px;border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 16px rgba(37,64,232,0.18);
+}
+.hero-logo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.hero-headline{
+  font-size:1.62rem;font-weight:700;line-height:1.4;margin:0 0 12px;letter-spacing:0.01em;
+}
+.hero-headline .accent{color:var(--brand);}
+.hero-sub{
+  font-size:0.98rem;color:var(--text-muted);line-height:1.75;margin:0 auto;max-width:420px;
+}
+.hero-sub strong{color:var(--text);font-weight:700;}
+
+/* ===== Before / After ===== */
+.ba{margin:30px 0 8px;}
+.ba-row{display:flex;flex-direction:column;gap:10px;}
+.ba-card{
+  border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;background:var(--bg);
+}
+.ba-card.after{border-color:var(--brand);background:var(--brand-soft);}
+.ba-label{
+  font-size:0.68rem;letter-spacing:0.14em;font-weight:800;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:10px;
+}
+.ba-card.after .ba-label{color:var(--brand);}
+.ba-line{display:flex;gap:10px;align-items:flex-start;margin-top:8px;font-size:0.92rem;line-height:1.6;}
+.ba-line:first-of-type{margin-top:0;}
+.ba-who{flex-shrink:0;font-weight:700;font-size:0.78rem;color:var(--text-muted);min-width:64px;padding-top:2px;}
+.ba-bubble{flex:1;background:var(--photo-bg);border-radius:10px;padding:8px 12px;}
+.ba-card.after .ba-bubble{background:#fff;}
+.ba-step{display:flex;align-items:center;gap:8px;font-size:0.88rem;font-weight:600;color:var(--text);}
+.ba-step .n{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;
+}
+.ba-arrow{text-align:center;font-size:1.3rem;color:var(--brand);margin:6px 0;}
+.ba-result{
+  margin-top:14px;padding-top:14px;border-top:1px dashed rgba(37,64,232,0.3);
+  font-size:0.9rem;font-weight:700;color:var(--brand);text-align:center;
+}
+
+.divider{height:1px;background:var(--line);margin:36px 0 0;}
+
+/* ===== デモ体験ゾーン(ここから下は実際の来店客がQRを読んだ時に見る画面の再現) ===== */
+.demo-zone{margin-top:30px;}
+.demo-zone-label{
+  text-align:center;font-size:0.68rem;letter-spacing:0.14em;font-weight:800;color:var(--text-muted);
+  text-transform:uppercase;margin-bottom:14px;
+}
+.demo-frame{
+  border:1px solid var(--line);border-radius:22px;padding:22px 18px 30px;
+  box-shadow:0 10px 30px rgba(36,34,32,0.06);
+}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;flex-wrap:wrap;}
 .topbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .icon-btn{
   background:none;border:1px solid var(--line);border-radius:10px;padding:9px 14px;
@@ -38,9 +98,9 @@ body{
   background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:5px 11px;
   display:inline-block;
 }
-.store-name{text-align:center;font-size:2.6rem;font-weight:700;letter-spacing:0.01em;margin-top:8px;}
+.store-name{text-align:center;font-size:1.9rem;font-weight:700;letter-spacing:0.01em;margin-top:4px;}
 
-.type-switch-wrap{margin-top:22px;text-align:center;}
+.type-switch-wrap{margin-top:20px;text-align:center;}
 .type-switch-label{
   font-size:0.66rem;letter-spacing:0.14em;font-weight:700;color:var(--text-muted);
   text-transform:uppercase;margin-bottom:9px;
@@ -49,32 +109,122 @@ body{
 .type-pill{
   font-size:0.86rem;font-weight:600;padding:8px 16px;border-radius:999px;
   border:1px solid var(--line);background:var(--bg);color:var(--text-muted);
-  cursor:pointer;font-family:inherit;
+  cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;
 }
-.type-pill[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text);}
-.type-pill:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+.type-pill[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand);}
+.type-pill:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
 
-.lang-tabs{display:flex;justify-content:center;gap:8px;margin-top:28px;padding-bottom:18px;border-bottom:1px solid var(--line);flex-wrap:wrap;row-gap:6px;}
-.lang-tab{background:none;border:none;padding:6px 2px 12px;font-size:1.15rem;color:var(--text-muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;}
-.lang-tab[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--text);font-weight:700;}
-.lang-tab:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
-.category{
-  margin-top:44px;margin-bottom:16px;font-size:1.08rem;font-weight:700;letter-spacing:0.1em;
-  color:var(--text);padding-bottom:8px;border-bottom:2px solid var(--text);display:inline-block;
+.other-types-toggle{
+  display:block;margin:14px auto 0;background:none;border:none;color:var(--text-muted);
+  font-size:0.8rem;text-decoration:underline;cursor:pointer;font-family:inherit;
 }
-.item{display:flex;gap:20px;padding:20px 0;align-items:flex-start;}
+.other-types-wrap{margin-top:12px;text-align:center;}
+.other-types-wrap[hidden]{display:none;}
+
+.lang-tabs{display:flex;justify-content:center;gap:8px;margin-top:24px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;row-gap:6px;}
+.lang-tab{background:none;border:none;padding:6px 2px 12px;font-size:1.1rem;color:var(--text-muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;}
+.lang-tab[aria-pressed="true"]{color:var(--brand);border-bottom-color:var(--brand);font-weight:700;}
+.lang-tab:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+
+/* ===== コンテンツタブ(料金・プラン / 使い方 / ルール・注意事項 / FAQ) ===== */
+.content-tabs{display:flex;gap:6px;margin-top:18px;overflow-x:auto;padding-bottom:2px;}
+.content-tab{
+  flex-shrink:0;font-size:0.84rem;font-weight:700;padding:10px 14px;border-radius:12px;
+  border:1px solid var(--line);background:var(--bg);color:var(--text-muted);cursor:pointer;
+  font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.content-tab[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text);}
+
+.category{
+  margin-top:36px;margin-bottom:14px;font-size:1.02rem;font-weight:700;letter-spacing:0.08em;
+  color:var(--text);padding-bottom:8px;border-bottom:2px solid var(--brand);display:inline-block;
+}
+.category:first-child{margin-top:26px;}
+.item{display:flex;gap:18px;padding:18px 0;align-items:flex-start;border-bottom:1px solid var(--line);}
+.item:last-child{border-bottom:none;}
 .item-photo{
-  width:132px;height:132px;border-radius:16px;background:var(--photo-bg);
-  display:flex;align-items:center;justify-content:center;font-size:3rem;flex-shrink:0;
+  width:112px;height:112px;border-radius:14px;background:var(--photo-bg);
+  display:flex;align-items:center;justify-content:center;font-size:2.6rem;flex-shrink:0;
   overflow:hidden;box-shadow:0 2px 10px rgba(36,34,32,0.10);
 }
 .item-photo img{width:100%;height:100%;object-fit:cover;display:block;}
 .item-main{flex:1;min-width:0;padding-top:2px;}
 .item-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
-.item-name{font-size:1.34rem;line-height:1.35;font-weight:600;}
-.item-price{font-variant-numeric:tabular-nums;color:var(--price);font-weight:700;font-size:1.2rem;white-space:nowrap;}
-.item-desc{margin-top:6px;font-size:0.96rem;color:var(--text-muted);line-height:1.55;}
-.note{margin-top:44px;font-size:0.86rem;color:var(--text-muted);line-height:1.7;text-align:center;}
+.item-name{font-size:1.16rem;line-height:1.35;font-weight:700;}
+.item-price{font-variant-numeric:tabular-nums;color:var(--price);font-weight:700;font-size:1.08rem;white-space:nowrap;}
+.item-desc{margin-top:6px;font-size:0.92rem;color:var(--text-muted);line-height:1.6;}
+
+/* ===== steps ===== */
+.section-block{margin-top:32px;}
+.section-title{
+  display:flex;align-items:center;gap:8px;font-size:1.02rem;font-weight:700;margin-bottom:16px;
+}
+.section-title .ico{font-size:1.2rem;}
+.steps-list{list-style:none;margin:0;padding:0;}
+.step{display:flex;gap:14px;padding:12px 0;}
+.step .n{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:0.86rem;font-weight:800;
+}
+.step-body{flex:1;padding-top:3px;}
+.step-title{font-size:0.98rem;font-weight:700;}
+.step-desc{margin-top:4px;font-size:0.88rem;color:var(--text-muted);line-height:1.6;}
+
+/* ===== rules / notice ===== */
+.rules-list{list-style:none;margin:0;padding:0;}
+.rule{
+  display:flex;gap:12px;align-items:flex-start;padding:11px 14px;margin-bottom:8px;
+  background:#FBF3F0;border:1px solid #F0DAD3;border-radius:12px;
+}
+.rule .ico{flex-shrink:0;font-size:1.05rem;line-height:1.5;}
+.rule-text{font-size:0.92rem;line-height:1.55;color:var(--text);}
+.notice-list .rule{background:var(--photo-bg);border-color:var(--line);}
+
+/* ===== faq ===== */
+.faq-list{list-style:none;margin:0;padding:0;}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-item:first-child{border-top:1px solid var(--line);}
+.faq-q{
+  width:100%;text-align:left;background:none;border:none;padding:15px 4px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:inherit;
+}
+.faq-q-text{font-size:0.96rem;font-weight:700;color:var(--text);}
+.faq-q-text::before{content:"Q. ";color:var(--brand);}
+.faq-plus{flex-shrink:0;font-size:1.1rem;color:var(--brand);font-weight:700;transition:transform 0.15s;}
+.faq-item[data-open="true"] .faq-plus{transform:rotate(45deg);}
+.faq-a{font-size:0.9rem;line-height:1.65;color:var(--text-muted);padding:0 4px 16px 4px;}
+.faq-a::before{content:"A. ";color:var(--text);font-weight:700;}
+.faq-a[hidden]{display:none;}
+
+.note{margin-top:40px;font-size:0.82rem;color:var(--text-muted);line-height:1.7;text-align:center;}
+.demo-disclaimer{
+  margin-top:10px;font-size:0.74rem;color:var(--text-muted);line-height:1.6;text-align:center;
+  padding-top:10px;border-top:1px dashed var(--line);
+}
+
+.powered-by{
+  margin-top:34px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:0.72rem;color:var(--text-muted);letter-spacing:0.03em;
+}
+.powered-by img{width:16px;height:16px;border-radius:4px;object-fit:cover;}
+.powered-by strong{color:var(--brand);font-weight:800;}
+
+/* ===== 店舗側メリット ===== */
+.forowner{margin:44px 0 0;}
+.forowner-title{text-align:center;font-size:1.1rem;font-weight:700;margin-bottom:16px;}
+.forowner-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+.forowner-card{
+  border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;
+}
+.forowner-card .ico{font-size:1.3rem;flex-shrink:0;}
+.forowner-card-text{font-size:0.88rem;line-height:1.55;color:var(--text);}
+.price-box{
+  margin-top:22px;border:1.5px solid var(--brand);border-radius:16px;padding:18px 20px;text-align:center;
+  background:var(--brand-soft);
+}
+.price-box .price-label{font-size:0.78rem;color:var(--text-muted);font-weight:700;letter-spacing:0.04em;}
+.price-box .price-num{font-size:1.9rem;font-weight:800;color:var(--brand);margin-top:4px;}
+.price-box .price-note{font-size:0.78rem;color:var(--text-muted);margin-top:6px;}
 
 .state-box{
   margin-top:60px;text-align:center;color:var(--text-muted);font-size:1.05rem;line-height:1.8;
@@ -82,7 +232,7 @@ body{
 .state-box.error{color:var(--danger);}
 .spinner{
   width:36px;height:36px;margin:0 auto 18px;border-radius:50%;
-  border:4px solid var(--line);border-top-color:var(--text);
+  border:4px solid var(--line);border-top-color:var(--brand);
   animation:spin 0.8s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -94,47 +244,112 @@ body{
 </style>
 
 <div class="page">
-  <div class="topbar">
-    <a class="icon-btn" href="menu-demo.html">← TOPページ</a>
-    <div class="topbar-left">
-      <div class="demo-badge">DEMO</div>
-      <a class="icon-btn" href="demo-admin.html">管理画面へ →</a>
+
+  <!-- ===== Hero(営業用。常に日本語固定) ===== -->
+  <div class="hero">
+    <div class="hero-logo-wrap"><img src="images/mela-logo.jpg" alt="MELA!"></div>
+    <h1 class="hero-headline">外国人への説明を、<span class="accent">QRひとつ</span>に。</h1>
+    <p class="hero-sub">料金・利用方法・注意事項・ルールを、お客様のスマホで多言語表示。<br><strong>スタッフが毎回説明しなくていい。</strong></p>
+  </div>
+
+  <!-- ===== Before / After ===== -->
+  <div class="ba">
+    <div class="ba-row">
+      <div class="ba-card before">
+        <div class="ba-label">Before(導入前)</div>
+        <div class="ba-line">
+          <div class="ba-who">外国人客</div>
+          <div class="ba-bubble">“How do I return this?”</div>
+        </div>
+        <div class="ba-line">
+          <div class="ba-who">スタッフ</div>
+          <div class="ba-bubble">毎回、英語で一から説明…</div>
+        </div>
+      </div>
+      <div class="ba-arrow">↓</div>
+      <div class="ba-card after">
+        <div class="ba-label">After(MELA!導入後)</div>
+        <div class="ba-step"><span class="n">1</span>QRコードを読み取る</div>
+        <div class="ba-step"><span class="n">2</span>English を選択</div>
+        <div class="ba-step"><span class="n">3</span>「Return Guide」をタップ</div>
+        <div class="ba-step"><span class="n">4</span>お客様自身がその場で確認</div>
+        <div class="ba-result">スタッフの説明、不要に。</div>
+      </div>
     </div>
   </div>
-  <div class="store-name" id="storeName">&nbsp;</div>
 
-  <div class="type-switch-wrap">
-    <div class="type-switch-label">業種別サンプルを見る</div>
-    <div class="type-switch" id="typeSwitch" role="group" aria-label="業種サンプル"></div>
+  <div class="divider"></div>
+
+  <!-- ===== ここから下:実際に外国人客がQRを読んだ時に見る画面の再現 ===== -->
+  <div class="demo-zone">
+    <div class="demo-zone-label">↓ ここから下は、お客様のスマホに実際に表示される画面です ↓</div>
+    <div class="demo-frame">
+      <div class="topbar">
+        <a class="icon-btn" href="menu-demo.html">← TOPページ</a>
+        <div class="topbar-left">
+          <div class="demo-badge">DEMO</div>
+          <a class="icon-btn" href="demo-admin.html">管理画面へ →</a>
+        </div>
+      </div>
+      <div class="store-name" id="storeName">&nbsp;</div>
+
+      <div class="type-switch-wrap">
+        <div class="type-switch-label">業種別サンプルを見る</div>
+        <div class="type-switch" id="typeSwitch" role="group" aria-label="業種サンプル"></div>
+        <button type="button" class="other-types-toggle" id="otherTypesToggle">その他の活用例(飲食)を見る ▾</button>
+        <div class="other-types-wrap" id="otherTypesWrap" hidden>
+          <div class="type-switch" id="otherTypeSwitch" role="group" aria-label="その他の活用例"></div>
+        </div>
+      </div>
+
+      <div id="loadingState" class="state-box">
+        <div class="spinner"></div>
+        <div id="loadingText">読み込み中…</div>
+      </div>
+
+      <div id="errorState" class="state-box error" hidden>
+        <div id="errorText">メニューを読み込めませんでした。通信環境をご確認のうえ、もう一度お試しください。</div>
+        <button type="button" class="retry-btn" id="retryBtn">再読み込み</button>
+      </div>
+
+      <div id="menuRoot" hidden>
+        <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
+        <div class="content-tabs" id="contentTabs" role="group" aria-label="Content" hidden></div>
+        <div id="menuBody"></div>
+        <p class="note" id="noteText"></p>
+        <p class="demo-disclaimer" id="disclaimerText"></p>
+        <div class="powered-by"><img src="images/mela-logo.jpg" alt=""><span>Powered by <strong>MELA!</strong></span></div>
+      </div>
+    </div>
   </div>
 
-  <div id="loadingState" class="state-box">
-    <div class="spinner"></div>
-    <div id="loadingText">読み込み中…</div>
+  <!-- ===== 店舗側メリット ===== -->
+  <div class="forowner">
+    <div class="forowner-title">導入すると、店舗はこう楽になります</div>
+    <div class="forowner-grid">
+      <div class="forowner-card"><span class="ico">⏱</span><span class="forowner-card-text">外国人対応にかかる時間を削減できる</span></div>
+      <div class="forowner-card"><span class="ico">🎯</span><span class="forowner-card-text">スタッフによる説明のばらつきをなくせる</span></div>
+      <div class="forowner-card"><span class="ico">🗣</span><span class="forowner-card-text">英語が苦手なスタッフでも、案内をQRに任せられる</span></div>
+      <div class="forowner-card"><span class="ico">🎓</span><span class="forowner-card-text">新人スタッフの教育がしやすくなる</span></div>
+      <div class="forowner-card"><span class="ico">📄</span><span class="forowner-card-text">紙の外国語説明書を何枚も用意しなくていい</span></div>
+      <div class="forowner-card"><span class="ico">📱</span><span class="forowner-card-text">アプリ不要・スマホだけで完結、複雑な注文/決済/POS機能はなし</span></div>
+    </div>
+    <div class="price-box">
+      <div class="price-label">導入価格(買い切り)</div>
+      <div class="price-num">¥19,800</div>
+      <div class="price-note">月額費用なし。将来的に更新代行・翻訳修正等のサポートを月額980〜1,980円程度でご用意予定です。</div>
+    </div>
   </div>
 
-  <div id="errorState" class="state-box error" hidden>
-    <div id="errorText">メニューを読み込めませんでした。通信環境をご確認のうえ、もう一度お試しください。</div>
-    <button type="button" class="retry-btn" id="retryBtn">再読み込み</button>
-  </div>
-
-  <div id="menuRoot" hidden>
-    <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
-    <div id="menuBody"></div>
-    <p class="note" id="noteText"></p>
-  </div>
 </div>
 
 <script>
 "use strict";
 
-// この画面(ページ)を開いた瞬間は必ず最上部から表示する。
-// 通常読み込みだけでなく、ブラウザの「戻る」操作でbfcacheから復元された場合も対象。
 try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
 window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
 
 // 5言語構成: 日本語・英語・簡体字中国語・繁体字中国語・韓国語。
-// 中国語は1つにまとめず、zh-Hans(简体中文)とzh-Hant(繁體中文)を別データとして保持する。
 var LANGS = [
   { code: "ja", label: "日本語" },
   { code: "en", label: "English" },
@@ -146,17 +361,32 @@ var LANGS = [
 var NOTE = {
   ja: "表示している内容は準備状況により一部日本語のみとなる場合があります。",
   en: "Some items may be shown in Japanese only depending on translation availability.",
-  "zh-Hans": "部分菜品可能仅显示日文，具体取决于翻译情况。",
-  "zh-Hant": "部分品項可能僅顯示日文，視翻譯完成度而定。",
-  ko: "번역 준비 상황에 따라 일부 메뉴는 일본어로만 표시될 수 있습니다."
+  "zh-Hans": "部分内容可能仅显示日文，具体取决于翻译情况。",
+  "zh-Hant": "部分內容可能僅顯示日文，視翻譯完成度而定。",
+  ko: "번역 준비 상황에 따라 일부 항목은 일본어로만 표시될 수 있습니다."
 };
+
+var DISCLAIMER = {
+  ja: "※本サンプルは架空の店舗・料金・ルールに基づくデモです。実在の店舗情報ではありません。",
+  en: "*This is a demo using a fictional store, pricing, and rules. It does not represent a real business.",
+  "zh-Hans": "※本示例基于虚构店铺、价格与规则制作，并非真实店铺信息。",
+  "zh-Hant": "※本範例基於虛構店鋪、價格與規則製作，並非真實店鋪資訊。",
+  ko: "※본 샘플은 가상의 매장·요금·규칙을 기반으로 한 데모입니다. 실제 매장 정보가 아닙니다."
+};
+
+var CONTENT_TAB_LABEL = {
+  plans: { ja: "料金・プラン", en: "Plans & Pricing", "zh-Hans": "价格・套餐", "zh-Hant": "價格・方案", ko: "요금・플랜" },
+  steps: { ja: "使い方", en: "How to Use", "zh-Hans": "使用方法", "zh-Hant": "使用方法", ko: "이용 방법" },
+  rules: { ja: "ルール・注意事項", en: "Rules & Notes", "zh-Hans": "规则・注意事项", "zh-Hant": "規則・注意事項", ko: "규칙・주의사항" },
+  faq: { ja: "FAQ", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" }
+};
+var CONTENT_TAB_ICON = { plans: "💰", steps: "📋", rules: "⚠️", faq: "❓" };
+var CONTENT_TAB_ORDER = ["plans", "steps", "rules", "faq"];
 
 var PRODUCTS = null;
 var currentLang = "ja";
+var currentContentTab = "plans";
 
-// 表示言語のデータが無い場合のフォールバック順:
-// zh-Hant → zh-Hans(繁体字が無ければ簡体字で代用) → ja(最終手段は日本語)。
-// en/ko/zh-Hansはja直行。
 function textOrFallback(field, lang) {
   if (!field) return "";
   if (field[lang]) return field[lang];
@@ -171,49 +401,21 @@ function els() {
     root: document.getElementById("menuRoot"),
   };
 }
+function showLoading() { var e = els(); e.loading.hidden = false; e.error.hidden = true; e.root.hidden = true; }
+function showError() { var e = els(); e.loading.hidden = true; e.error.hidden = false; e.root.hidden = true; }
+function showMenu() { var e = els(); e.loading.hidden = true; e.error.hidden = true; e.root.hidden = false; }
 
-function showLoading() {
-  var e = els();
-  e.loading.hidden = false;
-  e.error.hidden = true;
-  e.root.hidden = true;
-}
-function showError() {
-  var e = els();
-  e.loading.hidden = true;
-  e.error.hidden = false;
-  e.root.hidden = true;
-}
-function showMenu() {
-  var e = els();
-  e.loading.hidden = true;
-  e.error.hidden = true;
-  e.root.hidden = false;
-}
-
-function render(lang) {
-  currentLang = lang;
-  document.querySelectorAll(".lang-tab").forEach(function (b) {
-    b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
-  });
-
-  var storeNameText = textOrFallback(PRODUCTS.store_name, lang) || "Menu";
-  document.getElementById("storeName").textContent = storeNameText;
-  document.getElementById("pageTitle").textContent = storeNameText + " Menu";
-
-  var body = document.getElementById("menuBody");
-  body.innerHTML = "";
-
-  var visibleItems = PRODUCTS.items.filter(function (it) { return it.published !== false; });
-
-  PRODUCTS.categories.forEach(function (cat) {
+/* ===== 商品/プラン(既存items形式)の描画。カフェ等の旧サンプルの唯一の描画経路でもある ===== */
+function renderItemCategories(container, categoriesSource, itemsSource, lang) {
+  var visibleItems = itemsSource.filter(function (it) { return it.published !== false; });
+  categoriesSource.forEach(function (cat) {
     var itemsInCat = visibleItems.filter(function (it) { return it.category === cat.id; });
     if (itemsInCat.length === 0) return;
 
     var catDiv = document.createElement("div");
     catDiv.className = "category";
     catDiv.textContent = textOrFallback(cat.name, lang);
-    body.appendChild(catDiv);
+    container.appendChild(catDiv);
 
     itemsInCat.forEach(function (it) {
       var row = document.createElement("div");
@@ -226,10 +428,7 @@ function render(lang) {
         img.src = it.image;
         img.alt = textOrFallback(it.name, lang);
         img.loading = "lazy";
-        img.onerror = function () {
-          photo.innerHTML = "";
-          photo.textContent = it.icon || "🍽";
-        };
+        img.onerror = function () { photo.innerHTML = ""; photo.textContent = it.icon || "🍽"; };
         photo.appendChild(img);
       } else {
         photo.textContent = it.icon || "🍽";
@@ -259,13 +458,218 @@ function render(lang) {
         desc.textContent = descText;
         main.appendChild(desc);
       }
-
       row.appendChild(main);
-      body.appendChild(row);
+      container.appendChild(row);
     });
   });
+}
+
+/* ===== 汎用sections描画(steps / rules / notice / faq) =====
+   将来の温浴施設・民泊・体験系業種などへの横展開を見据え、
+   「メニュー」ではなく「店舗・施設の説明コンテンツ」として扱える構造にしている。 */
+function renderSteps(container, section, lang) {
+  var block = document.createElement("div");
+  block.className = "section-block";
+  var title = document.createElement("div");
+  title.className = "section-title";
+  title.innerHTML = '<span class="ico">' + (section.icon || "📋") + '</span>';
+  title.appendChild(document.createTextNode(textOrFallback(section.title, lang)));
+  block.appendChild(title);
+
+  var list = document.createElement("div");
+  list.className = "steps-list";
+  section.items.forEach(function (step, idx) {
+    var row = document.createElement("div");
+    row.className = "step";
+    var n = document.createElement("div");
+    n.className = "n";
+    n.textContent = String(idx + 1);
+    row.appendChild(n);
+    var body = document.createElement("div");
+    body.className = "step-body";
+    var t = document.createElement("div");
+    t.className = "step-title";
+    t.textContent = textOrFallback(step.text, lang);
+    body.appendChild(t);
+    var descText = textOrFallback(step.desc, lang);
+    if (descText) {
+      var d = document.createElement("div");
+      d.className = "step-desc";
+      d.textContent = descText;
+      body.appendChild(d);
+    }
+    row.appendChild(body);
+    list.appendChild(row);
+  });
+  block.appendChild(list);
+  container.appendChild(block);
+}
+
+function renderRulesLike(container, section, lang, isNotice) {
+  var block = document.createElement("div");
+  block.className = "section-block";
+  var title = document.createElement("div");
+  title.className = "section-title";
+  title.innerHTML = '<span class="ico">' + (section.icon || (isNotice ? "ℹ️" : "⚠️")) + '</span>';
+  title.appendChild(document.createTextNode(textOrFallback(section.title, lang)));
+  block.appendChild(title);
+
+  var list = document.createElement("div");
+  list.className = "rules-list" + (isNotice ? " notice-list" : "");
+  section.items.forEach(function (rule) {
+    var row = document.createElement("div");
+    row.className = "rule";
+    var ico = document.createElement("span");
+    ico.className = "ico";
+    ico.textContent = rule.icon || (isNotice ? "・" : "🚫");
+    row.appendChild(ico);
+    var t = document.createElement("span");
+    t.className = "rule-text";
+    t.textContent = textOrFallback(rule.text, lang);
+    row.appendChild(t);
+    list.appendChild(row);
+  });
+  block.appendChild(list);
+  container.appendChild(block);
+}
+
+function renderFaq(container, section, lang) {
+  var block = document.createElement("div");
+  block.className = "section-block";
+  var title = document.createElement("div");
+  title.className = "section-title";
+  title.innerHTML = '<span class="ico">' + (section.icon || "❓") + '</span>';
+  title.appendChild(document.createTextNode(textOrFallback(section.title, lang)));
+  block.appendChild(title);
+
+  var list = document.createElement("div");
+  list.className = "faq-list";
+  section.items.forEach(function (qa) {
+    var item = document.createElement("div");
+    item.className = "faq-item";
+    item.dataset.open = "false";
+
+    var qBtn = document.createElement("button");
+    qBtn.type = "button";
+    qBtn.className = "faq-q";
+    var qText = document.createElement("span");
+    qText.className = "faq-q-text";
+    qText.textContent = textOrFallback(qa.q, lang);
+    var plus = document.createElement("span");
+    plus.className = "faq-plus";
+    plus.textContent = "+";
+    qBtn.appendChild(qText);
+    qBtn.appendChild(plus);
+
+    var aDiv = document.createElement("div");
+    aDiv.className = "faq-a";
+    aDiv.textContent = textOrFallback(qa.a, lang);
+    aDiv.hidden = true;
+
+    qBtn.addEventListener("click", function () {
+      var open = item.dataset.open === "true";
+      item.dataset.open = open ? "false" : "true";
+      aDiv.hidden = open;
+    });
+
+    item.appendChild(qBtn);
+    item.appendChild(aDiv);
+    list.appendChild(item);
+  });
+  block.appendChild(list);
+  container.appendChild(block);
+}
+
+function sectionsOfKind(sections, kind) {
+  if (kind === "steps") return sections.filter(function (s) { return s.type === "steps"; });
+  if (kind === "rules") return sections.filter(function (s) { return s.type === "rules" || s.type === "notice"; });
+  if (kind === "faq") return sections.filter(function (s) { return s.type === "faq"; });
+  return [];
+}
+
+function hasSections(products) {
+  return !!(products.sections && products.sections.length);
+}
+
+function availableContentTabs(products) {
+  var tabs = [];
+  if (products.plans && products.plans.categories && products.plans.items) tabs.push("plans");
+  if (products.sections) {
+    CONTENT_TAB_ORDER.slice(1).forEach(function (kind) {
+      if (sectionsOfKind(products.sections, kind).length > 0) tabs.push(kind);
+    });
+  }
+  return tabs;
+}
+
+function buildContentTabs(products) {
+  var wrap = document.getElementById("contentTabs");
+  wrap.innerHTML = "";
+  var tabs = availableContentTabs(products);
+  if (tabs.length <= 1) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  if (tabs.indexOf(currentContentTab) === -1) currentContentTab = tabs[0];
+  tabs.forEach(function (kind) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "content-tab";
+    btn.dataset.kind = kind;
+    btn.innerHTML = '<span>' + CONTENT_TAB_ICON[kind] + '</span>';
+    btn.appendChild(document.createTextNode(textOrFallback(CONTENT_TAB_LABEL[kind], currentLang)));
+    btn.setAttribute("aria-pressed", kind === currentContentTab ? "true" : "false");
+    btn.addEventListener("click", function () {
+      currentContentTab = kind;
+      render(currentLang);
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function render(lang) {
+  currentLang = lang;
+  document.querySelectorAll(".lang-tab").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
+  });
+
+  var storeNameText = textOrFallback(PRODUCTS.store_name, lang) || "Sample";
+  document.getElementById("storeName").textContent = storeNameText;
+  document.getElementById("pageTitle").textContent = "MELA! — " + storeNameText;
+
+  buildContentTabs(PRODUCTS);
+  document.querySelectorAll(".content-tab").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.kind === currentContentTab ? "true" : "false");
+  });
+
+  var body = document.getElementById("menuBody");
+  body.innerHTML = "";
+
+  var tabs = availableContentTabs(PRODUCTS);
+  var activeTab = tabs.indexOf(currentContentTab) === -1 ? tabs[0] : currentContentTab;
+
+  if (activeTab === "plans" && PRODUCTS.plans) {
+    renderItemCategories(body, PRODUCTS.plans.categories, PRODUCTS.plans.items, lang);
+  } else if (activeTab === "steps" || activeTab === "rules" || activeTab === "faq") {
+    var secs = sectionsOfKind(PRODUCTS.sections || [], activeTab);
+    secs.forEach(function (sec) {
+      if (sec.type === "steps") renderSteps(body, sec, lang);
+      else if (sec.type === "rules") renderRulesLike(body, sec, lang, false);
+      else if (sec.type === "notice") renderRulesLike(body, sec, lang, true);
+      else if (sec.type === "faq") renderFaq(body, sec, lang);
+    });
+  } else if (!PRODUCTS.plans && !PRODUCTS.sections && PRODUCTS.categories && PRODUCTS.items) {
+    // 旧形式(カフェ等の既存5業種): categories/itemsが商品ルート直下にある
+    renderItemCategories(body, PRODUCTS.categories, PRODUCTS.items, lang);
+  }
 
   document.getElementById("noteText").textContent = NOTE[lang] || NOTE.ja;
+  var disc = document.getElementById("disclaimerText");
+  if (PRODUCTS.isFictionalDemo) {
+    disc.textContent = DISCLAIMER[lang] || DISCLAIMER.ja;
+    disc.hidden = false;
+  } else {
+    disc.hidden = true;
+    disc.textContent = "";
+  }
 }
 
 function buildLangTabs() {
@@ -285,14 +689,244 @@ function buildLangTabs() {
 
 var DEMO_STORAGE_KEY = "demo_menu_products_v1";
 
-// 業種ごとのサンプルメニュー一式。カフェ以外は実写真を用意していないため、
-// 写真の代わりにitem.iconの絵文字を表示する(item-photoの分岐で自動的に処理される)。
-// name/description/categories.nameは { ja, en, "zh-Hans", "zh-Hant", ko } の5言語構成。
-// 簡体字と繁体字は単純な文字変換ではなく、語彙・言い回しも地域に合わせて別データとして持つ
-// (例: 意面/義大利麵、里脊肉/里肌肉、芝士/起司など)。
+/* ===========================================================================
+   業種別サンプルデータ
+   - PRIMARY_TYPES: MELA!新コンセプトの主軸3業種(着物レンタル/レンタサイクル/動物カフェ)
+     -> { store_name, plans:{categories,items}, sections:[{id,type,icon,title,items}], isFictionalDemo:true }
+   - OTHER_TYPES: 既存の飲食5業種(実装済み資産として温存、「その他の活用例」として提示)
+     -> { store_name, categories, items } (旧形式のまま、無変更)
+   name/description/title/text等はすべて { ja, en, "zh-Hans", "zh-Hant", ko } の5言語構成。
+   簡体字と繁体字は単純な文字変換ではなく、語彙・言い回しも地域に合わせて別データとして持つ。
+   全て架空の店舗・料金・ルールによるデモデータです(実在店舗ではありません)。
+=========================================================================== */
 var SAMPLE_SETS = {
+
+  kimono: {
+    label: "着物レンタル",
+    icon: "👘",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample 着物レンタル", en: "Sample Kimono Rental", "zh-Hans": "Sample 和服租赁", "zh-Hant": "Sample 和服租借", ko: "Sample 기모노 대여" },
+      plans: {
+        categories: [
+          { id: "plan", name: { ja: "プラン", en: "Plans", "zh-Hans": "套餐", "zh-Hant": "方案", ko: "플랜" } },
+          { id: "option", name: { ja: "オプション", en: "Options", "zh-Hans": "附加选项", "zh-Hant": "附加選項", ko: "옵션" } }
+        ],
+        items: [
+          { id: "k-001", published: true, category: "plan", icon: "👘",
+            name: { ja: "スタンダードプラン", en: "Standard Plan", "zh-Hans": "标准套餐", "zh-Hant": "標準方案", ko: "스탠다드 플랜" },
+            description: { ja: "着物・帯・小物一式+着付け込み(利用時間 約4時間)", en: "Kimono, obi belt, and accessories with dressing included (approx. 4 hours)", "zh-Hans": "和服・腰带・小物配件+着装服务(使用时间约4小时)", "zh-Hant": "和服・腰帶・小物配件+著裝服務(使用時間約4小時)", ko: "기모노・오비띠・소품 일체+착용 서비스 포함(이용 시간 약 4시간)" },
+            price: 5000, image: null },
+          { id: "k-002", published: true, category: "plan", icon: "🎎",
+            name: { ja: "プレミアムプラン", en: "Premium Plan", "zh-Hans": "高级套餐", "zh-Hant": "高級方案", ko: "프리미엄 플랜" },
+            description: { ja: "高級着物+髪飾り+バッグ、着付け・ヘアセット込み(利用時間 約6時間)", en: "Premium kimono with hair accessories and a bag, dressing and hairstyling included (approx. 6 hours)", "zh-Hans": "高级和服+发饰+手提包，含着装与发型设计(使用时间约6小时)", "zh-Hant": "高級和服+髮飾+手提包，含著裝與髮型設計(使用時間約6小時)", ko: "고급 기모노+헤어 액세서리+가방, 착용 및 헤어스타일링 포함(이용 시간 약 6시간)" },
+            price: 8000, image: null },
+          { id: "k-003", published: true, category: "plan", icon: "💑",
+            name: { ja: "ペアプラン(2名)", en: "Pair Plan (for 2)", "zh-Hans": "情侣套餐(2位)", "zh-Hant": "情侶方案(2位)", ko: "커플 플랜(2인)" },
+            description: { ja: "スタンダードプラン×2名分+記念撮影10分付き", en: "Two Standard Plans plus a 10-minute photo session", "zh-Hans": "标准套餐×2份+10分钟纪念拍摄", "zh-Hant": "標準方案×2份+10分鐘紀念拍攝", ko: "스탠다드 플랜×2인분+10분 기념 촬영 포함" },
+            price: 9000, image: null },
+          { id: "k-101", published: true, category: "option", icon: "⏱",
+            name: { ja: "延長(1時間)", en: "Extension (1 hour)", "zh-Hans": "延长使用(1小时)", "zh-Hant": "延長使用(1小時)", ko: "연장(1시간)" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
+            price: 1000, image: null },
+          { id: "k-102", published: true, category: "option", icon: "💐",
+            name: { ja: "髪飾りアップグレード", en: "Hair Accessory Upgrade", "zh-Hans": "发饰升级", "zh-Hant": "髮飾升級", ko: "헤어 액세서리 업그레이드" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
+            price: 1500, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "👘",
+          title: { ja: "ご利用の流れ", en: "How It Works", "zh-Hans": "使用流程", "zh-Hant": "使用流程", ko: "이용 흐름" },
+          items: [
+            { text: { ja: "受付・プラン選択", en: "Check-in & choose your plan", "zh-Hans": "受理・选择套餐", "zh-Hant": "受理・選擇方案", ko: "접수・플랜 선택" },
+              desc: { ja: "スタッフがお好みの着物・帯をご案内します。", en: "Our staff will help you choose a kimono and obi belt.", "zh-Hans": "工作人员将为您推荐喜欢的和服与腰带。", "zh-Hant": "工作人員將為您推薦喜歡的和服與腰帶。", ko: "스태프가 원하시는 기모노와 오비띠를 안내해 드립니다." } },
+            { text: { ja: "着付け(約20〜30分)", en: "Dressing (approx. 20–30 min)", "zh-Hans": "着装(约20〜30分钟)", "zh-Hant": "著裝(約20〜30分鐘)", ko: "착용(약 20〜30분)" },
+              desc: { ja: "プロのスタッフが着付けいたします。", en: "A professional staff member will dress you.", "zh-Hans": "由专业工作人员为您穿着。", "zh-Hant": "由專業工作人員為您穿著。", ko: "전문 스태프가 착용을 도와드립니다." } },
+            { text: { ja: "荷物をお預け", en: "Store your belongings", "zh-Hans": "寄存行李", "zh-Hant": "寄存行李", ko: "짐 보관" },
+              desc: { ja: "お手荷物は無料でお預かりします。", en: "Free luggage storage is available.", "zh-Hans": "行李寄存服务免费。", "zh-Hant": "行李寄存服務免費。", ko: "짐 보관은 무료로 이용하실 수 있습니다." } },
+            { text: { ja: "外出・観光をお楽しみください", en: "Enjoy your outing", "zh-Hans": "外出观光", "zh-Hant": "外出觀光", ko: "외출・관광 즐기기" },
+              desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "返却時間までにご来店", en: "Return before your scheduled time", "zh-Hans": "请在归还时间前回店", "zh-Hant": "請在歸還時間前回店", ko: "반납 시간까지 매장 방문" },
+              desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "return", type: "steps", icon: "↩️",
+          title: { ja: "返却について", en: "Return", "zh-Hans": "关于归还", "zh-Hant": "關於歸還", ko: "반납 안내" },
+          items: [
+            { text: { ja: "返却場所は受付カウンターです", en: "Return at the front counter", "zh-Hans": "归还地点为前台柜台", "zh-Hant": "歸還地點為前台櫃台", ko: "반납 장소는 접수 카운터입니다" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "たたむ必要はありません、そのままお持ちください", en: "No need to fold — just bring it as is", "zh-Hans": "无需折叠，直接归还即可", "zh-Hant": "無需摺疊，直接歸還即可", ko: "접을 필요 없이 그대로 가져오세요" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "延長したい場合はお電話ください", en: "Call us if you need more time", "zh-Hans": "如需延长请致电店铺", "zh-Hant": "如需延長請致電店鋪", ko: "연장이 필요하면 전화로 연락해 주세요" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "rules", type: "rules", icon: "⚠️",
+          title: { ja: "禁止事項・注意事項", en: "Rules & Cautions", "zh-Hans": "禁止事项・注意事项", "zh-Hant": "禁止事項・注意事項", ko: "금지사항・주의사항" },
+          items: [
+            { icon: "🚭", text: { ja: "着物での喫煙はご遠慮ください", en: "Smoking while wearing the kimono is not allowed", "zh-Hans": "穿着和服时请勿吸烟", "zh-Hant": "穿著和服時請勿吸菸", ko: "기모노 착용 중 흡연은 삼가주세요" } },
+            { icon: "🍜", text: { ja: "飲食の際は汚さないようご注意ください", en: "Please be careful not to stain the kimono while eating", "zh-Hans": "用餐时请注意不要弄脏和服", "zh-Hant": "用餐時請注意不要弄髒和服", ko: "식사 시 기모노가 더러워지지 않도록 주의해 주세요" } },
+            { icon: "🌧", text: { ja: "雨天時は貸出の傘をご利用ください", en: "Please use our rental umbrella on rainy days", "zh-Hans": "雨天请使用店内提供的雨伞", "zh-Hant": "雨天請使用店內提供的雨傘", ko: "우천 시에는 대여 우산을 이용해 주세요" } },
+            { icon: "🏃", text: { ja: "着崩れ防止のため走らないでください", en: "Please avoid running to prevent the kimono from loosening", "zh-Hans": "为防止和服松散，请勿奔跑", "zh-Hant": "為防止和服鬆散，請勿奔跑", ko: "옷매무새가 흐트러지지 않도록 뛰지 말아 주세요" } },
+            { icon: "💧", text: { ja: "汚損・破損時は規定の弁償が発生する場合があります", en: "A repair fee may apply in case of stains or damage", "zh-Hans": "如有污损・破损，可能产生规定的赔偿费用", "zh-Hant": "如有汙損・破損，可能產生規定的賠償費用", ko: "오염・손상 시 규정에 따른 배상금이 발생할 수 있습니다" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "荷物はどこに預けられますか？", en: "Where can I store my belongings?", "zh-Hans": "行李可以寄存在哪里？", "zh-Hant": "行李可以寄存在哪裡？", ko: "짐은 어디에 보관하나요?" },
+              a: { ja: "受付カウンターで無料でお預かりします。返却時にお返しします。", en: "We offer free storage at the front counter, returned when you bring the kimono back.", "zh-Hans": "可在前台免费寄存，归还和服时一并领取。", "zh-Hant": "可在前台免費寄存，歸還和服時一併領取。", ko: "접수 카운터에서 무료로 보관해 드리며, 반납 시 함께 돌려드립니다." } },
+            { q: { ja: "延長はできますか？", en: "Can I extend my rental?", "zh-Hans": "可以延长使用时间吗？", "zh-Hant": "可以延長使用時間嗎？", ko: "연장할 수 있나요?" },
+              a: { ja: "可能です。1時間ごとに追加料金がかかります。お電話でご連絡ください。", en: "Yes, an extension fee applies per additional hour. Please call us to arrange it.", "zh-Hans": "可以，每延长1小时将收取额外费用，请致电店铺。", "zh-Hant": "可以，每延長1小時將收取額外費用，請致電店鋪。", ko: "가능합니다. 1시간마다 추가 요금이 발생하며, 전화로 문의해 주세요." } },
+            { q: { ja: "サイズは選べますか？", en: "Can I choose my size?", "zh-Hans": "可以选择尺码吗？", "zh-Hant": "可以選擇尺碼嗎？", ko: "사이즈를 선택할 수 있나요?" },
+              a: { ja: "S〜LLまでご用意しています。受付時にスタッフがサイズをお選びします。", en: "Sizes from S to LL are available. Staff will help select the right size at check-in.", "zh-Hans": "备有S〜LL码，受理时工作人员会为您挑选合适尺码。", "zh-Hant": "備有S〜LL碼，受理時工作人員會為您挑選合適尺碼。", ko: "S〜LL 사이즈까지 준비되어 있으며, 접수 시 스태프가 사이즈를 골라드립니다." } },
+            { q: { ja: "男性用・子供用はありますか？", en: "Do you have kimono for men or children?", "zh-Hans": "有男士款和儿童款吗？", "zh-Hant": "有男士款和兒童款嗎？", ko: "남성용・아동용도 있나요?" },
+              a: { ja: "男性用・子供用もご用意しています。事前にご相談ください。", en: "Yes, both are available. Please ask us in advance.", "zh-Hans": "均有提供，请提前告知我们。", "zh-Hant": "均有提供，請提前告知我們。", ko: "모두 준비되어 있으니 사전에 문의해 주세요." } }
+          ]
+        }
+      ]
+    }
+  },
+
+  bike: {
+    label: "レンタサイクル",
+    icon: "🚲",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample レンタサイクル", en: "Sample Bike Rental", "zh-Hans": "Sample 自行车租赁", "zh-Hant": "Sample 自行車租借", ko: "Sample 자전거 대여" },
+      plans: {
+        categories: [{ id: "plan", name: { ja: "料金プラン", en: "Pricing Plans", "zh-Hans": "价格套餐", "zh-Hant": "價格方案", ko: "요금 플랜" } }],
+        items: [
+          { id: "b-001", published: true, category: "plan", icon: "🚲",
+            name: { ja: "1時間プラン", en: "1-Hour Plan", "zh-Hans": "1小时套餐", "zh-Hant": "1小時方案", ko: "1시간 플랜" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 500, image: null },
+          { id: "b-002", published: true, category: "plan", icon: "🚲",
+            name: { ja: "4時間プラン", en: "4-Hour Plan", "zh-Hans": "4小时套餐", "zh-Hant": "4小時方案", ko: "4시간 플랜" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1200, image: null },
+          { id: "b-003", published: true, category: "plan", icon: "🌇",
+            name: { ja: "1日プラン", en: "Full-Day Plan", "zh-Hans": "1日套餐", "zh-Hant": "1日方案", ko: "1일 플랜" },
+            description: { ja: "当日返却分のみ。18:00までにご返却ください。", en: "Same-day return only, by 18:00.", "zh-Hans": "仅限当日归还，请于18:00前归还。", "zh-Hant": "僅限當日歸還，請於18:00前歸還。", ko: "당일 반납 전용, 18:00까지 반납해 주세요." }, price: 1800, image: null },
+          { id: "b-004", published: true, category: "plan", icon: "🔋",
+            name: { ja: "電動アシスト追加", en: "E-assist Upgrade", "zh-Hans": "电动辅助升级", "zh-Hant": "電動輔助升級", ko: "전동 어시스트 추가" },
+            description: { ja: "各プランに追加できます", en: "Can be added to any plan", "zh-Hans": "可添加至任意套餐", "zh-Hant": "可添加至任意方案", ko: "모든 플랜에 추가 가능" }, price: 500, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "🚲",
+          title: { ja: "借り方", en: "How to Rent", "zh-Hans": "租借方法", "zh-Hant": "租借方法", ko: "대여 방법" },
+          items: [
+            { text: { ja: "受付で身分証をご提示ください", en: "Show your ID at the counter", "zh-Hans": "在柜台出示身份证件", "zh-Hant": "在櫃台出示身分證件", ko: "카운터에서 신분증을 제시해 주세요" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "プランを選び、自転車と鍵を受け取る", en: "Choose a plan and receive your bike and key", "zh-Hans": "选择套餐，领取自行车与钥匙", "zh-Hant": "選擇方案，領取自行車與鑰匙", ko: "플랜을 선택하고 자전거와 열쇠 수령" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "サドルの高さを調整してから出発", en: "Adjust the saddle height before you go", "zh-Hans": "调整好座椅高度后出发", "zh-Hant": "調整好坐墊高度後出發", ko: "안장 높이를 조정한 후 출발" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "指定の返却ポートへ返却", en: "Return to the designated port", "zh-Hans": "归还至指定停放点", "zh-Hant": "歸還至指定停放點", ko: "지정된 반납 포트로 반납" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "howto", type: "steps", icon: "🔧",
+          title: { ja: "自転車・鍵の使い方", en: "Using the Bike & Lock", "zh-Hans": "自行车・车锁使用方法", "zh-Hant": "自行車・車鎖使用方法", ko: "자전거・자물쇠 사용법" },
+          items: [
+            { text: { ja: "鍵はダイヤル式です", en: "The lock is a dial-type combination lock", "zh-Hans": "车锁为密码式", "zh-Hant": "車鎖為密碼式", ko: "자물쇠는 다이얼식입니다" },
+              desc: { ja: "受付でお伝えした番号を合わせて解錠してください。", en: "Set the number given at check-in to unlock.", "zh-Hans": "请对准受理时告知的数字解锁。", "zh-Hant": "請對準受理時告知的數字解鎖。", ko: "접수 시 안내받은 번호를 맞춰 잠금을 해제하세요." } },
+            { text: { ja: "変速ギアはハンドル右側で操作", en: "Shift gears using the lever on the right handlebar", "zh-Hans": "变速把手位于右侧车把", "zh-Hant": "變速把手位於右側車把", ko: "변속기는 오른쪽 핸들에서 조작합니다" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "ライトは夕方以降、自動点灯します", en: "The light turns on automatically after dusk", "zh-Hans": "傍晚后车灯将自动亮起", "zh-Hant": "傍晚後車燈將自動亮起", ko: "라이트는 저녁 이후 자동으로 켜집니다" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "rules", type: "rules", icon: "⚠️",
+          title: { ja: "交通ルール・禁止事項", en: "Traffic Rules & Prohibitions", "zh-Hans": "交通规则・禁止事项", "zh-Hant": "交通規則・禁止事項", ko: "교통 규칙・금지사항" },
+          items: [
+            { icon: "🪖", text: { ja: "ヘルメットの着用を推奨します", en: "Wearing a helmet is recommended", "zh-Hans": "建议佩戴头盔", "zh-Hant": "建議佩戴安全帽", ko: "헬멧 착용을 권장합니다" } },
+            { icon: "🚷", text: { ja: "指定区域外での歩道走行は禁止です", en: "Riding on sidewalks outside designated areas is prohibited", "zh-Hans": "禁止在指定区域以外的人行道上骑行", "zh-Hant": "禁止在指定區域以外的人行道上騎行", ko: "지정 구역 외 인도 주행은 금지입니다" } },
+            { icon: "🚫", text: { ja: "二人乗り・飲酒運転は禁止です", en: "No riding double or riding under the influence", "zh-Hans": "禁止双人骑行及酒后骑行", "zh-Hant": "禁止雙人騎行及酒後騎行", ko: "2인 승차・음주 운전은 금지입니다" } },
+            { icon: "☂️", text: { ja: "傘をさしながらの運転は禁止です", en: "Riding while holding an umbrella is prohibited", "zh-Hans": "禁止撑伞骑行", "zh-Hant": "禁止撐傘騎行", ko: "우산을 쓰고 주행하는 것은 금지입니다" } }
+          ]
+        },
+        { id: "trouble", type: "notice", icon: "🛠",
+          title: { ja: "事故・故障時の対応", en: "In Case of Accident or Breakdown", "zh-Hans": "事故・故障时的处理", "zh-Hant": "事故・故障時的處理", ko: "사고・고장 시 대응" },
+          items: [
+            { text: { ja: "まず安全な場所に移動してください", en: "First, move to a safe location", "zh-Hans": "请先移动到安全的地方", "zh-Hant": "請先移動到安全的地方", ko: "먼저 안전한 곳으로 이동해 주세요" } },
+            { text: { ja: "その後、店舗まで電話でご連絡ください", en: "Then call the shop for assistance", "zh-Hans": "然后请致电店铺联系", "zh-Hant": "然後請致電店鋪聯繫", ko: "이후 매장으로 전화 주세요" } },
+            { text: { ja: "保険が適用される場合があります", en: "Insurance coverage may apply", "zh-Hans": "部分情况可适用保险", "zh-Hant": "部分情況可適用保險", ko: "경우에 따라 보험이 적용될 수 있습니다" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "延長料金はいくらですか？", en: "What is the extension fee?", "zh-Hans": "延长费用是多少？", "zh-Hant": "延長費用是多少？", ko: "연장 요금은 얼마인가요?" },
+              a: { ja: "30分ごとに300円かかります。", en: "300 yen per additional 30 minutes.", "zh-Hans": "每30分钟收取300日元。", "zh-Hant": "每30分鐘收取300日圓。", ko: "30분마다 300엔이 부과됩니다." } },
+            { q: { ja: "借りた店舗と違うポートに返却できますか？", en: "Can I return the bike at a different port?", "zh-Hans": "可以归还至与借用不同的停放点吗？", "zh-Hant": "可以歸還至與借用不同的停放點嗎？", ko: "빌린 곳과 다른 반납 포트에 반납할 수 있나요?" },
+              a: { ja: "はい、市内の指定ポートであればどこでも返却可能です。", en: "Yes, you can return it at any designated port in the city.", "zh-Hans": "可以，可归还至市内任一指定停放点。", "zh-Hant": "可以，可歸還至市內任一指定停放點。", ko: "네, 시내 지정 포트라면 어디든 반납 가능합니다." } },
+            { q: { ja: "子供も利用できますか？", en: "Can children use the bikes?", "zh-Hans": "儿童也可以使用吗？", "zh-Hant": "兒童也可以使用嗎？", ko: "어린이도 이용할 수 있나요?" },
+              a: { ja: "身長140cm以上のお子様よりご利用いただけます。", en: "Children over 140cm in height may use the bikes.", "zh-Hans": "身高140cm以上的儿童可以使用。", "zh-Hant": "身高140cm以上的兒童可以使用。", ko: "신장 140cm 이상의 어린이부터 이용 가능합니다." } }
+          ]
+        }
+      ]
+    }
+  },
+
+  animalcafe: {
+    label: "動物カフェ",
+    icon: "🐾",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample 動物カフェ", en: "Sample Animal Café", "zh-Hans": "Sample 动物咖啡厅", "zh-Hant": "Sample 動物咖啡廳", ko: "Sample 동물 카페" },
+      plans: {
+        categories: [{ id: "plan", name: { ja: "料金プラン", en: "Pricing Plans", "zh-Hans": "价格套餐", "zh-Hant": "價格方案", ko: "요금 플랜" } }],
+        items: [
+          { id: "a-001", published: true, category: "plan", icon: "🐾",
+            name: { ja: "60分ステイ(ドリンク付)", en: "60-Min Stay (Drink Included)", "zh-Hans": "60分钟畅玩(含饮品)", "zh-Hant": "60分鐘暢玩(含飲品)", ko: "60분 스테이(음료 포함)" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1200, image: null },
+          { id: "a-002", published: true, category: "plan", icon: "🐾",
+            name: { ja: "90分ステイ(ドリンク付)", en: "90-Min Stay (Drink Included)", "zh-Hans": "90分钟畅玩(含饮品)", "zh-Hant": "90分鐘暢玩(含飲品)", ko: "90분 스테이(음료 포함)" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1600, image: null },
+          { id: "a-003", published: true, category: "plan", icon: "⏱",
+            name: { ja: "延長(10分ごと)", en: "Extension (per 10 min)", "zh-Hans": "延长(每10分钟)", "zh-Hant": "延長(每10分鐘)", ko: "연장(10분당)" },
+            description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 200, image: null },
+          { id: "a-004", published: true, category: "plan", icon: "📷",
+            name: { ja: "撮影プラン追加", en: "Photo Session Add-on", "zh-Hans": "拍照套餐追加", "zh-Hant": "拍照方案追加", ko: "촬영 플랜 추가" },
+            description: { ja: "スタッフによる撮影サポート付き", en: "Includes photo assistance from staff", "zh-Hans": "含工作人员拍照协助", "zh-Hant": "含工作人員拍照協助", ko: "스태프의 촬영 지원 포함" }, price: 500, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "🐾",
+          title: { ja: "ご利用の流れ", en: "How It Works", "zh-Hans": "使用流程", "zh-Hant": "使用流程", ko: "이용 흐름" },
+          items: [
+            { text: { ja: "受付・注意事項の確認", en: "Check-in & review the rules", "zh-Hans": "受理・确认注意事项", "zh-Hant": "受理・確認注意事項", ko: "접수・주의사항 확인" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "手指の消毒", en: "Sanitize your hands", "zh-Hans": "手部消毒", "zh-Hant": "手部消毒", ko: "손 소독" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "入店・動物と触れ合う", en: "Enter and interact with the animals", "zh-Hans": "入店・与动物互动", "zh-Hant": "入店・與動物互動", ko: "입장・동물과 교감하기" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "終了時間になったら退店", en: "Leave when your time is up", "zh-Hans": "时间结束后退店", "zh-Hant": "時間結束後退店", ko: "시간 종료 후 퇴장" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "rules", type: "rules", icon: "⚠️",
+          title: { ja: "禁止事項・安全上の注意", en: "Rules & Safety Notes", "zh-Hans": "禁止事项・安全注意事项", "zh-Hant": "禁止事項・安全注意事項", ko: "금지사항・안전 주의사항" },
+          items: [
+            { icon: "🔊", text: { ja: "大きな音を立てないでください", en: "Please avoid making loud noises", "zh-Hans": "请勿发出较大声响", "zh-Hant": "請勿發出較大聲響", ko: "큰 소리를 내지 말아 주세요" } },
+            { icon: "🤲", text: { ja: "無理に抱っこ・追いかけないでください", en: "Do not force animals to be held or chase them", "zh-Hans": "请勿强行抱起或追赶动物", "zh-Hant": "請勿強行抱起或追趕動物", ko: "억지로 안거나 쫓아다니지 말아 주세요" } },
+            { icon: "📵", text: { ja: "フラッシュ撮影は禁止です", en: "Flash photography is not allowed", "zh-Hans": "禁止使用闪光灯拍照", "zh-Hant": "禁止使用閃光燈拍照", ko: "플래시 촬영은 금지입니다" } },
+            { icon: "🍖", text: { ja: "餌やりは店内の専用フードのみ可能です", en: "Only feed animals with food purchased in the café", "zh-Hans": "喂食请仅使用店内指定食物", "zh-Hant": "餵食請僅使用店內指定食物", ko: "먹이 주기는 매장 내 전용 사료만 가능합니다" } },
+            { icon: "🐾", text: { ja: "体調の悪そうな動物には無理に触れないでください", en: "Please do not touch animals that appear unwell", "zh-Hans": "请勿强行触摸状态不佳的动物", "zh-Hant": "請勿強行觸摸狀態不佳的動物", ko: "컨디션이 안 좋아 보이는 동물은 무리하게 만지지 말아 주세요" } }
+          ]
+        },
+        { id: "child", type: "notice", icon: "🧒",
+          title: { ja: "お子様のご利用について", en: "For Children", "zh-Hans": "关于儿童使用", "zh-Hant": "關於兒童使用", ko: "어린이 이용 안내" },
+          items: [
+            { text: { ja: "小学生以下は保護者同伴が必要です", en: "Elementary school age and under must be accompanied by a guardian", "zh-Hans": "小学生以下需家长陪同", "zh-Hant": "國小以下需家長陪同", ko: "초등학생 이하는 보호자 동반이 필요합니다" } },
+            { text: { ja: "動物を驚かせないよう見守りをお願いします", en: "Please supervise children so they don't startle the animals", "zh-Hans": "请留意避免儿童惊吓到动物", "zh-Hant": "請留意避免兒童驚嚇到動物", ko: "동물이 놀라지 않도록 지켜봐 주세요" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "アレルギーがあっても入店できますか？", en: "Can I enter if I have allergies?", "zh-Hans": "有过敏症状也可以入店吗？", "zh-Hant": "有過敏症狀也可以入店嗎？", ko: "알레르기가 있어도 입장할 수 있나요?" },
+              a: { ja: "入店は可能ですが、心配な方は受付にご相談ください。", en: "Yes, but please consult our staff at check-in if you have concerns.", "zh-Hans": "可以入店，如有担心请在受理时咨询工作人员。", "zh-Hant": "可以入店，如有擔心請在受理時諮詢工作人員。", ko: "입장은 가능하지만, 걱정되시면 접수 시 스태프에게 문의해 주세요." } },
+            { q: { ja: "すべての動物を抱っこできますか？", en: "Can I hold all the animals?", "zh-Hans": "所有动物都可以抱吗？", "zh-Hant": "所有動物都可以抱嗎？", ko: "모든 동물을 안을 수 있나요?" },
+              a: { ja: "動物によって抱っこ可否が異なります。スタッフの案内に従ってください。", en: "It depends on the animal — please follow staff instructions.", "zh-Hans": "视动物种类而定，请听从工作人员指示。", "zh-Hant": "視動物種類而定，請聽從工作人員指示。", ko: "동물에 따라 다르므로 스태프의 안내를 따라 주세요." } },
+            { q: { ja: "写真は撮れますか？", en: "Can I take photos?", "zh-Hans": "可以拍照吗？", "zh-Hant": "可以拍照嗎？", ko: "사진을 찍을 수 있나요?" },
+              a: { ja: "フラッシュ無しであれば自由に撮影いただけます。", en: "Yes, as long as you don't use flash.", "zh-Hans": "只要不使用闪光灯即可自由拍摄。", "zh-Hant": "只要不使用閃光燈即可自由拍攝。", ko: "플래시를 사용하지 않으면 자유롭게 촬영 가능합니다." } }
+          ]
+        }
+      ]
+    }
+  },
+
   cafe: {
-    label: "カフェ",
+    label: "カフェ", icon: "☕",
     products: {
       store_name: { ja: "Sample Café", en: "Sample Café", "zh-Hans": "Sample Café", "zh-Hant": "Sample Café", ko: "Sample Café" },
       categories: [
@@ -326,7 +960,7 @@ var SAMPLE_SETS = {
   },
 
   izakaya: {
-    label: "居酒屋",
+    label: "居酒屋", icon: "🏮",
     products: {
       store_name: { ja: "Sample 居酒屋", en: "Sample Izakaya", "zh-Hans": "Sample 居酒屋", "zh-Hant": "Sample 居酒屋", ko: "Sample 이자카야" },
       categories: [
@@ -337,30 +971,25 @@ var SAMPLE_SETS = {
       items: [
         { id: "item-101", published: true, category: "otoshi", icon: "🫛",
           name: { ja: "枝豆", en: "Edamame", "zh-Hans": "毛豆", "zh-Hant": "毛豆", ko: "에다마메" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 400, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 400, image: null },
         { id: "item-102", published: true, category: "otoshi", icon: "🍳",
           name: { ja: "出汁巻き玉子", en: "Dashi Rolled Omelette", "zh-Hans": "高汤煎蛋卷", "zh-Hant": "高湯煎蛋捲", ko: "다시마키 계란말이" },
-          description: { ja: "だしの効いたふわふわ玉子焼き", en: "Fluffy Japanese omelette with dashi broth", "zh-Hans": "松软的日式高汤煎蛋", "zh-Hant": "鬆軟的日式高湯煎蛋", ko: "육수가 스며든 폭신한 계란말이" },
-          price: 480, image: null },
+          description: { ja: "だしの効いたふわふわ玉子焼き", en: "Fluffy Japanese omelette with dashi broth", "zh-Hans": "松软的日式高汤煎蛋", "zh-Hant": "鬆軟的日式高湯煎蛋", ko: "육수가 스며든 폭신한 계란말이" }, price: 480, image: null },
         { id: "item-103", published: true, category: "yakimono", icon: "🍗",
           name: { ja: "鶏の唐揚げ", en: "Fried Chicken (Karaage)", "zh-Hans": "日式炸鸡块", "zh-Hant": "日式炸雞塊", ko: "가라아게" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 580, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 580, image: null },
         { id: "item-104", published: true, category: "yakimono", icon: "🍢",
           name: { ja: "焼き鳥盛り合わせ(5本)", en: "Yakitori Assortment (5 skewers)", "zh-Hans": "烤鸡肉串拼盘(5串)", "zh-Hant": "烤雞肉串拼盤(5串)", ko: "야키토리 모둠(5꼬치)" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 780, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 780, image: null },
         { id: "item-105", published: true, category: "drink", icon: "🍺",
           name: { ja: "生ビール", en: "Draft Beer", "zh-Hans": "生啤酒", "zh-Hant": "生啤酒", ko: "생맥주" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 550, image: null }
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 550, image: null }
       ]
     }
   },
 
   restaurant: {
-    label: "レストラン",
+    label: "レストラン", icon: "🍽",
     products: {
       store_name: { ja: "Sample Restaurant", en: "Sample Restaurant", "zh-Hans": "Sample Restaurant", "zh-Hant": "Sample Restaurant", ko: "Sample Restaurant" },
       categories: [
@@ -371,30 +1000,25 @@ var SAMPLE_SETS = {
       items: [
         { id: "item-201", published: true, category: "appetizer", icon: "🍅",
           name: { ja: "カプレーゼ", en: "Caprese Salad", "zh-Hans": "卡布里沙拉", "zh-Hant": "卡布里沙拉", ko: "카프레제 샐러드" },
-          description: { ja: "トマトとモッツァレラのシンプルサラダ", en: "Tomato and mozzarella salad", "zh-Hans": "番茄配马苏里拉的简单沙拉", "zh-Hant": "番茄配莫札瑞拉的簡單沙拉", ko: "토마토와 모짜렐라 샐러드" },
-          price: 780, image: null },
+          description: { ja: "トマトとモッツァレラのシンプルサラダ", en: "Tomato and mozzarella salad", "zh-Hans": "番茄配马苏里拉的简单沙拉", "zh-Hant": "番茄配莫札瑞拉的簡單沙拉", ko: "토마토와 모짜렐라 샐러드" }, price: 780, image: null },
         { id: "item-202", published: true, category: "main", icon: "🍝",
           name: { ja: "本日のパスタ", en: "Today's Pasta", "zh-Hans": "今日意面", "zh-Hant": "今日義大利麵", ko: "오늘의 파스타" },
-          description: { ja: "季節の食材を使ったシェフのおすすめ", en: "Chef's recommendation with seasonal ingredients", "zh-Hans": "使用当季食材的主厨推荐", "zh-Hant": "使用當季食材的主廚推薦", ko: "제철 재료를 사용한 셰프 추천" },
-          price: 1280, image: null },
+          description: { ja: "季節の食材を使ったシェフのおすすめ", en: "Chef's recommendation with seasonal ingredients", "zh-Hans": "使用当季食材的主厨推荐", "zh-Hant": "使用當季食材的主廚推薦", ko: "제철 재료를 사용한 셰프 추천" }, price: 1280, image: null },
         { id: "item-203", published: true, category: "main", icon: "🍗",
           name: { ja: "骨付き鶏もも肉のロースト", en: "Roasted Chicken Leg", "zh-Hans": "烤带骨鸡腿肉", "zh-Hant": "烤帶骨雞腿肉", ko: "닭다리살 로스트" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 1680, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1680, image: null },
         { id: "item-204", published: true, category: "dessert", icon: "🍮",
           name: { ja: "ティラミス", en: "Tiramisu", "zh-Hans": "提拉米苏", "zh-Hant": "提拉米蘇", ko: "티라미수" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 650, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 650, image: null },
         { id: "item-205", published: true, category: "dessert", icon: "🍷",
           name: { ja: "グラスワイン(赤/白)", en: "Glass of Wine (Red/White)", "zh-Hans": "杯装红酒/白酒", "zh-Hant": "杯裝紅酒/白酒", ko: "글라스 와인(레드/화이트)" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 700, image: null }
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 700, image: null }
       ]
     }
   },
 
   ramen: {
-    label: "ラーメン店",
+    label: "ラーメン店", icon: "🍜",
     products: {
       store_name: { ja: "Sample らーめん", en: "Sample Ramen", "zh-Hans": "Sample 拉面", "zh-Hant": "Sample 拉麵", ko: "Sample 라멘" },
       categories: [
@@ -404,30 +1028,25 @@ var SAMPLE_SETS = {
       items: [
         { id: "item-301", published: true, category: "ramen", icon: "🍜",
           name: { ja: "醤油ラーメン", en: "Shoyu Ramen", "zh-Hans": "酱油拉面", "zh-Hant": "醬油拉麵", ko: "쇼유 라멘" },
-          description: { ja: "鶏ガラベースのあっさり醤油スープ", en: "Light soy-sauce soup with chicken broth base", "zh-Hans": "鸡骨清爽酱油汤底", "zh-Hant": "雞骨清爽醬油湯底", ko: "닭육수 베이스의 깔끔한 간장 라멘" },
-          price: 850, image: null },
+          description: { ja: "鶏ガラベースのあっさり醤油スープ", en: "Light soy-sauce soup with chicken broth base", "zh-Hans": "鸡骨清爽酱油汤底", "zh-Hant": "雞骨清爽醬油湯底", ko: "닭육수 베이스의 깔끔한 간장 라멘" }, price: 850, image: null },
         { id: "item-302", published: true, category: "ramen", icon: "🍜",
           name: { ja: "味噌ラーメン", en: "Miso Ramen", "zh-Hans": "味噌拉面", "zh-Hant": "味噌拉麵", ko: "미소 라멘" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 900, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 900, image: null },
         { id: "item-303", published: true, category: "side", icon: "🍚",
           name: { ja: "半チャーハン", en: "Half Fried Rice", "zh-Hans": "半份炒饭", "zh-Hant": "半份炒飯", ko: "미니 볶음밥" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 400, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 400, image: null },
         { id: "item-304", published: true, category: "side", icon: "🥟",
           name: { ja: "餃子(5個)", en: "Gyoza (5pcs)", "zh-Hans": "煎饺(5个)", "zh-Hant": "煎餃(5個)", ko: "교자(5개)" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 350, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 350, image: null },
         { id: "item-305", published: true, category: "side", icon: "🍥",
           name: { ja: "替え玉", en: "Extra Noodles", "zh-Hans": "加面", "zh-Hant": "加麵", ko: "면 사리 추가" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 150, image: null }
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 150, image: null }
       ]
     }
   },
 
   yakiniku: {
-    label: "焼肉店",
+    label: "焼肉店", icon: "🥩",
     products: {
       store_name: { ja: "Sample 焼肉", en: "Sample Yakiniku", "zh-Hans": "Sample 烤肉", "zh-Hant": "Sample 烤肉", ko: "Sample 야키니쿠" },
       categories: [
@@ -438,36 +1057,28 @@ var SAMPLE_SETS = {
       items: [
         { id: "item-401", published: true, category: "meat", icon: "🥩",
           name: { ja: "特選カルビ", en: "Premium Short Rib", "zh-Hans": "特选牛五花", "zh-Hant": "特選牛五花", ko: "특선 갈비" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 1980, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1980, image: null },
         { id: "item-402", published: true, category: "meat", icon: "🥩",
           name: { ja: "上ロース", en: "Prime Loin", "zh-Hans": "上等里脊肉", "zh-Hant": "特選里肌肉", ko: "특상 로스" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 1780, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1780, image: null },
         { id: "item-403", published: true, category: "side", icon: "🍲",
           name: { ja: "石焼ビビンバ", en: "Stone-pot Bibimbap", "zh-Hans": "石锅拌饭", "zh-Hant": "石鍋拌飯", ko: "돌솥 비빔밥" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 980, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 980, image: null },
         { id: "item-404", published: true, category: "side", icon: "🥬",
           name: { ja: "サンチュ・野菜盛り合わせ", en: "Lettuce & Vegetable Platter", "zh-Hans": "生菜蔬菜拼盘", "zh-Hant": "生菜蔬菜拼盤", ko: "쌈채소 모둠" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 480, image: null },
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 480, image: null },
         { id: "item-405", published: true, category: "drink", icon: "🍺",
           name: { ja: "生ビール", en: "Draft Beer", "zh-Hans": "生啤酒", "zh-Hant": "生啤酒", ko: "생맥주" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 550, image: null }
+          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 550, image: null }
       ]
     }
   }
 };
 
-var TYPE_ORDER = ["cafe", "izakaya", "restaurant", "ramen", "yakiniku"];
-var DEFAULT_TYPE = "cafe";
+var PRIMARY_TYPES = ["kimono", "bike", "animalcafe"];
+var OTHER_TYPES = ["cafe", "izakaya", "restaurant", "ramen", "yakiniku"];
+var DEFAULT_TYPE = "kimono";
 var currentType = DEFAULT_TYPE;
-
-// 営業デモは外部通信に一切依存しない構成にする(外部サービスが落ちていてもデモ体験自体は必ず成立させるため)。
-// 優先順位: 1. localStorage(demo-admin.htmlでこの端末上で編集済みならその内容) → 2. 内蔵DEFAULT_PRODUCTS。
-// どちらも同期処理のみで完結するため、ネットワーク起因の「読み込み中のまま止まる」状態は原理的に発生しない。
 
 function readLocalDemoData() {
   try {
@@ -483,26 +1094,40 @@ function readLocalDemoData() {
 function buildTypeSwitch() {
   var wrap = document.getElementById("typeSwitch");
   wrap.innerHTML = "";
-  TYPE_ORDER.forEach(function (typeKey) {
-    var btn = document.createElement("button");
-    btn.className = "type-pill";
-    btn.type = "button";
-    btn.dataset.type = typeKey;
-    btn.textContent = SAMPLE_SETS[typeKey].label;
-    btn.setAttribute("aria-pressed", typeKey === currentType ? "true" : "false");
-    btn.addEventListener("click", function () { selectType(typeKey); });
-    wrap.appendChild(btn);
+  PRIMARY_TYPES.forEach(function (typeKey) {
+    wrap.appendChild(makeTypePill(typeKey));
   });
+
+  var otherWrap = document.getElementById("otherTypeSwitch");
+  otherWrap.innerHTML = "";
+  OTHER_TYPES.forEach(function (typeKey) {
+    otherWrap.appendChild(makeTypePill(typeKey));
+  });
+}
+
+function makeTypePill(typeKey) {
+  var btn = document.createElement("button");
+  btn.className = "type-pill";
+  btn.type = "button";
+  btn.dataset.type = typeKey;
+  btn.innerHTML = '<span>' + (SAMPLE_SETS[typeKey].icon || "") + '</span>';
+  btn.appendChild(document.createTextNode(SAMPLE_SETS[typeKey].label));
+  btn.setAttribute("aria-pressed", typeKey === currentType ? "true" : "false");
+  btn.addEventListener("click", function () { selectType(typeKey); });
+  return btn;
 }
 
 function updateTypeSwitchState() {
   document.querySelectorAll(".type-pill").forEach(function (b) {
     b.setAttribute("aria-pressed", b.dataset.type === currentType ? "true" : "false");
   });
+  if (OTHER_TYPES.indexOf(currentType) !== -1) {
+    document.getElementById("otherTypesWrap").hidden = false;
+    document.getElementById("otherTypesToggle").textContent = "その他の活用例(飲食)を隠す ▴";
+  }
 }
 
 // カフェのみdemo-admin.htmlでの編集内容(localStorage)を反映する。
-// 他の業種サンプルは常に内蔵データを表示する(編集機能は今後の対応)。
 function dataForType(typeKey) {
   if (typeKey === "cafe") {
     return readLocalDemoData() || SAMPLE_SETS.cafe.products;
@@ -513,6 +1138,7 @@ function dataForType(typeKey) {
 function selectType(typeKey) {
   if (!SAMPLE_SETS[typeKey]) typeKey = DEFAULT_TYPE;
   currentType = typeKey;
+  currentContentTab = "plans";
   updateTypeSwitchState();
 
   try {
@@ -541,6 +1167,7 @@ function loadProducts() {
     buildTypeSwitch();
     PRODUCTS = dataForType(currentType);
     buildLangTabs();
+    updateTypeSwitchState();
     render("ja");
     showMenu();
   } catch (err) {
@@ -550,5 +1177,12 @@ function loadProducts() {
 }
 
 document.getElementById("retryBtn").addEventListener("click", loadProducts);
+document.getElementById("otherTypesToggle").addEventListener("click", function () {
+  var wrap = document.getElementById("otherTypesWrap");
+  var willShow = wrap.hidden;
+  wrap.hidden = !willShow;
+  this.textContent = willShow ? "その他の活用例(飲食)を隠す ▴" : "その他の活用例(飲食)を見る ▾";
+});
+
 loadProducts();
 </script>
