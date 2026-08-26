@@ -122,6 +122,26 @@ h1{font-size:1.7rem;margin:0 0 4px;}
 .setup-help a{color:var(--text);}
 
 .hidden{display:none !important;}
+
+/* ===== 説明ページ(sections)機能 ===== */
+.top-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.top-tab{
+  flex:1;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--surface);
+  color:var(--text-muted);font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.top-tab[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent);}
+.section-type-badge{
+  display:inline-block;font-size:0.78rem;font-weight:700;padding:3px 10px;border-radius:999px;
+  background:var(--surface);color:var(--text-muted);margin-top:4px;
+}
+.field select#sectionTypeInput{margin-bottom:4px;}
+.subitem-card{
+  border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;
+}
+.subitem-card-title{font-weight:600;font-size:1.02rem;}
+.subitem-card-desc{color:var(--text-muted);font-size:0.9rem;margin-top:3px;}
+.subitem-card-actions{display:flex;gap:8px;margin-top:10px;}
+.hint{font-size:0.82rem;color:var(--text-muted);margin:-8px 0 16px;line-height:1.6;}
 </style>
 
 <div class="page">
@@ -167,6 +187,11 @@ h1{font-size:1.7rem;margin:0 0 4px;}
       </div>
     </div>
 
+    <div class="top-tabs">
+      <button type="button" class="top-tab" id="topTabItems" aria-pressed="true">料金・プラン</button>
+      <button type="button" class="top-tab" id="topTabSections" aria-pressed="false">説明ページ</button>
+    </div>
+
     <div id="conflictBanner" class="banner warn hidden">
       他の端末で変更された可能性があります。最新の情報を読み込み直してください。
       <div style="margin-top:8px;"><button type="button" class="btn btn-secondary btn-sm" id="reloadBtn">最新情報を読み込む</button></div>
@@ -174,6 +199,130 @@ h1{font-size:1.7rem;margin:0 0 4px;}
 
     <div id="listBody"></div>
     <div id="listEmpty" class="empty hidden">商品がまだ登録されていません。<br>右下の「＋ 商品を追加」から始めましょう。</div>
+  </div>
+
+  <!-- ===== 説明ページ一覧画面(steps/rules/notice/faq) ===== -->
+  <div id="screenSectionList" class="hidden">
+    <div class="topbar">
+      <div>
+        <h1>メニュー管理</h1>
+        <p class="subtitle" id="sectionListSubtitle">&nbsp;</p>
+      </div>
+      <div class="topbar-left">
+        <a class="icon-btn" href="menu.html">← トップページ</a>
+        <button type="button" class="icon-btn" id="openSettingsBtn2">設定</button>
+      </div>
+    </div>
+
+    <div class="top-tabs">
+      <button type="button" class="top-tab" id="topTabItems2" aria-pressed="false">料金・プラン</button>
+      <button type="button" class="top-tab" id="topTabSections2" aria-pressed="true">説明ページ</button>
+    </div>
+
+    <p class="hint">利用の流れ・返却方法・ルール・注意事項・よくある質問など、お客様への説明をここでまとめて管理できます。</p>
+
+    <div id="sectionListBody"></div>
+    <div id="sectionListEmpty" class="empty hidden">説明ページがまだ登録されていません。<br>右下の「＋ 説明ページを追加」から始めましょう。</div>
+  </div>
+
+  <!-- ===== 説明ページ編集画面 ===== -->
+  <div id="screenSectionEdit" class="hidden">
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="sectionBackBtn">← 一覧に戻る</button>
+    </div>
+    <h1 id="sectionEditTitle">説明ページを追加</h1>
+
+    <div id="sectionEditError" class="banner error hidden"></div>
+
+    <div class="field">
+      <label for="sectionTypeInput">種類</label>
+      <select id="sectionTypeInput">
+        <option value="steps">使い方・利用の流れ・体験手順</option>
+        <option value="rules">ルール・禁止事項・注意事項</option>
+        <option value="notice">その他の重要な案内</option>
+        <option value="faq">よくある質問(FAQ)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="sectionIconInput">アイコン(絵文字、任意)</label>
+      <input type="text" id="sectionIconInput" maxlength="4" placeholder="例: 👘 🚲 ⚠️" />
+    </div>
+
+    <div class="lang-group">
+      <div class="lang-group-title">見出し</div>
+      <div class="lang-row"><span class="lang-badge">JA</span><input type="text" id="sec_title_ja" placeholder="例: 利用の流れ" /></div>
+      <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="sec_title_en" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="sec_title_zh" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="sec_title_ko" placeholder="未入力なら日本語から自動翻訳" /></div>
+      <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+    </div>
+
+    <div class="field" style="margin-top:24px;">
+      <label id="subitemsLabel">項目</label>
+      <div id="subitemsList"></div>
+      <button type="button" class="btn btn-secondary btn-block" id="addSubitemBtn" style="margin-top:8px;">＋ 項目を追加</button>
+    </div>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
+      <button type="button" class="btn btn-primary btn-block" id="saveSectionBtn">保存</button>
+      <button type="button" class="btn btn-danger btn-block hidden" id="deleteSectionBtn">この説明ページを削除</button>
+    </div>
+  </div>
+
+  <!-- ===== 項目編集画面(steps/rules/noticeは見出し+説明、faqは質問+回答) ===== -->
+  <div id="screenSubitemEdit" class="hidden">
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="subitemBackBtn">← 説明ページに戻る</button>
+    </div>
+    <h1 id="subitemEditTitle">項目を追加</h1>
+
+    <div id="subitemEditError" class="banner error hidden"></div>
+
+    <!-- steps/rules/notice用 -->
+    <div id="subitemFieldsStandard">
+      <div class="lang-group">
+        <div class="lang-group-title" id="subitemTitleLabel">見出し</div>
+        <div class="lang-row"><span class="lang-badge">JA</span><input type="text" id="sub_title_ja" /></div>
+        <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="sub_title_en" placeholder="未入力なら日本語から自動翻訳" /></div>
+        <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="sub_title_zh" placeholder="未入力なら日本語から自動翻訳" /></div>
+        <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="sub_title_ko" placeholder="未入力なら日本語から自動翻訳" /></div>
+        <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+      </div>
+      <div class="lang-group">
+        <div class="lang-group-title" id="subitemDescLabel">補足説明(任意)</div>
+        <div class="lang-row"><span class="lang-badge">JA</span><textarea id="sub_desc_ja"></textarea></div>
+        <div class="lang-row"><span class="lang-badge">EN</span><textarea id="sub_desc_en" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+        <div class="lang-row"><span class="lang-badge">中文</span><textarea id="sub_desc_zh" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+        <div class="lang-row"><span class="lang-badge">한국</span><textarea id="sub_desc_ko" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+        <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+      </div>
+    </div>
+
+    <!-- faq用 -->
+    <div id="subitemFieldsFaq" class="hidden">
+      <div class="lang-group">
+        <div class="lang-group-title">質問</div>
+        <div class="lang-row"><span class="lang-badge">JA</span><input type="text" id="sub_q_ja" /></div>
+        <div class="lang-row"><span class="lang-badge">EN</span><input type="text" id="sub_q_en" placeholder="未入力なら日本語から自動翻訳" /></div>
+        <div class="lang-row"><span class="lang-badge">中文</span><input type="text" id="sub_q_zh" placeholder="未入力なら日本語から自動翻訳" /></div>
+        <div class="lang-row"><span class="lang-badge">한국</span><input type="text" id="sub_q_ko" placeholder="未入力なら日本語から自動翻訳" /></div>
+        <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+      </div>
+      <div class="lang-group">
+        <div class="lang-group-title">回答</div>
+        <div class="lang-row"><span class="lang-badge">JA</span><textarea id="sub_a_ja"></textarea></div>
+        <div class="lang-row"><span class="lang-badge">EN</span><textarea id="sub_a_en" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+        <div class="lang-row"><span class="lang-badge">中文</span><textarea id="sub_a_zh" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+        <div class="lang-row"><span class="lang-badge">한국</span><textarea id="sub_a_ko" placeholder="未入力なら日本語から自動翻訳"></textarea></div>
+        <div class="auto-translate-note">空欄のまま保存すると、日本語から自動で翻訳して埋めます(未確認の自動翻訳です)。</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
+      <button type="button" class="btn btn-primary btn-block" id="saveSubitemBtn">保存</button>
+      <button type="button" class="btn btn-danger btn-block hidden" id="deleteSubitemBtn">この項目を削除</button>
+    </div>
   </div>
 
   <!-- ===== 商品編集画面 ===== -->
@@ -281,6 +430,10 @@ var state = {
   pendingImageChanged: false,
   pendingImagePath: null,
   saving: false,
+  deleteKind: "item", // "item" | "section" (削除確認画面の共通化用)
+  sectionEditingId: null,   // null = 新規追加の説明ページ
+  sectionDraft: null,       // 説明ページ編集中の作業用コピー(保存ボタンを押すまでGitHubへは反映しない)
+  subitemEditingIndex: null, // null = 新規追加の項目
 };
 
 /* ---------- ユーティリティ ---------- */
@@ -542,16 +695,47 @@ function renderSetupScreen(prefillError) {
   if (prefillError) toast(prefillError, true);
 }
 
+var SCREEN_NAMES = ["setup", "list", "edit", "deleteConfirm", "sectionList", "sectionEdit", "subitemEdit"];
+
 function showScreen(name) {
-  ["setup", "list", "edit", "deleteConfirm"].forEach(function (s) {
+  SCREEN_NAMES.forEach(function (s) {
     var el = document.getElementById("screen" + s.charAt(0).toUpperCase() + s.slice(1));
     if (el) el.classList.add("hidden");
   });
   var target = document.getElementById("screen" + name.charAt(0).toUpperCase() + name.slice(1));
   if (target) target.classList.remove("hidden");
-  $("addFab").classList.toggle("hidden", name !== "list");
+
+  var fab = $("addFab");
+  if (name === "list") {
+    fab.classList.remove("hidden");
+    fab.textContent = "＋ 商品を追加";
+    fab.onclick = function () { openEdit(null); };
+  } else if (name === "sectionList") {
+    fab.classList.remove("hidden");
+    fab.textContent = "＋ 説明ページを追加";
+    fab.onclick = function () { openSectionEdit(null); };
+  } else {
+    fab.classList.add("hidden");
+  }
+
+  if (name === "list" || name === "sectionList") {
+    ["topTabItems", "topTabItems2"].forEach(function (id) { var b = document.getElementById(id); if (b) b.setAttribute("aria-pressed", name === "list" ? "true" : "false"); });
+    ["topTabSections", "topTabSections2"].forEach(function (id) { var b = document.getElementById(id); if (b) b.setAttribute("aria-pressed", name === "sectionList" ? "true" : "false"); });
+  }
+
   window.scrollTo(0, 0); // 画面(スクリーン)切り替え時は必ず最上部から表示する
 }
+
+function goToItemsView() { showScreen("list"); }
+function goToSectionsView() { showScreen("sectionList"); renderSectionList(); }
+$("topTabItems").addEventListener("click", goToItemsView);
+$("topTabItems2").addEventListener("click", goToItemsView);
+$("topTabSections").addEventListener("click", goToSectionsView);
+$("topTabSections2").addEventListener("click", goToSectionsView);
+$("openSettingsBtn2").addEventListener("click", function () {
+  renderSetupScreen();
+  $("tokenInput").value = state.token || "";
+});
 
 $("saveTokenBtn").addEventListener("click", function () {
   var token = $("tokenInput").value.trim();
@@ -855,14 +1039,24 @@ function saveItem() {
     });
 }
 
-/* ---------- 削除 ---------- */
+/* ---------- 削除(商品/説明ページ共通の確認画面) ---------- */
 $("deleteItemBtn").addEventListener("click", function () {
+  state.deleteKind = "item";
   var item = (state.products.items || []).find(function (i) { return i.id === state.editingId; });
   $("deleteConfirmName").textContent = item ? (item.name.ja || item.id) : "";
   showScreen("deleteConfirm");
 });
-$("deleteBackBtn").addEventListener("click", function () { showScreen("edit"); });
-$("deleteCancelBtn").addEventListener("click", function () { showScreen("edit"); });
+$("deleteSectionBtn").addEventListener("click", function () {
+  state.deleteKind = "section";
+  $("deleteConfirmName").textContent = state.sectionDraft ? ((state.sectionDraft.title && state.sectionDraft.title.ja) || state.sectionDraft.id) : "";
+  showScreen("deleteConfirm");
+});
+$("deleteBackBtn").addEventListener("click", function () {
+  showScreen(state.deleteKind === "section" ? "sectionEdit" : "edit");
+});
+$("deleteCancelBtn").addEventListener("click", function () {
+  showScreen(state.deleteKind === "section" ? "sectionEdit" : "edit");
+});
 
 $("deleteConfirmBtn").addEventListener("click", function () {
   if (state.saving) return;
@@ -870,25 +1064,32 @@ $("deleteConfirmBtn").addEventListener("click", function () {
   $("deleteConfirmBtn").disabled = true;
   $("deleteConfirmBtn").textContent = "削除中…";
 
+  var isSection = state.deleteKind === "section";
+  var targetId = isSection ? state.sectionEditingId : state.editingId;
+
   ghGetFile("products.json")
     .then(function (file) {
       if (!file) throw new Error("products.jsonが見つかりませんでした。");
       var latest = JSON.parse(base64ToUtf8(file.content));
-      latest.items = (latest.items || []).filter(function (i) { return i.id !== state.editingId; });
+      if (isSection) {
+        latest.sections = (latest.sections || []).filter(function (s) { return s.id !== targetId; });
+      } else {
+        latest.items = (latest.items || []).filter(function (i) { return i.id !== targetId; });
+      }
       var newJson = JSON.stringify(latest, null, 2);
-      return ghPutFile("products.json", utf8ToBase64(newJson), "商品削除: " + state.editingId, file.sha)
+      return ghPutFile("products.json", utf8ToBase64(newJson), (isSection ? "説明ページ削除: " : "商品削除: ") + targetId, file.sha)
         .then(function () { return latest; });
     })
     .then(function (latest) {
       state.products = latest;
       toast("削除しました。");
-      showScreen("list");
-      renderList();
+      if (isSection) { showScreen("sectionList"); renderSectionList(); }
+      else { showScreen("list"); renderList(); }
     })
     .catch(function (err) {
       console.error(err);
       toast(err.message || "削除に失敗しました。", true);
-      showScreen("edit");
+      showScreen(isSection ? "sectionEdit" : "edit");
     })
     .finally(function () {
       state.saving = false;
@@ -897,8 +1098,327 @@ $("deleteConfirmBtn").addEventListener("click", function () {
     });
 });
 
+/* ==========================================================================
+   説明ページ(sections: steps/rules/notice/faq)機能
+   商品(items)のCRUDとは完全に独立したコードパスとして追加。
+   既存のitems関連コードは一切変更していない。
+   保存の型は既存saveItem()と同じ(直前にproducts.jsonを再取得→sha付きPUT)。
+   ========================================================================== */
+
+var SECTION_TYPE_LABEL = {
+  steps: "使い方・利用の流れ・体験手順",
+  rules: "ルール・禁止事項・注意事項",
+  notice: "その他の重要な案内",
+  faq: "よくある質問(FAQ)"
+};
+
+function renderSectionList() {
+  var body = $("sectionListBody");
+  body.innerHTML = "";
+  var sections = (state.products && state.products.sections) || [];
+  $("sectionListSubtitle").textContent = sections.length + "件の説明ページ";
+
+  if (sections.length === 0) {
+    show("sectionListEmpty");
+    return;
+  }
+  hide("sectionListEmpty");
+
+  sections.forEach(function (sec) {
+    var card = document.createElement("div");
+    card.className = "card";
+
+    var photo = document.createElement("div");
+    photo.className = "card-photo";
+    photo.textContent = sec.icon || "📋";
+
+    var main = document.createElement("div");
+    main.className = "card-main";
+    var name = document.createElement("div");
+    name.className = "card-name";
+    name.textContent = (sec.title && sec.title.ja) || "(見出し未設定)";
+    var meta = document.createElement("div");
+    meta.className = "card-price";
+    meta.textContent = SECTION_TYPE_LABEL[sec.type] || sec.type;
+    var count = document.createElement("div");
+    count.className = "card-status";
+    count.textContent = ((sec.items && sec.items.length) || 0) + "件の項目";
+    main.appendChild(name); main.appendChild(meta); main.appendChild(count);
+
+    var actions = document.createElement("div");
+    actions.className = "card-actions";
+    var editBtn = document.createElement("button");
+    editBtn.type = "button"; editBtn.className = "btn btn-secondary btn-sm";
+    editBtn.textContent = "編集";
+    editBtn.addEventListener("click", function () { openSectionEdit(sec.id); });
+    actions.appendChild(editBtn);
+
+    card.appendChild(photo); card.appendChild(main); card.appendChild(actions);
+    body.appendChild(card);
+  });
+}
+
+function cloneJson(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function blankLangObj() { return { ja: "", en: "", zh: "", ko: "" }; }
+
+function openSectionEdit(sectionId) {
+  state.sectionEditingId = sectionId || null;
+  hide("sectionEditError");
+
+  var existing = null;
+  if (sectionId) existing = (state.products.sections || []).find(function (s) { return s.id === sectionId; });
+
+  state.sectionDraft = existing ? cloneJson(existing) : { id: null, type: "steps", icon: "", title: blankLangObj(), items: [] };
+
+  $("sectionEditTitle").textContent = existing ? "説明ページを編集" : "説明ページを追加";
+  $("sectionTypeInput").value = state.sectionDraft.type || "steps";
+  $("sectionIconInput").value = state.sectionDraft.icon || "";
+  $("sec_title_ja").value = state.sectionDraft.title.ja || "";
+  $("sec_title_en").value = state.sectionDraft.title.en || "";
+  $("sec_title_zh").value = state.sectionDraft.title.zh || "";
+  $("sec_title_ko").value = state.sectionDraft.title.ko || "";
+
+  $("deleteSectionBtn").classList.toggle("hidden", !existing);
+  $("subitemsLabel").textContent = "項目";
+
+  buildSubitemsList();
+  showScreen("sectionEdit");
+}
+
+$("sectionBackBtn").addEventListener("click", function () { showScreen("sectionList"); renderSectionList(); });
+
+function subitemPreviewText(type, item) {
+  if (type === "faq") return (item.question && item.question.ja) || "(質問未設定)";
+  return (item.title && item.title.ja) || "(見出し未設定)";
+}
+
+function buildSubitemsList() {
+  var wrap = $("subitemsList");
+  wrap.innerHTML = "";
+  var type = $("sectionTypeInput").value;
+  var items = state.sectionDraft.items || [];
+
+  if (items.length === 0) {
+    var empty = document.createElement("div");
+    empty.className = "subitem-card-desc";
+    empty.textContent = "まだ項目がありません。";
+    wrap.appendChild(empty);
+    return;
+  }
+
+  items.forEach(function (it, idx) {
+    var card = document.createElement("div");
+    card.className = "subitem-card";
+    var title = document.createElement("div");
+    title.className = "subitem-card-title";
+    title.textContent = subitemPreviewText(type, it);
+    card.appendChild(title);
+
+    var descText = type === "faq" ? ((it.answer && it.answer.ja) || "") : ((it.description && it.description.ja) || "");
+    if (descText) {
+      var desc = document.createElement("div");
+      desc.className = "subitem-card-desc";
+      desc.textContent = descText;
+      card.appendChild(desc);
+    }
+
+    var actions = document.createElement("div");
+    actions.className = "subitem-card-actions";
+    var editBtn = document.createElement("button");
+    editBtn.type = "button"; editBtn.className = "btn btn-secondary btn-sm";
+    editBtn.textContent = "編集";
+    editBtn.addEventListener("click", function () { openSubitemEdit(idx); });
+    var delBtn = document.createElement("button");
+    delBtn.type = "button"; delBtn.className = "btn btn-danger btn-sm";
+    delBtn.textContent = "削除";
+    delBtn.addEventListener("click", function () {
+      if (!confirm("この項目を削除しますか？")) return;
+      state.sectionDraft.items.splice(idx, 1);
+      buildSubitemsList();
+    });
+    actions.appendChild(editBtn); actions.appendChild(delBtn);
+    card.appendChild(actions);
+
+    wrap.appendChild(card);
+  });
+}
+
+$("sectionTypeInput").addEventListener("change", function () {
+  // 種類を変更した場合、既存項目は形式が異なるため一旦クリアする(混在を避けるため)
+  if (state.sectionDraft && state.sectionDraft.items && state.sectionDraft.items.length > 0) {
+    if (!confirm("種類を変更すると、登録済みの項目はいったんクリアされます。よろしいですか？")) {
+      $("sectionTypeInput").value = state.sectionDraft.type;
+      return;
+    }
+    state.sectionDraft.items = [];
+    buildSubitemsList();
+  }
+  state.sectionDraft.type = $("sectionTypeInput").value;
+});
+
+$("addSubitemBtn").addEventListener("click", function () { openSubitemEdit(null); });
+
+function openSubitemEdit(idx) {
+  state.subitemEditingIndex = (idx === null || idx === undefined) ? null : idx;
+  hide("subitemEditError");
+  var type = $("sectionTypeInput").value;
+  var isFaq = type === "faq";
+  var item = (idx !== null && idx !== undefined) ? state.sectionDraft.items[idx] : null;
+
+  $("subitemEditTitle").textContent = item ? "項目を編集" : "項目を追加";
+  $("subitemFieldsStandard").classList.toggle("hidden", isFaq);
+  $("subitemFieldsFaq").classList.toggle("hidden", !isFaq);
+  $("deleteSubitemBtn").classList.toggle("hidden", !item);
+
+  if (isFaq) {
+    $("sub_q_ja").value = item && item.question ? item.question.ja || "" : "";
+    $("sub_q_en").value = item && item.question ? item.question.en || "" : "";
+    $("sub_q_zh").value = item && item.question ? item.question.zh || "" : "";
+    $("sub_q_ko").value = item && item.question ? item.question.ko || "" : "";
+    $("sub_a_ja").value = item && item.answer ? item.answer.ja || "" : "";
+    $("sub_a_en").value = item && item.answer ? item.answer.en || "" : "";
+    $("sub_a_zh").value = item && item.answer ? item.answer.zh || "" : "";
+    $("sub_a_ko").value = item && item.answer ? item.answer.ko || "" : "";
+  } else {
+    $("subitemTitleLabel").textContent = type === "rules" || type === "notice" ? "内容" : "見出し";
+    $("subitemDescLabel").textContent = "補足説明(任意)";
+    $("sub_title_ja").value = item && item.title ? item.title.ja || "" : "";
+    $("sub_title_en").value = item && item.title ? item.title.en || "" : "";
+    $("sub_title_zh").value = item && item.title ? item.title.zh || "" : "";
+    $("sub_title_ko").value = item && item.title ? item.title.ko || "" : "";
+    $("sub_desc_ja").value = item && item.description ? item.description.ja || "" : "";
+    $("sub_desc_en").value = item && item.description ? item.description.en || "" : "";
+    $("sub_desc_zh").value = item && item.description ? item.description.zh || "" : "";
+    $("sub_desc_ko").value = item && item.description ? item.description.ko || "" : "";
+  }
+
+  showScreen("subitemEdit");
+}
+
+$("subitemBackBtn").addEventListener("click", function () { showScreen("sectionEdit"); });
+
+$("deleteSubitemBtn").addEventListener("click", function () {
+  if (!confirm("この項目を削除しますか？")) return;
+  state.sectionDraft.items.splice(state.subitemEditingIndex, 1);
+  showScreen("sectionEdit");
+  buildSubitemsList();
+});
+
+$("saveSubitemBtn").addEventListener("click", function () {
+  var type = $("sectionTypeInput").value;
+  var isFaq = type === "faq";
+  var btn = $("saveSubitemBtn");
+
+  if (isFaq) {
+    var qJa = $("sub_q_ja").value.trim();
+    if (!qJa) { $("subitemEditError").textContent = "質問(日本語)を入力してください。"; show("subitemEditError"); return; }
+  } else {
+    var tJa = $("sub_title_ja").value.trim();
+    if (!tJa) { $("subitemEditError").textContent = "見出し(日本語)を入力してください。"; show("subitemEditError"); return; }
+  }
+  hide("subitemEditError");
+  btn.disabled = true; btn.textContent = "翻訳中…";
+
+  var tasks;
+  if (isFaq) {
+    tasks = Promise.all([
+      fillMissingTranslations({ ja: $("sub_q_ja").value.trim(), en: $("sub_q_en").value.trim(), zh: $("sub_q_zh").value.trim(), ko: $("sub_q_ko").value.trim() }),
+      fillMissingTranslations({ ja: $("sub_a_ja").value.trim(), en: $("sub_a_en").value.trim(), zh: $("sub_a_zh").value.trim(), ko: $("sub_a_ko").value.trim() }),
+    ]).then(function (r) { return { question: r[0], answer: r[1] }; });
+  } else {
+    tasks = Promise.all([
+      fillMissingTranslations({ ja: $("sub_title_ja").value.trim(), en: $("sub_title_en").value.trim(), zh: $("sub_title_zh").value.trim(), ko: $("sub_title_ko").value.trim() }),
+      fillMissingTranslations({ ja: $("sub_desc_ja").value.trim(), en: $("sub_desc_en").value.trim(), zh: $("sub_desc_zh").value.trim(), ko: $("sub_desc_ko").value.trim() }),
+    ]).then(function (r) { return { title: r[0], description: r[1] }; });
+  }
+
+  tasks.then(function (built) {
+    if (state.subitemEditingIndex !== null && state.subitemEditingIndex !== undefined) {
+      state.sectionDraft.items[state.subitemEditingIndex] = built;
+    } else {
+      state.sectionDraft.items.push(built);
+    }
+    showScreen("sectionEdit");
+    buildSubitemsList();
+  }).catch(function () {
+    // 翻訳に失敗しても保存(空欄のまま)は続行する
+    showScreen("sectionEdit");
+    buildSubitemsList();
+  }).finally(function () {
+    btn.disabled = false; btn.textContent = "保存";
+  });
+});
+
+function validateSectionForm() {
+  var titleJa = $("sec_title_ja").value.trim();
+  if (!titleJa) return "見出し(日本語)を入力してください。";
+  return null;
+}
+
+$("saveSectionBtn").addEventListener("click", function () {
+  var errMsg = validateSectionForm();
+  if (errMsg) { $("sectionEditError").textContent = errMsg; show("sectionEditError"); return; }
+  hide("sectionEditError");
+  saveSection();
+});
+
+function saveSection() {
+  if (state.saving) return;
+  state.saving = true;
+  var btn = $("saveSectionBtn");
+  btn.disabled = true; btn.textContent = "翻訳中…";
+
+  var id = state.sectionEditingId || ("section-" + Date.now().toString(36) + "-" + randomHex(4));
+  var newSection = {
+    id: id,
+    type: $("sectionTypeInput").value,
+    icon: $("sectionIconInput").value.trim(),
+    title: null,
+    items: state.sectionDraft.items || [],
+  };
+
+  fillMissingTranslations({
+    ja: $("sec_title_ja").value.trim(),
+    en: $("sec_title_en").value.trim(),
+    zh: $("sec_title_zh").value.trim(),
+    ko: $("sec_title_ko").value.trim(),
+  }).then(function (title) {
+    newSection.title = title;
+    btn.textContent = "保存中…";
+    return ghGetFile("products.json");
+  }).then(function (file) {
+    if (!file) throw new Error("products.jsonが見つかりませんでした。");
+    var latest = JSON.parse(base64ToUtf8(file.content));
+    var sections = latest.sections || [];
+    var idx = sections.findIndex(function (s) { return s.id === id; });
+    if (idx >= 0) sections[idx] = newSection; else sections.push(newSection);
+    latest.sections = sections;
+
+    var newJson = JSON.stringify(latest, null, 2);
+    return ghPutFile("products.json", utf8ToBase64(newJson), "説明ページ更新: " + id, file.sha)
+      .then(function () { return latest; });
+  }).then(function (latest) {
+    state.products = latest;
+    toast("保存しました。");
+    showScreen("sectionList");
+    renderSectionList();
+  }).catch(function (err) {
+    console.error(err);
+    var msg = err.message || "保存に失敗しました。";
+    if (err.status === 409 || /他の端末/.test(msg)) show("conflictBanner");
+    $("sectionEditError").textContent = msg;
+    show("sectionEditError");
+    toast(msg, true);
+  }).finally(function () {
+    state.saving = false;
+    btn.disabled = false;
+    btn.textContent = "保存";
+  });
+}
+
 /* ---------- FAB ---------- */
-$("addFab").addEventListener("click", function () { openEdit(null); });
+/* addFabのクリック処理はshowScreen()内でonclickとして画面ごとに動的に割り当てる */
 
 init();
 </script>
