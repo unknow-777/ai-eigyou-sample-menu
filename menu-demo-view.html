@@ -30,21 +30,26 @@ a{color:var(--brand);}
   padding:0 18px 64px;
 }
 
-/* ===== Hero (営業用マーケティング部分。currentLangに関わらず日本語固定) ===== */
-.hero{padding:28px 0 8px;text-align:center;}
+/* ===== Hero (営業用マーケティング部分。currentLangに関わらず日本語固定、JS無しでも表示される静的HTML) ===== */
+.hero{padding:22px 0 6px;text-align:center;}
 .hero-logo-wrap{
-  width:64px;height:64px;margin:0 auto 18px;border-radius:16px;overflow:hidden;
+  width:44px;height:44px;margin:0 auto 14px;border-radius:12px;overflow:hidden;
   box-shadow:0 4px 16px rgba(37,64,232,0.18);
 }
 .hero-logo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
 .hero-headline{
-  font-size:1.62rem;font-weight:700;line-height:1.4;margin:0 0 12px;letter-spacing:0.01em;
+  font-size:1.44rem;font-weight:700;line-height:1.4;margin:0 0 10px;letter-spacing:0.01em;
 }
 .hero-headline .accent{color:var(--brand);}
 .hero-sub{
-  font-size:0.98rem;color:var(--text-muted);line-height:1.75;margin:0 auto;max-width:420px;
+  font-size:0.94rem;color:var(--text-muted);line-height:1.7;margin:0 auto;max-width:400px;
 }
 .hero-sub strong{color:var(--text);font-weight:700;}
+.hero-cta{
+  display:inline-block;margin-top:18px;padding:12px 24px;border-radius:999px;
+  background:var(--brand);color:#fff;font-weight:700;font-size:0.92rem;text-decoration:none;
+}
+.hero-cta:active{opacity:0.85;}
 
 /* ===== Before / After ===== */
 .ba{margin:30px 0 8px;}
@@ -224,32 +229,25 @@ a{color:var(--brand);}
 }
 .price-box .price-label{font-size:0.78rem;color:var(--text-muted);font-weight:700;letter-spacing:0.04em;}
 .price-box .price-num{font-size:1.9rem;font-weight:800;color:var(--brand);margin-top:4px;}
-.price-box .price-note{font-size:0.78rem;color:var(--text-muted);margin-top:6px;}
+.price-box .price-tags{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.price-box .price-tag{
+  font-size:0.72rem;padding:4px 11px;border-radius:999px;border:1px solid var(--brand);
+  color:var(--brand);font-weight:700;background:#fff;
+}
+.price-box .price-note{font-size:0.76rem;color:var(--text-muted);margin-top:8px;}
 
-.state-box{
-  margin-top:60px;text-align:center;color:var(--text-muted);font-size:1.05rem;line-height:1.8;
-}
-.state-box.error{color:var(--danger);}
-.spinner{
-  width:36px;height:36px;margin:0 auto 18px;border-radius:50%;
-  border:4px solid var(--line);border-top-color:var(--brand);
-  animation:spin 0.8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-@media (prefers-reduced-motion: reduce){.spinner{animation:none;}}
-.retry-btn{
-  margin-top:14px;padding:10px 22px;border:1px solid var(--text);border-radius:999px;
-  background:none;color:var(--text);font-size:0.95rem;cursor:pointer;font-family:inherit;
-}
+.cta-section{margin:32px 0 0;text-align:center;}
+.cta-section-title{font-size:1.02rem;font-weight:700;margin-bottom:6px;}
+.cta-section-text{font-size:0.86rem;color:var(--text-muted);line-height:1.6;}
 </style>
 
+<!-- ===== Hero(営業用。常に日本語固定。JavaScriptに依存せず常時表示される静的HTML) ===== -->
 <div class="page">
 
-  <!-- ===== Hero(営業用。常に日本語固定) ===== -->
   <div class="hero">
     <div class="hero-logo-wrap"><img src="images/mela-logo.jpg" alt="MELA!"></div>
     <h1 class="hero-headline">外国人への説明を、<span class="accent">QRひとつ</span>に。</h1>
-    <p class="hero-sub">料金・利用方法・注意事項・ルールを、お客様のスマホで多言語表示。<br><strong>スタッフが毎回説明しなくていい。</strong></p>
+    <p class="hero-sub"><strong>スタッフが毎回説明しなくていい。</strong><br>料金・使い方・注意事項・ルールを、お客様のスマホで多言語案内。</p>
   </div>
 
   <!-- ===== Before / After ===== -->
@@ -276,12 +274,17 @@ a{color:var(--brand);}
         <div class="ba-result">スタッフの説明、不要に。</div>
       </div>
     </div>
+    <a class="hero-cta" href="#demo">実際の画面を体験する ↓</a>
   </div>
 
   <div class="divider"></div>
 
-  <!-- ===== ここから下:実際に外国人客がQRを読んだ時に見る画面の再現 ===== -->
-  <div class="demo-zone">
+  <!-- ===== ここから下:実際に外国人客がQRを読んだ時に見る画面の再現
+       menuBody等は初期状態から静的HTMLとして本物のコンテンツ(着物レンタル/日本語)を直接記述している。
+       JavaScriptが正常に動く場合はrender()がこの中身を上書きし、多言語・タブ切替等を有効化する。
+       JavaScriptが失敗・無効の場合でも、この静的な内容がそのまま残るため「読み込み中」のまま
+       止まったり空白になったりしない。 ===== -->
+  <div class="demo-zone" id="demo">
     <div class="demo-zone-label">↓ ここから下は、お客様のスマホに実際に表示される画面です ↓</div>
     <div class="demo-frame">
       <div class="topbar">
@@ -291,7 +294,7 @@ a{color:var(--brand);}
           <a class="icon-btn" href="demo-admin.html">管理画面へ →</a>
         </div>
       </div>
-      <div class="store-name" id="storeName">&nbsp;</div>
+      <div class="store-name" id="storeName">Sample 着物レンタル</div>
 
       <div class="type-switch-wrap">
         <div class="type-switch-label">業種別サンプルを見る</div>
@@ -302,25 +305,52 @@ a{color:var(--brand);}
         </div>
       </div>
 
-      <div id="loadingState" class="state-box">
-        <div class="spinner"></div>
-        <div id="loadingText">読み込み中…</div>
-      </div>
-
-      <div id="errorState" class="state-box error" hidden>
-        <div id="errorText">メニューを読み込めませんでした。通信環境をご確認のうえ、もう一度お試しください。</div>
-        <button type="button" class="retry-btn" id="retryBtn">再読み込み</button>
-      </div>
-
-      <div id="menuRoot" hidden>
+      <div id="menuRoot">
         <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
         <div class="content-tabs" id="contentTabs" role="group" aria-label="Content" hidden></div>
-        <div id="menuBody"></div>
-        <p class="note" id="noteText"></p>
-        <p class="demo-disclaimer" id="disclaimerText"></p>
+        <div id="menuBody">
+          <div class="category">プラン</div>
+          <div class="item">
+            <div class="item-photo">👘</div>
+            <div class="item-main">
+              <div class="item-top"><span class="item-name">スタンダードプラン</span><span class="item-price">¥5,000</span></div>
+              <div class="item-desc">着物・帯・小物一式+着付け込み(利用時間 約4時間)</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="item-photo">🎎</div>
+            <div class="item-main">
+              <div class="item-top"><span class="item-name">プレミアムプラン</span><span class="item-price">¥8,000</span></div>
+              <div class="item-desc">高級着物+髪飾り+バッグ、着付け・ヘアセット込み(利用時間 約6時間)</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="item-photo">💑</div>
+            <div class="item-main">
+              <div class="item-top"><span class="item-name">ペアプラン(2名)</span><span class="item-price">¥9,000</span></div>
+              <div class="item-desc">スタンダードプラン×2名分+記念撮影10分付き</div>
+            </div>
+          </div>
+          <div class="category">オプション</div>
+          <div class="item">
+            <div class="item-photo">⏱</div>
+            <div class="item-main"><div class="item-top"><span class="item-name">延長(1時間)</span><span class="item-price">¥1,000</span></div></div>
+          </div>
+          <div class="item">
+            <div class="item-photo">💐</div>
+            <div class="item-main"><div class="item-top"><span class="item-name">髪飾りアップグレード</span><span class="item-price">¥1,500</span></div></div>
+          </div>
+        </div>
+        <p class="note" id="noteText">表示している内容は準備状況により一部日本語のみとなる場合があります。</p>
+        <p class="demo-disclaimer" id="disclaimerText">※本サンプルは架空の店舗・料金・ルールに基づくデモです。実在の店舗情報ではありません。</p>
         <div class="powered-by"><img src="images/mela-logo.jpg" alt=""><span>Powered by <strong>MELA!</strong></span></div>
       </div>
     </div>
+  </div>
+
+  <div class="cta-section">
+    <div class="cta-section-title">あなたのお店用のサンプルも作れます</div>
+    <div class="cta-section-text">業種・料金・ルールに合わせて、このデモと同じ形式でご用意できます。</div>
   </div>
 
   <!-- ===== 店舗側メリット ===== -->
@@ -335,9 +365,10 @@ a{color:var(--brand);}
       <div class="forowner-card"><span class="ico">📱</span><span class="forowner-card-text">アプリ不要・スマホだけで完結、複雑な注文/決済/POS機能はなし</span></div>
     </div>
     <div class="price-box">
-      <div class="price-label">導入価格(買い切り)</div>
+      <div class="price-label">導入価格</div>
       <div class="price-num">¥19,800</div>
-      <div class="price-note">月額費用なし。将来的に更新代行・翻訳修正等のサポートを月額980〜1,980円程度でご用意予定です。</div>
+      <div class="price-tags"><span class="price-tag">買い切り</span><span class="price-tag">月額0円</span><span class="price-tag">アプリ不要</span></div>
+      <div class="price-note">将来的に更新代行・翻訳修正等のサポートを月額980〜1,980円程度でご用意予定です。</div>
     </div>
   </div>
 
@@ -394,16 +425,9 @@ function textOrFallback(field, lang) {
   return field.ja || "";
 }
 
-function els() {
-  return {
-    loading: document.getElementById("loadingState"),
-    error: document.getElementById("errorState"),
-    root: document.getElementById("menuRoot"),
-  };
-}
-function showLoading() { var e = els(); e.loading.hidden = false; e.error.hidden = true; e.root.hidden = true; }
-function showError() { var e = els(); e.loading.hidden = true; e.error.hidden = false; e.root.hidden = true; }
-function showMenu() { var e = els(); e.loading.hidden = true; e.error.hidden = true; e.root.hidden = false; }
+/* このデモは外部通信(fetch/API)に一切依存しない。全データはこのファイル内に埋め込み済みのため、
+   「読み込み中」「読み込み失敗」という状態そのものが本来存在しない。menuRootは常に表示済みで、
+   render()はその場で内容を書き換えるだけ(同期処理、失敗時も画面が空白/停止しない)。 */
 
 /* ===== 商品/プラン(既存items形式)の描画。カフェ等の旧サンプルの唯一の描画経路でもある ===== */
 function renderItemCategories(container, categoriesSource, itemsSource, lang) {
@@ -1149,7 +1173,6 @@ function selectType(typeKey) {
 
   PRODUCTS = dataForType(typeKey);
   render(currentLang);
-  showMenu();
 }
 
 function initialTypeFromUrl() {
@@ -1169,14 +1192,13 @@ function loadProducts() {
     buildLangTabs();
     updateTypeSwitchState();
     render("ja");
-    showMenu();
   } catch (err) {
-    console.error("[demo] fatal: failed to render even built-in sample data:", err);
-    showError();
+    // 静的HTML(着物レンタル・日本語)が既に画面に表示されているため、
+    // ここで例外が起きても営業デモ全体が空白/停止することはない。
+    console.error("[demo] JS enhancement failed, static fallback content remains visible:", err);
   }
 }
 
-document.getElementById("retryBtn").addEventListener("click", loadProducts);
 document.getElementById("otherTypesToggle").addEventListener("click", function () {
   var wrap = document.getElementById("otherTypesWrap");
   var willShow = wrap.hidden;
