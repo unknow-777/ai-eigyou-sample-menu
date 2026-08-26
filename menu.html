@@ -55,6 +55,59 @@ body{
   margin-top:48px;margin-bottom:16px;font-size:1.15rem;font-weight:700;letter-spacing:0.08em;
   color:var(--text);padding-bottom:8px;border-bottom:2px solid var(--text);display:inline-block;
 }
+
+/* ===== コンテンツタブ(料金・プラン/使い方/ルール・注意事項/FAQ)
+   sectionsが無い店舗では非表示のまま、既存の見た目を一切変えない ===== */
+.content-tabs{display:flex;gap:6px;margin-top:20px;overflow-x:auto;padding-bottom:2px;}
+.content-tabs[hidden]{display:none;}
+.content-tab{
+  flex-shrink:0;font-size:0.9rem;font-weight:700;padding:10px 15px;border-radius:12px;
+  border:1px solid var(--line);background:var(--bg);color:var(--text-muted);cursor:pointer;
+  font-family:inherit;white-space:nowrap;
+}
+.content-tab[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text);}
+
+/* ===== steps(利用の流れ・返却方法・体験手順) ===== */
+.section-block{margin-top:36px;}
+.section-title{display:flex;align-items:center;gap:8px;font-size:1.1rem;font-weight:700;margin-bottom:16px;}
+.section-title .ico{font-size:1.25rem;}
+.steps-list{list-style:none;margin:0;padding:0;}
+.step{display:flex;gap:14px;padding:12px 0;}
+.step .n{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:0.86rem;font-weight:800;
+}
+.step-body{flex:1;padding-top:3px;}
+.step-title{font-size:1rem;font-weight:700;}
+.step-desc{margin-top:4px;font-size:0.9rem;color:var(--text-muted);line-height:1.6;}
+
+/* ===== rules / notice(注意事項・禁止事項・重要な案内) ===== */
+.rules-list{list-style:none;margin:0;padding:0;}
+.rule{
+  display:flex;gap:12px;align-items:flex-start;padding:12px 14px;margin-bottom:8px;
+  background:#FBF3F0;border:1px solid #F0DAD3;border-radius:12px;
+}
+.rule .ico{flex-shrink:0;font-size:1.05rem;line-height:1.5;}
+.rule-body{flex:1;}
+.rule-title{font-size:0.96rem;font-weight:700;color:var(--text);}
+.rule-desc{margin-top:3px;font-size:0.88rem;color:var(--text-muted);line-height:1.55;}
+.notice-list .rule{background:var(--photo-bg);border-color:var(--line);}
+
+/* ===== faq(よくある質問) ===== */
+.faq-list{list-style:none;margin:0;padding:0;}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-item:first-child{border-top:1px solid var(--line);}
+.faq-q{
+  width:100%;text-align:left;background:none;border:none;padding:15px 4px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:inherit;
+}
+.faq-q-text{font-size:1rem;font-weight:700;color:var(--text);}
+.faq-q-text::before{content:"Q. ";color:var(--text-muted);}
+.faq-plus{flex-shrink:0;font-size:1.1rem;color:var(--text-muted);font-weight:700;transition:transform 0.15s;}
+.faq-item[data-open="true"] .faq-plus{transform:rotate(45deg);}
+.faq-a{font-size:0.92rem;line-height:1.65;color:var(--text-muted);padding:0 4px 16px 4px;}
+.faq-a::before{content:"A. ";color:var(--text);font-weight:700;}
+.faq-a[hidden]{display:none;}
 .item{display:flex;gap:22px;padding:22px 0;align-items:flex-start;}
 .item-photo{
   width:140px;height:140px;border-radius:16px;background:var(--photo-bg);
@@ -101,6 +154,7 @@ body{
 
   <div id="menuRoot" hidden>
     <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
+    <div class="content-tabs" id="contentTabs" role="group" aria-label="Content" hidden></div>
     <div id="menuBody"></div>
     <p class="note" id="noteText"></p>
     <div class="foot-mark"><span id="footStoreName"></span></div>
@@ -139,6 +193,7 @@ var ERROR_TEXT = {
 
 var PRODUCTS = null;
 var currentLang = "ja";
+var currentContentTab = "plans";
 var EXTERNAL_FETCH_TIMEOUT_MS = 10000;
 
 function textOrFallback(field, lang) {
@@ -146,6 +201,14 @@ function textOrFallback(field, lang) {
   if (field[lang]) return field[lang];
   return field.ja || "";
 }
+
+var CONTENT_TAB_LABEL = {
+  plans: { ja: "料金・プラン", en: "Plans & Pricing", zh: "价格・套餐", ko: "요금・플랜" },
+  steps: { ja: "使い方", en: "How to Use", zh: "使用方法", ko: "이용 방법" },
+  rules: { ja: "ルール・注意事項", en: "Rules & Notes", zh: "规则・注意事项", ko: "규칙・주의사항" },
+  faq: { ja: "FAQ", en: "FAQ", zh: "常见问题", ko: "자주 묻는 질문" }
+};
+var CONTENT_TAB_ORDER = ["plans", "steps", "rules", "faq"];
 
 function els() {
   return {
@@ -174,28 +237,18 @@ function showMenu() {
   e.root.hidden = false;
 }
 
-function render(lang) {
-  currentLang = lang;
-  document.querySelectorAll(".lang-tab").forEach(function (b) {
-    b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
-  });
+/* ===== 商品/プラン(既存items形式)の描画。従来のロジックを関数へ切り出しただけで処理内容は無変更 ===== */
+function renderItemCategories(container, categoriesSource, itemsSource, lang) {
+  var visibleItems = itemsSource.filter(function (it) { return it.published !== false; });
 
-  document.getElementById("storeName").textContent = textOrFallback(PRODUCTS.store_name, lang) || "Menu";
-  document.getElementById("footStoreName").textContent = textOrFallback(PRODUCTS.store_name, lang) || "";
-
-  var body = document.getElementById("menuBody");
-  body.innerHTML = "";
-
-  var visibleItems = PRODUCTS.items.filter(function (it) { return it.published !== false; });
-
-  PRODUCTS.categories.forEach(function (cat) {
+  categoriesSource.forEach(function (cat) {
     var itemsInCat = visibleItems.filter(function (it) { return it.category === cat.id; });
     if (itemsInCat.length === 0) return;
 
     var catDiv = document.createElement("div");
     catDiv.className = "category";
     catDiv.textContent = textOrFallback(cat.name, lang);
-    body.appendChild(catDiv);
+    container.appendChild(catDiv);
 
     itemsInCat.forEach(function (it) {
       var row = document.createElement("div");
@@ -243,9 +296,211 @@ function render(lang) {
       }
 
       row.appendChild(main);
-      body.appendChild(row);
+      container.appendChild(row);
     });
   });
+}
+
+/* ===== 汎用sections描画(steps / rules / notice / faq)
+   将来の温浴施設・体験系業種などへの横展開を見据え、「メニュー」ではなく
+   「店舗・施設の説明コンテンツ」として扱える構造にしている。 ===== */
+function renderSteps(container, section, lang) {
+  var block = document.createElement("div");
+  block.className = "section-block";
+  var title = document.createElement("div");
+  title.className = "section-title";
+  title.innerHTML = '<span class="ico">' + (section.icon || "📋") + '</span>';
+  title.appendChild(document.createTextNode(textOrFallback(section.title, lang)));
+  block.appendChild(title);
+
+  var list = document.createElement("div");
+  list.className = "steps-list";
+  (section.items || []).forEach(function (step, idx) {
+    var row = document.createElement("div");
+    row.className = "step";
+    var n = document.createElement("div");
+    n.className = "n";
+    n.textContent = String(idx + 1);
+    row.appendChild(n);
+    var body = document.createElement("div");
+    body.className = "step-body";
+    var t = document.createElement("div");
+    t.className = "step-title";
+    t.textContent = textOrFallback(step.title, lang);
+    body.appendChild(t);
+    var descText = textOrFallback(step.description, lang);
+    if (descText) {
+      var d = document.createElement("div");
+      d.className = "step-desc";
+      d.textContent = descText;
+      body.appendChild(d);
+    }
+    row.appendChild(body);
+    list.appendChild(row);
+  });
+  block.appendChild(list);
+  container.appendChild(block);
+}
+
+function renderRulesLike(container, section, lang, isNotice) {
+  var block = document.createElement("div");
+  block.className = "section-block";
+  var title = document.createElement("div");
+  title.className = "section-title";
+  title.innerHTML = '<span class="ico">' + (section.icon || (isNotice ? "ℹ️" : "⚠️")) + '</span>';
+  title.appendChild(document.createTextNode(textOrFallback(section.title, lang)));
+  block.appendChild(title);
+
+  var list = document.createElement("div");
+  list.className = "rules-list" + (isNotice ? " notice-list" : "");
+  (section.items || []).forEach(function (rule) {
+    var row = document.createElement("div");
+    row.className = "rule";
+    var ico = document.createElement("span");
+    ico.className = "ico";
+    ico.textContent = rule.icon || (isNotice ? "・" : "🚫");
+    row.appendChild(ico);
+    var body = document.createElement("div");
+    body.className = "rule-body";
+    var t = document.createElement("div");
+    t.className = "rule-title";
+    t.textContent = textOrFallback(rule.title, lang);
+    body.appendChild(t);
+    var descText = textOrFallback(rule.description, lang);
+    if (descText) {
+      var d = document.createElement("div");
+      d.className = "rule-desc";
+      d.textContent = descText;
+      body.appendChild(d);
+    }
+    row.appendChild(body);
+    list.appendChild(row);
+  });
+  block.appendChild(list);
+  container.appendChild(block);
+}
+
+function renderFaq(container, section, lang) {
+  var block = document.createElement("div");
+  block.className = "section-block";
+  var title = document.createElement("div");
+  title.className = "section-title";
+  title.innerHTML = '<span class="ico">' + (section.icon || "❓") + '</span>';
+  title.appendChild(document.createTextNode(textOrFallback(section.title, lang)));
+  block.appendChild(title);
+
+  var list = document.createElement("div");
+  list.className = "faq-list";
+  (section.items || []).forEach(function (qa) {
+    var item = document.createElement("div");
+    item.className = "faq-item";
+    item.dataset.open = "false";
+
+    var qBtn = document.createElement("button");
+    qBtn.type = "button";
+    qBtn.className = "faq-q";
+    var qText = document.createElement("span");
+    qText.className = "faq-q-text";
+    qText.textContent = textOrFallback(qa.question, lang);
+    var plus = document.createElement("span");
+    plus.className = "faq-plus";
+    plus.textContent = "+";
+    qBtn.appendChild(qText);
+    qBtn.appendChild(plus);
+
+    var aDiv = document.createElement("div");
+    aDiv.className = "faq-a";
+    aDiv.textContent = textOrFallback(qa.answer, lang);
+    aDiv.hidden = true;
+
+    qBtn.addEventListener("click", function () {
+      var open = item.dataset.open === "true";
+      item.dataset.open = open ? "false" : "true";
+      aDiv.hidden = open;
+    });
+
+    item.appendChild(qBtn);
+    item.appendChild(aDiv);
+    list.appendChild(item);
+  });
+  block.appendChild(list);
+  container.appendChild(block);
+}
+
+function sectionsOfKind(sections, kind) {
+  if (kind === "steps") return sections.filter(function (s) { return s.type === "steps"; });
+  if (kind === "rules") return sections.filter(function (s) { return s.type === "rules" || s.type === "notice"; });
+  if (kind === "faq") return sections.filter(function (s) { return s.type === "faq"; });
+  return [];
+}
+
+function availableContentTabs() {
+  var tabs = [];
+  var hasItems = PRODUCTS.items && PRODUCTS.items.length > 0 && PRODUCTS.categories && PRODUCTS.categories.length > 0;
+  var sections = PRODUCTS.sections || [];
+  if (hasItems) tabs.push("plans");
+  CONTENT_TAB_ORDER.slice(1).forEach(function (kind) {
+    if (sectionsOfKind(sections, kind).length > 0) tabs.push(kind);
+  });
+  return tabs;
+}
+
+function buildContentTabs() {
+  var wrap = document.getElementById("contentTabs");
+  wrap.innerHTML = "";
+  var tabs = availableContentTabs();
+  // sectionsが無い(=既存の飲食店等)場合は従来通りタブ自体を出さない
+  if (tabs.length <= 1) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  if (tabs.indexOf(currentContentTab) === -1) currentContentTab = tabs[0];
+  tabs.forEach(function (kind) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "content-tab";
+    btn.dataset.kind = kind;
+    btn.textContent = textOrFallback(CONTENT_TAB_LABEL[kind], currentLang);
+    btn.setAttribute("aria-pressed", kind === currentContentTab ? "true" : "false");
+    btn.addEventListener("click", function () {
+      currentContentTab = kind;
+      render(currentLang);
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function render(lang) {
+  currentLang = lang;
+  document.querySelectorAll(".lang-tab").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
+  });
+
+  document.getElementById("storeName").textContent = textOrFallback(PRODUCTS.store_name, lang) || "Menu";
+  document.getElementById("footStoreName").textContent = textOrFallback(PRODUCTS.store_name, lang) || "";
+
+  buildContentTabs();
+  document.querySelectorAll(".content-tab").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.kind === currentContentTab ? "true" : "false");
+  });
+
+  var body = document.getElementById("menuBody");
+  body.innerHTML = "";
+
+  var tabs = availableContentTabs();
+  var activeTab = tabs.length === 0 ? null : (tabs.indexOf(currentContentTab) === -1 ? tabs[0] : currentContentTab);
+
+  // タブが1つ以下(=切替UIを出す必要がない)場合でも、その唯一のタブの中身は必ず描画する。
+  // (items用の"plans"だけを特別扱いすると、sectionsのみでitemsが無い店舗が空白になってしまうため)
+  if (activeTab === "plans") {
+    renderItemCategories(body, PRODUCTS.categories, PRODUCTS.items, lang);
+  } else if (activeTab === "steps" || activeTab === "rules" || activeTab === "faq") {
+    var secs = sectionsOfKind(PRODUCTS.sections || [], activeTab);
+    secs.forEach(function (sec) {
+      if (sec.type === "steps") renderSteps(body, sec, lang);
+      else if (sec.type === "rules") renderRulesLike(body, sec, lang, false);
+      else if (sec.type === "notice") renderRulesLike(body, sec, lang, true);
+      else if (sec.type === "faq") renderFaq(body, sec, lang);
+    });
+  }
 
   document.getElementById("noteText").textContent = NOTE[lang] || NOTE.ja;
 }
@@ -281,8 +536,16 @@ function loadProducts() {
       return res.json();
     })
     .then(function (data) {
-      if (!data || !Array.isArray(data.items)) throw new Error("invalid products.json");
+      if (!data || typeof data !== "object") throw new Error("invalid products.json");
+      if (!Array.isArray(data.items) && !Array.isArray(data.sections)) {
+        throw new Error("invalid products.json");
+      }
+      // 既存products.json(sectionsキーが無い)でも壊れないよう安全にフォールバックする
+      data.items = Array.isArray(data.items) ? data.items : [];
+      data.categories = Array.isArray(data.categories) ? data.categories : [];
+      data.sections = Array.isArray(data.sections) ? data.sections : [];
       PRODUCTS = data;
+      currentContentTab = "plans";
       buildLangTabs();
       render("ja");
       showMenu();
