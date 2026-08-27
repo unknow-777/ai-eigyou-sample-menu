@@ -141,11 +141,12 @@ a{color:var(--brand);}
 .lang-sub[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:700;}
 
 /* ===== コンテンツタブ(料金・プラン / 使い方 / ルール・注意事項 / FAQ) ===== */
-.content-tabs{display:flex;gap:6px;margin-top:18px;overflow-x:auto;padding-bottom:2px;}
+.content-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:18px;}
 .content-tab{
-  flex-shrink:0;font-size:0.84rem;font-weight:700;padding:10px 14px;border-radius:12px;
+  font-size:0.82rem;font-weight:700;padding:10px 8px;border-radius:12px;
   border:1px solid var(--line);background:var(--bg);color:var(--text-muted);cursor:pointer;
-  font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  white-space:normal;text-align:center;line-height:1.3;
 }
 .content-tab[aria-pressed="true"]{background:var(--text);color:#fff;border-color:var(--text);}
 
