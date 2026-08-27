@@ -68,7 +68,7 @@ a{color:var(--brand);}
 .ba-who{flex-shrink:0;font-weight:700;font-size:0.78rem;color:var(--text-muted);min-width:64px;padding-top:2px;}
 .ba-bubble{flex:1;background:var(--photo-bg);border-radius:10px;padding:8px 12px;}
 .ba-card.after .ba-bubble{background:#fff;}
-.ba-step{display:flex;align-items:center;gap:8px;font-size:0.88rem;font-weight:600;color:var(--text);}
+.ba-step{display:flex;align-items:center;gap:8px;font-size:0.88rem;font-weight:600;color:var(--text);padding:5px 0;}
 .ba-step .n{
   flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;
@@ -126,10 +126,19 @@ a{color:var(--brand);}
 .other-types-wrap{margin-top:12px;text-align:center;}
 .other-types-wrap[hidden]{display:none;}
 
-.lang-tabs{display:flex;justify-content:center;gap:8px;margin-top:24px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;row-gap:6px;}
-.lang-tab{background:none;border:none;padding:6px 2px 12px;font-size:1.1rem;color:var(--text-muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;}
+.lang-tabs{display:flex;justify-content:center;gap:6px;margin-top:24px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:nowrap;}
+.lang-tab{background:none;border:none;padding:6px 2px 12px;font-size:1.02rem;color:var(--text-muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .lang-tab[aria-pressed="true"]{color:var(--brand);border-bottom-color:var(--brand);font-weight:700;}
 .lang-tab:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+
+/* ===== 中文のくくり(簡体/繁體をここから選ぶ、選択中のみ表示) ===== */
+.lang-sub-wrap{display:flex;justify-content:center;gap:8px;margin-top:10px;}
+.lang-sub-wrap[hidden]{display:none;}
+.lang-sub{
+  background:var(--photo-bg);border:1px solid var(--line);border-radius:999px;padding:5px 14px;
+  font-size:0.82rem;color:var(--text-muted);cursor:pointer;font-family:inherit;
+}
+.lang-sub[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:700;}
 
 /* ===== コンテンツタブ(料金・プラン / 使い方 / ルール・注意事項 / FAQ) ===== */
 .content-tabs{display:flex;gap:6px;margin-top:18px;overflow-x:auto;padding-bottom:2px;}
@@ -242,7 +251,7 @@ a{color:var(--brand);}
 </style>
 
 <!-- ===== Hero(営業用。常に日本語固定。JavaScriptに依存せず常時表示される静的HTML) ===== -->
-<div class="page">
+<div class="page" id="top">
 
   <div class="hero">
     <div class="hero-logo-wrap"><img src="images/mela-logo.jpg" alt="MELA!"></div>
@@ -288,10 +297,9 @@ a{color:var(--brand);}
     <div class="demo-zone-label">↓ ここから下は、お客様のスマホに実際に表示される画面です ↓</div>
     <div class="demo-frame">
       <div class="topbar">
-        <a class="icon-btn" href="menu-demo.html">← TOPページ</a>
+        <a class="icon-btn" href="#top">↑ ページのトップへ</a>
         <div class="topbar-left">
           <div class="demo-badge">DEMO</div>
-          <a class="icon-btn" href="demo-admin.html">管理画面へ →</a>
         </div>
       </div>
       <div class="store-name" id="storeName">Sample 着物レンタル</div>
@@ -299,14 +307,11 @@ a{color:var(--brand);}
       <div class="type-switch-wrap">
         <div class="type-switch-label">業種別サンプルを見る</div>
         <div class="type-switch" id="typeSwitch" role="group" aria-label="業種サンプル"></div>
-        <button type="button" class="other-types-toggle" id="otherTypesToggle">その他の活用例(飲食)を見る ▾</button>
-        <div class="other-types-wrap" id="otherTypesWrap" hidden>
-          <div class="type-switch" id="otherTypeSwitch" role="group" aria-label="その他の活用例"></div>
-        </div>
       </div>
 
       <div id="menuRoot">
         <div class="lang-tabs" id="langTabs" role="group" aria-label="Language"></div>
+        <div class="lang-sub-wrap" id="langSubWrap" role="group" aria-label="中文" hidden></div>
         <div class="content-tabs" id="contentTabs" role="group" aria-label="Content" hidden></div>
         <div id="menuBody">
           <div class="category">プラン</div>
@@ -393,6 +398,19 @@ var LANGS = [
   { code: "zh-Hant", label: "繁體中文" },
   { code: "ko", label: "한국어" }
 ];
+
+// 言語タブは1列にまとめるため、中文は簡体字/繁體字をまとめた1つの「くくり」として表示し、
+// くくりを選ぶと簡体字/繁體字を選ぶための小さなサブ切替が現れる。
+var LANG_GROUPS = [
+  { code: "ja", label: "日本語" },
+  { code: "en", label: "English" },
+  { code: "zh", label: "中文", variants: [
+      { code: "zh-Hans", label: "简体中文" },
+      { code: "zh-Hant", label: "繁體中文" }
+    ] },
+  { code: "ko", label: "한국어" }
+];
+var currentZhVariant = "zh-Hans";
 
 var NOTE = {
   ja: "表示している内容は準備状況により一部日本語のみとなる場合があります。",
@@ -656,9 +674,19 @@ function buildContentTabs(products) {
 
 function render(lang) {
   currentLang = lang;
+  var isZh = (lang === "zh-Hans" || lang === "zh-Hant");
+  if (isZh) currentZhVariant = lang;
   document.querySelectorAll(".lang-tab").forEach(function (b) {
-    b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
+    var active = isZh ? (b.dataset.lang === "zh") : (b.dataset.lang === lang);
+    b.setAttribute("aria-pressed", active ? "true" : "false");
   });
+  var subWrap = document.getElementById("langSubWrap");
+  if (subWrap) {
+    subWrap.hidden = !isZh;
+    subWrap.querySelectorAll(".lang-sub").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
+    });
+  }
 
   var storeNameText = textOrFallback(PRODUCTS.store_name, lang) || "Sample";
   document.getElementById("storeName").textContent = storeNameText;
@@ -704,15 +732,34 @@ function render(lang) {
 function buildLangTabs() {
   var tabsEl = document.getElementById("langTabs");
   tabsEl.innerHTML = "";
-  LANGS.forEach(function (l) {
+  LANG_GROUPS.forEach(function (g) {
     var btn = document.createElement("button");
     btn.className = "lang-tab";
     btn.type = "button";
-    btn.dataset.lang = l.code;
-    btn.textContent = l.label;
-    btn.setAttribute("aria-pressed", l.code === "ja" ? "true" : "false");
-    btn.addEventListener("click", function () { render(l.code); });
+    btn.dataset.lang = g.code;
+    btn.textContent = g.label;
+    btn.setAttribute("aria-pressed", g.code === "ja" ? "true" : "false");
+    btn.addEventListener("click", function () {
+      render(g.variants ? currentZhVariant : g.code);
+    });
     tabsEl.appendChild(btn);
+  });
+
+  var subWrap = document.getElementById("langSubWrap");
+  subWrap.innerHTML = "";
+  var zhGroup = LANG_GROUPS.filter(function (g) { return g.variants; })[0];
+  zhGroup.variants.forEach(function (v) {
+    var sub = document.createElement("button");
+    sub.type = "button";
+    sub.className = "lang-sub";
+    sub.dataset.lang = v.code;
+    sub.textContent = v.label;
+    sub.setAttribute("aria-pressed", v.code === currentZhVariant ? "true" : "false");
+    sub.addEventListener("click", function () {
+      currentZhVariant = v.code;
+      render(v.code);
+    });
+    subWrap.appendChild(sub);
   });
 }
 
@@ -952,160 +999,11 @@ var SAMPLE_SETS = {
         }
       ]
     }
-  },
-
-  cafe: {
-    label: "カフェ", icon: "☕",
-    products: {
-      store_name: { ja: "Sample Café", en: "Sample Café", "zh-Hans": "Sample Café", "zh-Hant": "Sample Café", ko: "Sample Café" },
-      categories: [
-        { id: "drink", name: { ja: "ドリンク", en: "Drinks", "zh-Hans": "饮品", "zh-Hant": "飲品", ko: "음료" } },
-        { id: "food", name: { ja: "フード", en: "Food", "zh-Hans": "餐点", "zh-Hant": "餐點", ko: "푸드" } },
-        { id: "sweets", name: { ja: "スイーツ", en: "Sweets", "zh-Hans": "甜点", "zh-Hant": "甜點", ko: "디저트" } }
-      ],
-      items: [
-        { id: "item-001", published: true, category: "drink",
-          name: { ja: "カフェラテ", en: "Café Latte", "zh-Hans": "拿铁咖啡", "zh-Hant": "拿鐵咖啡", ko: "카페라떼" },
-          description: { ja: "エスプレッソにミルクを合わせたコーヒー", en: "Espresso with steamed milk", "zh-Hans": "浓缩咖啡加牛奶", "zh-Hant": "濃縮咖啡加牛奶", ko: "에스프레소에 우유를 더한 커피" },
-          price: 550, image: "images/item-001-a1b2c3d4.webp" },
-        { id: "item-002", published: true, category: "drink",
-          name: { ja: "自家製レモンソーダ", en: "House Lemon Soda", "zh-Hans": "自制柠檬苏打水", "zh-Hant": "自製檸檬蘇打水", ko: "수제 레몬 소다" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 480, image: "images/item-002-a1b2c3d4.webp" },
-        { id: "item-003", published: true, category: "food",
-          name: { ja: "本日のサンドイッチ", en: "Today's Sandwich", "zh-Hans": "今日三明治", "zh-Hant": "今日三明治", ko: "오늘의 샌드위치" },
-          description: { ja: "旬の野菜と自家製ソース", en: "Seasonal vegetables with house-made sauce", "zh-Hans": "时令蔬菜配自制酱料", "zh-Hant": "時令蔬菜配自製醬料", ko: "제철 채소와 수제 소스" },
-          price: 980, image: "images/item-003-a1b2c3d4.webp" },
-        { id: "item-004", published: true, category: "food",
-          name: { ja: "特製カレー", en: "House Curry", "zh-Hans": "特制咖喱", "zh-Hant": "特製咖哩", ko: "스페셜 카레" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 1200, image: "images/item-004-a1b2c3d4.webp" },
-        { id: "item-005", published: true, category: "sweets",
-          name: { ja: "焼きたてチーズケーキ", en: "Baked Cheesecake", "zh-Hans": "现烤芝士蛋糕", "zh-Hant": "現烤起司蛋糕", ko: "구운 치즈케이크" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" },
-          price: 650, image: "images/item-005-a1b2c3d4.webp" }
-      ]
-    }
-  },
-
-  izakaya: {
-    label: "居酒屋", icon: "🏮",
-    products: {
-      store_name: { ja: "Sample 居酒屋", en: "Sample Izakaya", "zh-Hans": "Sample 居酒屋", "zh-Hant": "Sample 居酒屋", ko: "Sample 이자카야" },
-      categories: [
-        { id: "otoshi", name: { ja: "お通し・前菜", en: "Starters", "zh-Hans": "小菜・前菜", "zh-Hant": "小菜・前菜", ko: "안주・전채" } },
-        { id: "yakimono", name: { ja: "焼き物・揚げ物", en: "Grilled & Fried", "zh-Hans": "烧烤・炸物", "zh-Hant": "燒烤・炸物", ko: "구이・튀김" } },
-        { id: "drink", name: { ja: "ドリンク", en: "Drinks", "zh-Hans": "饮品", "zh-Hant": "飲品", ko: "음료" } }
-      ],
-      items: [
-        { id: "item-101", published: true, category: "otoshi", icon: "🫛",
-          name: { ja: "枝豆", en: "Edamame", "zh-Hans": "毛豆", "zh-Hant": "毛豆", ko: "에다마메" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 400, image: null },
-        { id: "item-102", published: true, category: "otoshi", icon: "🍳",
-          name: { ja: "出汁巻き玉子", en: "Dashi Rolled Omelette", "zh-Hans": "高汤煎蛋卷", "zh-Hant": "高湯煎蛋捲", ko: "다시마키 계란말이" },
-          description: { ja: "だしの効いたふわふわ玉子焼き", en: "Fluffy Japanese omelette with dashi broth", "zh-Hans": "松软的日式高汤煎蛋", "zh-Hant": "鬆軟的日式高湯煎蛋", ko: "육수가 스며든 폭신한 계란말이" }, price: 480, image: null },
-        { id: "item-103", published: true, category: "yakimono", icon: "🍗",
-          name: { ja: "鶏の唐揚げ", en: "Fried Chicken (Karaage)", "zh-Hans": "日式炸鸡块", "zh-Hant": "日式炸雞塊", ko: "가라아게" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 580, image: null },
-        { id: "item-104", published: true, category: "yakimono", icon: "🍢",
-          name: { ja: "焼き鳥盛り合わせ(5本)", en: "Yakitori Assortment (5 skewers)", "zh-Hans": "烤鸡肉串拼盘(5串)", "zh-Hant": "烤雞肉串拼盤(5串)", ko: "야키토리 모둠(5꼬치)" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 780, image: null },
-        { id: "item-105", published: true, category: "drink", icon: "🍺",
-          name: { ja: "生ビール", en: "Draft Beer", "zh-Hans": "生啤酒", "zh-Hant": "生啤酒", ko: "생맥주" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 550, image: null }
-      ]
-    }
-  },
-
-  restaurant: {
-    label: "レストラン", icon: "🍽",
-    products: {
-      store_name: { ja: "Sample Restaurant", en: "Sample Restaurant", "zh-Hans": "Sample Restaurant", "zh-Hant": "Sample Restaurant", ko: "Sample Restaurant" },
-      categories: [
-        { id: "appetizer", name: { ja: "前菜", en: "Appetizers", "zh-Hans": "前菜", "zh-Hant": "前菜", ko: "애피타이저" } },
-        { id: "main", name: { ja: "メイン", en: "Main Dishes", "zh-Hans": "主菜", "zh-Hant": "主菜", ko: "메인" } },
-        { id: "dessert", name: { ja: "デザート・ドリンク", en: "Dessert & Drinks", "zh-Hans": "甜点・饮品", "zh-Hant": "甜點・飲品", ko: "디저트・음료" } }
-      ],
-      items: [
-        { id: "item-201", published: true, category: "appetizer", icon: "🍅",
-          name: { ja: "カプレーゼ", en: "Caprese Salad", "zh-Hans": "卡布里沙拉", "zh-Hant": "卡布里沙拉", ko: "카프레제 샐러드" },
-          description: { ja: "トマトとモッツァレラのシンプルサラダ", en: "Tomato and mozzarella salad", "zh-Hans": "番茄配马苏里拉的简单沙拉", "zh-Hant": "番茄配莫札瑞拉的簡單沙拉", ko: "토마토와 모짜렐라 샐러드" }, price: 780, image: null },
-        { id: "item-202", published: true, category: "main", icon: "🍝",
-          name: { ja: "本日のパスタ", en: "Today's Pasta", "zh-Hans": "今日意面", "zh-Hant": "今日義大利麵", ko: "오늘의 파스타" },
-          description: { ja: "季節の食材を使ったシェフのおすすめ", en: "Chef's recommendation with seasonal ingredients", "zh-Hans": "使用当季食材的主厨推荐", "zh-Hant": "使用當季食材的主廚推薦", ko: "제철 재료를 사용한 셰프 추천" }, price: 1280, image: null },
-        { id: "item-203", published: true, category: "main", icon: "🍗",
-          name: { ja: "骨付き鶏もも肉のロースト", en: "Roasted Chicken Leg", "zh-Hans": "烤带骨鸡腿肉", "zh-Hant": "烤帶骨雞腿肉", ko: "닭다리살 로스트" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1680, image: null },
-        { id: "item-204", published: true, category: "dessert", icon: "🍮",
-          name: { ja: "ティラミス", en: "Tiramisu", "zh-Hans": "提拉米苏", "zh-Hant": "提拉米蘇", ko: "티라미수" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 650, image: null },
-        { id: "item-205", published: true, category: "dessert", icon: "🍷",
-          name: { ja: "グラスワイン(赤/白)", en: "Glass of Wine (Red/White)", "zh-Hans": "杯装红酒/白酒", "zh-Hant": "杯裝紅酒/白酒", ko: "글라스 와인(레드/화이트)" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 700, image: null }
-      ]
-    }
-  },
-
-  ramen: {
-    label: "ラーメン店", icon: "🍜",
-    products: {
-      store_name: { ja: "Sample らーめん", en: "Sample Ramen", "zh-Hans": "Sample 拉面", "zh-Hant": "Sample 拉麵", ko: "Sample 라멘" },
-      categories: [
-        { id: "ramen", name: { ja: "ラーメン", en: "Ramen", "zh-Hans": "拉面", "zh-Hant": "拉麵", ko: "라멘" } },
-        { id: "side", name: { ja: "サイドメニュー", en: "Side Dishes", "zh-Hans": "配菜", "zh-Hant": "配菜", ko: "사이드 메뉴" } }
-      ],
-      items: [
-        { id: "item-301", published: true, category: "ramen", icon: "🍜",
-          name: { ja: "醤油ラーメン", en: "Shoyu Ramen", "zh-Hans": "酱油拉面", "zh-Hant": "醬油拉麵", ko: "쇼유 라멘" },
-          description: { ja: "鶏ガラベースのあっさり醤油スープ", en: "Light soy-sauce soup with chicken broth base", "zh-Hans": "鸡骨清爽酱油汤底", "zh-Hant": "雞骨清爽醬油湯底", ko: "닭육수 베이스의 깔끔한 간장 라멘" }, price: 850, image: null },
-        { id: "item-302", published: true, category: "ramen", icon: "🍜",
-          name: { ja: "味噌ラーメン", en: "Miso Ramen", "zh-Hans": "味噌拉面", "zh-Hant": "味噌拉麵", ko: "미소 라멘" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 900, image: null },
-        { id: "item-303", published: true, category: "side", icon: "🍚",
-          name: { ja: "半チャーハン", en: "Half Fried Rice", "zh-Hans": "半份炒饭", "zh-Hant": "半份炒飯", ko: "미니 볶음밥" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 400, image: null },
-        { id: "item-304", published: true, category: "side", icon: "🥟",
-          name: { ja: "餃子(5個)", en: "Gyoza (5pcs)", "zh-Hans": "煎饺(5个)", "zh-Hant": "煎餃(5個)", ko: "교자(5개)" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 350, image: null },
-        { id: "item-305", published: true, category: "side", icon: "🍥",
-          name: { ja: "替え玉", en: "Extra Noodles", "zh-Hans": "加面", "zh-Hant": "加麵", ko: "면 사리 추가" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 150, image: null }
-      ]
-    }
-  },
-
-  yakiniku: {
-    label: "焼肉店", icon: "🥩",
-    products: {
-      store_name: { ja: "Sample 焼肉", en: "Sample Yakiniku", "zh-Hans": "Sample 烤肉", "zh-Hant": "Sample 烤肉", ko: "Sample 야키니쿠" },
-      categories: [
-        { id: "meat", name: { ja: "カルビ・ロース", en: "Short Rib & Loin", "zh-Hans": "五花肉・里脊肉", "zh-Hant": "五花肉・里肌肉", ko: "갈비・로스" } },
-        { id: "side", name: { ja: "サイドメニュー", en: "Side Dishes", "zh-Hans": "配菜", "zh-Hant": "配菜", ko: "사이드 메뉴" } },
-        { id: "drink", name: { ja: "ドリンク", en: "Drinks", "zh-Hans": "饮品", "zh-Hant": "飲品", ko: "음료" } }
-      ],
-      items: [
-        { id: "item-401", published: true, category: "meat", icon: "🥩",
-          name: { ja: "特選カルビ", en: "Premium Short Rib", "zh-Hans": "特选牛五花", "zh-Hant": "特選牛五花", ko: "특선 갈비" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1980, image: null },
-        { id: "item-402", published: true, category: "meat", icon: "🥩",
-          name: { ja: "上ロース", en: "Prime Loin", "zh-Hans": "上等里脊肉", "zh-Hant": "特選里肌肉", ko: "특상 로스" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 1780, image: null },
-        { id: "item-403", published: true, category: "side", icon: "🍲",
-          name: { ja: "石焼ビビンバ", en: "Stone-pot Bibimbap", "zh-Hans": "石锅拌饭", "zh-Hant": "石鍋拌飯", ko: "돌솥 비빔밥" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 980, image: null },
-        { id: "item-404", published: true, category: "side", icon: "🥬",
-          name: { ja: "サンチュ・野菜盛り合わせ", en: "Lettuce & Vegetable Platter", "zh-Hans": "生菜蔬菜拼盘", "zh-Hant": "生菜蔬菜拼盤", ko: "쌈채소 모둠" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 480, image: null },
-        { id: "item-405", published: true, category: "drink", icon: "🍺",
-          name: { ja: "生ビール", en: "Draft Beer", "zh-Hans": "生啤酒", "zh-Hant": "生啤酒", ko: "생맥주" },
-          description: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" }, price: 550, image: null }
-      ]
-    }
   }
+
 };
 
 var PRIMARY_TYPES = ["kimono", "bike", "animalcafe"];
-var OTHER_TYPES = ["cafe", "izakaya", "restaurant", "ramen", "yakiniku"];
 var DEFAULT_TYPE = "kimono";
 var currentType = DEFAULT_TYPE;
 
@@ -1126,12 +1024,6 @@ function buildTypeSwitch() {
   PRIMARY_TYPES.forEach(function (typeKey) {
     wrap.appendChild(makeTypePill(typeKey));
   });
-
-  var otherWrap = document.getElementById("otherTypeSwitch");
-  otherWrap.innerHTML = "";
-  OTHER_TYPES.forEach(function (typeKey) {
-    otherWrap.appendChild(makeTypePill(typeKey));
-  });
 }
 
 function makeTypePill(typeKey) {
@@ -1150,17 +1042,9 @@ function updateTypeSwitchState() {
   document.querySelectorAll(".type-pill").forEach(function (b) {
     b.setAttribute("aria-pressed", b.dataset.type === currentType ? "true" : "false");
   });
-  if (OTHER_TYPES.indexOf(currentType) !== -1) {
-    document.getElementById("otherTypesWrap").hidden = false;
-    document.getElementById("otherTypesToggle").textContent = "その他の活用例(飲食)を隠す ▴";
-  }
 }
 
-// カフェのみdemo-admin.htmlでの編集内容(localStorage)を反映する。
 function dataForType(typeKey) {
-  if (typeKey === "cafe") {
-    return readLocalDemoData() || SAMPLE_SETS.cafe.products;
-  }
   return SAMPLE_SETS[typeKey].products;
 }
 
@@ -1203,13 +1087,6 @@ function loadProducts() {
     console.error("[demo] JS enhancement failed, static fallback content remains visible:", err);
   }
 }
-
-document.getElementById("otherTypesToggle").addEventListener("click", function () {
-  var wrap = document.getElementById("otherTypesWrap");
-  var willShow = wrap.hidden;
-  wrap.hidden = !willShow;
-  this.textContent = willShow ? "その他の活用例(飲食)を隠す ▴" : "その他の活用例(飲食)を見る ▾";
-});
 
 loadProducts();
 </script>
