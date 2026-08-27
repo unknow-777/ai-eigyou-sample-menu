@@ -248,6 +248,12 @@ a{color:var(--brand);}
 .cta-section{margin:32px 0 0;text-align:center;}
 .cta-section-title{font-size:1.02rem;font-weight:700;margin-bottom:6px;}
 .cta-section-text{font-size:0.86rem;color:var(--text-muted);line-height:1.6;}
+
+.site-footer{
+  margin-top:36px;padding-top:18px;border-top:1px solid var(--line);
+  text-align:center;font-size:0.76rem;color:var(--text-muted);line-height:1.8;
+}
+.site-footer a{color:var(--text-muted);text-decoration:underline;}
 </style>
 
 <!-- ===== Hero(営業用。常に日本語固定。JavaScriptに依存せず常時表示される静的HTML) ===== -->
@@ -373,13 +379,19 @@ a{color:var(--brand);}
       <div class="price-label">導入事例、募集中</div>
       <div class="price-num" style="font-size:1.5rem;">1か月無料でお試しいただけます</div>
       <div class="price-note" style="margin-top:10px;">現在、外国人のお客様が利用される店舗・施設様を対象に、導入事例にご協力いただける事業者様を3店舗限定で募集しています。実際の店舗に合わせて、利用方法・料金・ルール・FAQなどの案内ページを作成します。</div>
-      <a class="hero-cta" style="margin-top:16px;" href="#demo">店舗用サンプルについて相談する</a>
+      <a class="hero-cta" style="margin-top:16px;" href="mailto:78yen.sidejob@gmail.com?subject=MELA!%20%E5%B0%8E%E5%85%A5%E4%BA%8B%E4%BE%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6&body=%E5%BA%97%E8%88%97%E5%90%8D%EF%BC%9A%0A%E3%81%94%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%E3%81%8A%E5%90%8D%E5%89%8D%EF%BC%9A%0A%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88%EF%BC%9A%0A">店舗用サンプルについて相談する</a>
+      <div class="price-note" style="margin-top:10px;font-size:0.72rem;">Instagram DM・メール・お問い合わせフォームなど、届いたご連絡へそのままご返信いただいても構いません。</div>
     </div>
   </div>
 
   <div class="cta-section">
     <div class="cta-section-title">あなたのお店の場合は？</div>
     <div class="cta-section-text">店舗様の料金・利用方法・注意事項などに合わせたMELA!のサンプル画面も無料で作成できます。</div>
+  </div>
+
+  <div class="site-footer">
+    <div>運営：MELA! （担当：中山連）</div>
+    <div>お問い合わせ：<a href="mailto:78yen.sidejob@gmail.com">78yen.sidejob@gmail.com</a></div>
   </div>
 
 </div>
@@ -439,7 +451,7 @@ var CONTENT_TAB_ORDER = ["plans", "steps", "rules", "faq"];
 
 var PRODUCTS = null;
 var currentLang = "ja";
-var currentContentTab = "plans";
+var currentContentTab = "rules"; // 料金プランより先に「ルール・注意事項」を初期表示し、単なるメニューに見えないようにする
 
 function textOrFallback(field, lang) {
   if (!field) return "";
@@ -1050,7 +1062,7 @@ function dataForType(typeKey) {
 function selectType(typeKey) {
   if (!SAMPLE_SETS[typeKey]) typeKey = DEFAULT_TYPE;
   currentType = typeKey;
-  currentContentTab = "plans";
+  currentContentTab = "rules"; // 料金プランより先に「ルール・注意事項」を初期表示し、単なるメニューに見えないようにする
   updateTypeSwitchState();
 
   try {
