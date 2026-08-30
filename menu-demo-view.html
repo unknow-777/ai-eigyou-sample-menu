@@ -1011,11 +1011,311 @@ var SAMPLE_SETS = {
         }
       ]
     }
+  },
+
+  craft: {
+    label: "伝統工芸・刃物",
+    icon: "🔪",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample 伝統工芸工房", en: "Sample Craft Workshop", "zh-Hans": "Sample 传统工艺工坊", "zh-Hant": "Sample 傳統工藝工坊", ko: "Sample 전통 공예 공방" },
+      plans: {
+        categories: [
+          { id: "plan", name: { ja: "体験プラン", en: "Experience Plans", "zh-Hans": "体验套餐", "zh-Hant": "體驗方案", ko: "체험 플랜" } },
+          { id: "option", name: { ja: "オプション", en: "Options", "zh-Hans": "附加选项", "zh-Hant": "附加選項", ko: "옵션" } }
+        ],
+        items: [
+          { id: "c-001", published: true, category: "plan", icon: "👀",
+            name: { ja: "工房見学のみ", en: "Workshop Tour Only", "zh-Hans": "仅工坊参观", "zh-Hant": "僅工坊參觀", ko: "공방 견학만" },
+            description: { ja: "職人の作業風景を間近で見学(所要約15分)", en: "Watch our craftspeople work up close (approx. 15 min)", "zh-Hans": "近距离参观工匠作业过程(约15分钟)", "zh-Hant": "近距離參觀工匠作業過程(約15分鐘)", ko: "장인의 작업 모습을 가까이서 견학(약 15분)" },
+            price: 500, image: null },
+          { id: "c-002", published: true, category: "plan", icon: "🔨",
+            name: { ja: "制作体験(小物コース)", en: "Making Experience (Small Item Course)", "zh-Hans": "制作体验(小物课程)", "zh-Hant": "製作體驗(小物課程)", ko: "제작 체험(소품 코스)" },
+            description: { ja: "ペーパーナイフ等の小物を1点制作(所要約60分)", en: "Make one small item, such as a paper knife (approx. 60 min)", "zh-Hans": "制作纸刀等小物一件(约60分钟)", "zh-Hant": "製作紙刀等小物一件(約60分鐘)", ko: "종이칼 등 소품 1점 제작(약 60분)" },
+            price: 3500, image: null },
+          { id: "c-003", published: true, category: "plan", icon: "🗡",
+            name: { ja: "制作体験(本格コース)", en: "Making Experience (Full Course)", "zh-Hans": "制作体验(正式课程)", "zh-Hant": "製作體驗(正式課程)", ko: "제작 체험(정식 코스)" },
+            description: { ja: "職人指導のもと本格的な工程を体験(所要約90分)", en: "Experience the full process with hands-on guidance from a craftsperson (approx. 90 min)", "zh-Hans": "在工匠指导下体验正式制作工序(约90分钟)", "zh-Hant": "在工匠指導下體驗正式製作工序(約90分鐘)", ko: "장인의 지도하에 정식 공정을 체험(약 90분)" },
+            price: 6000, image: null },
+          { id: "c-101", published: true, category: "option", icon: "📦",
+            name: { ja: "国内発送", en: "Domestic Shipping", "zh-Hans": "日本国内配送", "zh-Hant": "日本國內配送", ko: "일본 국내 배송" },
+            description: { ja: "完成品をご自宅までお届け", en: "We ship your finished piece to your address", "zh-Hans": "将成品配送至您的住址", "zh-Hant": "將成品配送至您的住址", ko: "완성품을 자택으로 배송해 드립니다" },
+            price: 1200, image: null },
+          { id: "c-102", published: true, category: "option", icon: "🌏",
+            name: { ja: "海外発送", en: "International Shipping", "zh-Hans": "海外配送", "zh-Hant": "海外配送", ko: "해외 배송" },
+            description: { ja: "海外のご自宅までお届け(国により金額変動)", en: "We ship overseas (fee varies by country)", "zh-Hans": "配送至海外住址(费用因国家而异)", "zh-Hant": "配送至海外住址(費用因國家而異)", ko: "해외 자택으로 배송(국가에 따라 금액 변동)" },
+            price: 3000, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "🔪",
+          title: { ja: "体験の流れ", en: "How It Works", "zh-Hans": "体验流程", "zh-Hant": "體驗流程", ko: "체험 흐름" },
+          items: [
+            { text: { ja: "受付・コース選択", en: "Check-in & choose your course", "zh-Hans": "受理・选择课程", "zh-Hant": "受理・選擇課程", ko: "접수・코스 선택" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "道具・素材の説明", en: "Introduction to tools and materials", "zh-Hans": "工具・材料说明", "zh-Hant": "工具・材料說明", ko: "도구・재료 설명" },
+              desc: { ja: "職人が使い方と安全な扱い方をご説明します。", en: "Our craftsperson will explain how to use the tools safely.", "zh-Hans": "工匠将说明使用方法及安全操作方式。", "zh-Hant": "工匠將說明使用方法及安全操作方式。", ko: "장인이 사용법과 안전한 취급법을 설명해 드립니다." } },
+            { text: { ja: "制作体験", en: "Hands-on making", "zh-Hans": "制作体验", "zh-Hant": "製作體驗", ko: "제작 체험" }, desc: { ja: "スタッフがそばで見守りながらサポートします。", en: "Staff will be by your side to assist throughout.", "zh-Hans": "工作人员将全程在旁协助。", "zh-Hant": "工作人員將全程在旁協助。", ko: "스태프가 옆에서 지켜보며 도와드립니다." } },
+            { text: { ja: "仕上げ・お会計", en: "Finishing & checkout", "zh-Hans": "收尾・结账", "zh-Hant": "收尾・結帳", ko: "마무리・계산" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "howto", type: "steps", icon: "🛠",
+          title: { ja: "道具の使い方", en: "Using the Tools", "zh-Hans": "工具使用方法", "zh-Hant": "工具使用方法", ko: "도구 사용법" },
+          items: [
+            { text: { ja: "刃物は必ず職人の指示に従って持ってください", en: "Always hold the blade tools as instructed by our craftsperson", "zh-Hans": "使用刀具时请务必按照工匠指示握持", "zh-Hant": "使用刀具時請務必按照工匠指示握持", ko: "칼날 도구는 반드시 장인의 지시에 따라 잡아 주세요" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "刃先を人に向けないでください", en: "Never point the blade toward another person", "zh-Hans": "请勿将刀刃朝向他人", "zh-Hant": "請勿將刀刃朝向他人", ko: "칼끝을 사람 쪽으로 향하지 마세요" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "作業台の上でのみ道具を使用してください", en: "Only use tools on the workbench provided", "zh-Hans": "请仅在工作台上使用工具", "zh-Hant": "請僅在工作檯上使用工具", ko: "도구는 반드시 작업대 위에서만 사용해 주세요" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "rules", type: "rules", icon: "⚠️",
+          title: { ja: "安全上の注意・取り扱い注意", en: "Safety Notes & Handling Cautions", "zh-Hans": "安全注意事项・使用注意事项", "zh-Hant": "安全注意事項・使用注意事項", ko: "안전 주의사항・취급 주의사항" },
+          items: [
+            { icon: "🔪", text: { ja: "刃物は必ずスタッフの指導のもとでのみ使用してください", en: "Blade tools must only be used under staff supervision", "zh-Hans": "刀具请务必在工作人员指导下使用", "zh-Hant": "刀具請務必在工作人員指導下使用", ko: "칼날 도구는 반드시 스태프의 지도하에만 사용해 주세요" } },
+            { icon: "🧤", text: { ja: "軍手・保護具は着用したままお願いします", en: "Please keep gloves and protective gear on throughout", "zh-Hans": "请全程佩戴手套等防护用品", "zh-Hant": "請全程佩戴手套等防護用品", ko: "장갑・보호구는 착용한 채로 진행해 주세요" } },
+            { icon: "🚼", text: { ja: "小さなお子様の単独での道具使用はご遠慮ください", en: "Young children should not use tools unsupervised", "zh-Hans": "请勿让年幼儿童单独使用工具", "zh-Hant": "請勿讓年幼兒童單獨使用工具", ko: "어린 자녀가 단독으로 도구를 사용하지 않도록 해주세요" } },
+            { icon: "💧", text: { ja: "破損・怪我等が発生した場合は速やかにスタッフへお伝えください", en: "Notify staff immediately in case of damage or injury", "zh-Hans": "如发生损坏或受伤，请立即告知工作人员", "zh-Hant": "如發生損壞或受傷，請立即告知工作人員", ko: "파손・부상 발생 시 즉시 스태프에게 알려 주세요" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "所要時間はどれくらいですか？", en: "How long does it take?", "zh-Hans": "所需时间大约多久？", "zh-Hant": "所需時間大約多久？", ko: "소요 시간은 어느 정도인가요?" },
+              a: { ja: "コースにより60〜90分程度です。", en: "Around 60 to 90 minutes depending on the course.", "zh-Hans": "根据课程不同，约需60〜90分钟。", "zh-Hant": "根據課程不同，約需60〜90分鐘。", ko: "코스에 따라 60〜90분 정도입니다." } },
+            { q: { ja: "作品はいつ完成しますか？", en: "When will my piece be finished?", "zh-Hans": "作品什么时候完成？", "zh-Hant": "作品什麼時候完成？", ko: "작품은 언제 완성되나요?" },
+              a: { ja: "小物コースは当日お渡し、本格コースは仕上げ加工のため2〜3週間後の発送となります。", en: "Small-item course pieces are ready same-day; full course pieces require finishing work and ship in 2–3 weeks.", "zh-Hans": "小物课程当日即可取件，正式课程因需精加工，将于2〜3周后配送。", "zh-Hant": "小物課程當日即可取件，正式課程因需精加工，將於2〜3週後配送。", ko: "소품 코스는 당일 수령 가능하며, 정식 코스는 마감 가공을 위해 2〜3주 후 발송됩니다." } },
+            { q: { ja: "その場で持ち帰れますか？", en: "Can I take it home the same day?", "zh-Hans": "可以当场带走吗？", "zh-Hant": "可以當場帶走嗎？", ko: "그 자리에서 가져갈 수 있나요?" },
+              a: { ja: "小物コースは持ち帰り可能です。本格コースは発送のみとなります。", en: "The small-item course can be taken home immediately. The full course is ship-only.", "zh-Hans": "小物课程可当场带走，正式课程仅提供配送。", "zh-Hant": "小物課程可當場帶走，正式課程僅提供配送。", ko: "소품 코스는 당일 반출이 가능합니다. 정식 코스는 배송으로만 받으실 수 있습니다." } },
+            { q: { ja: "海外への発送はできますか？", en: "Can you ship internationally?", "zh-Hans": "可以配送到海外吗？", "zh-Hant": "可以配送到海外嗎？", ko: "해외 배송이 가능한가요?" },
+              a: { ja: "可能です。刃物類は各国の輸入規制により発送できない場合がございますので事前にご相談ください。", en: "Yes, but blade items may be restricted by import regulations in some countries — please check with us in advance.", "zh-Hans": "可以，但刀具类可能因各国进口规定而无法配送，请提前咨询。", "zh-Hant": "可以，但刀具類可能因各國進口規定而無法配送，請提前諮詢。", ko: "가능합니다. 다만 칼날류는 국가별 수입 규제로 인해 발송이 제한될 수 있으니 사전에 문의해 주세요." } },
+            { q: { ja: "お手入れ方法を教えてもらえますか？", en: "Will you show me how to care for it?", "zh-Hans": "可以教我保养方法吗？", "zh-Hant": "可以教我保養方法嗎？", ko: "관리 방법을 알려주시나요?" },
+              a: { ja: "はい、体験終了時にお手入れ方法をカードでお渡しします。", en: "Yes, we hand out a care instruction card at the end of your experience.", "zh-Hans": "可以，体验结束时会附上保养说明卡。", "zh-Hant": "可以，體驗結束時會附上保養說明卡。", ko: "네, 체험이 끝날 때 관리 방법 카드를 드립니다." } }
+          ]
+        }
+      ]
+    }
+  },
+
+  brewery: {
+    label: "酒蔵・食品製造",
+    icon: "🍶",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample 酒蔵・食品蔵", en: "Sample Brewery & Food Cellar", "zh-Hans": "Sample 酒藏・食品坊", "zh-Hant": "Sample 酒藏・食品坊", ko: "Sample 양조장・식품 공방" },
+      plans: {
+        categories: [
+          { id: "plan", name: { ja: "見学・試飲プラン", en: "Tour & Tasting Plans", "zh-Hans": "参观・试饮套餐", "zh-Hant": "參觀・試飲方案", ko: "견학・시음 플랜" } },
+          { id: "goods", name: { ja: "商品購入", en: "Purchase", "zh-Hans": "商品购买", "zh-Hant": "商品購買", ko: "상품 구매" } }
+        ],
+        items: [
+          { id: "br-001", published: true, category: "plan", icon: "🚶",
+            name: { ja: "蔵見学のみ", en: "Facility Tour Only", "zh-Hans": "仅参观酒藏", "zh-Hant": "僅參觀酒藏", ko: "양조장 견학만" },
+            description: { ja: "製造の様子をご案内(所要約20分)", en: "A guided look at our production process (approx. 20 min)", "zh-Hans": "参观制造过程(约20分钟)", "zh-Hant": "參觀製造過程(約20分鐘)", ko: "제조 과정 안내(약 20분)" },
+            price: 300, image: null },
+          { id: "br-002", published: true, category: "plan", icon: "🍶",
+            name: { ja: "試飲セット(3種)", en: "Tasting Set (3 kinds)", "zh-Hans": "试饮套装(3种)", "zh-Hant": "試飲套裝(3種)", ko: "시음 세트(3종)" },
+            description: { ja: "定番3種をお猪口で試飲", en: "Taste our 3 signature varieties in small cups", "zh-Hans": "以酒杯试饮3款经典产品", "zh-Hant": "以酒杯試飲3款經典產品", ko: "대표 3종을 잔으로 시음" },
+            price: 1000, image: null },
+          { id: "br-003", published: true, category: "plan", icon: "🥂",
+            name: { ja: "試飲セット(5種・限定酒含む)", en: "Tasting Set (5 kinds, incl. limited edition)", "zh-Hans": "试饮套装(5种・含限量款)", "zh-Hant": "試飲套裝(5種・含限量款)", ko: "시음 세트(5종・한정판 포함)" },
+            description: { ja: "季節限定酒を含む5種を試飲", en: "Includes a seasonal limited-edition brew among 5 varieties", "zh-Hans": "含季节限定酒在内共5种试饮", "zh-Hant": "含季節限定酒在內共5種試飲", ko: "계절 한정주를 포함한 5종 시음" },
+            price: 1800, image: null },
+          { id: "br-101", published: true, category: "goods", icon: "🍾",
+            name: { ja: "蔵元限定ボトル(720ml)", en: "Brewery-Exclusive Bottle (720ml)", "zh-Hans": "酒藏限定瓶装(720ml)", "zh-Hant": "酒藏限定瓶裝(720ml)", ko: "양조장 한정 보틀(720ml)" },
+            description: { ja: "この蔵でしか買えない限定商品", en: "Available only here at the brewery", "zh-Hans": "仅在本店销售的限定商品", "zh-Hant": "僅在本店銷售的限定商品", ko: "이곳에서만 구입 가능한 한정 상품" },
+            price: 2500, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "🍶",
+          title: { ja: "楽しみ方の流れ", en: "How to Enjoy Your Visit", "zh-Hans": "游览流程", "zh-Hant": "遊覽流程", ko: "이용 흐름" },
+          items: [
+            { text: { ja: "受付・プラン選択", en: "Check-in & choose your plan", "zh-Hans": "受理・选择套餐", "zh-Hant": "受理・選擇方案", ko: "접수・플랜 선택" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "蔵内を見学", en: "Tour the facility", "zh-Hans": "参观酒藏内部", "zh-Hant": "參觀酒藏內部", ko: "양조장 내부 견학" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "試飲カウンターへ", en: "Head to the tasting counter", "zh-Hans": "前往试饮柜台", "zh-Hant": "前往試飲櫃台", ko: "시음 카운터로 이동" }, desc: { ja: "スタッフが1杯ずつ特徴をご紹介します。", en: "Staff will introduce the character of each pour.", "zh-Hans": "工作人员将逐杯介绍风味特点。", "zh-Hant": "工作人員將逐杯介紹風味特點。", ko: "스태프가 한 잔씩 특징을 소개해 드립니다." } },
+            { text: { ja: "お気に入りがあればご購入", en: "Purchase your favorite if you'd like", "zh-Hans": "如有喜欢的可购买", "zh-Hant": "如有喜歡的可購買", ko: "마음에 드는 술이 있으면 구매" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "process", type: "steps", icon: "🏭",
+          title: { ja: "製造工程のご紹介", en: "Our Production Process", "zh-Hans": "制造工序介绍", "zh-Hant": "製造工序介紹", ko: "제조 공정 소개" },
+          items: [
+            { text: { ja: "原料の仕込み", en: "Preparing the ingredients", "zh-Hans": "原料准备", "zh-Hant": "原料準備", ko: "원료 준비" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "発酵(数週間)", en: "Fermentation (several weeks)", "zh-Hans": "发酵(数周)", "zh-Hant": "發酵(數週)", ko: "발효(수 주간)" }, desc: { ja: "温度管理をしながらじっくり発酵させます。", en: "Fermented slowly with careful temperature control.", "zh-Hans": "在严格温控下缓慢发酵。", "zh-Hant": "在嚴格溫控下緩慢發酵。", ko: "온도를 관리하며 천천히 발효시킵니다." } },
+            { text: { ja: "搾り・ろ過", en: "Pressing & filtering", "zh-Hans": "压榨・过滤", "zh-Hant": "壓榨・過濾", ko: "압착・여과" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "瓶詰め・出荷", en: "Bottling & shipping", "zh-Hans": "装瓶・出货", "zh-Hant": "裝瓶・出貨", ko: "병입・출하" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "rules", type: "rules", icon: "⚠️",
+          title: { ja: "ご注意事項", en: "Important Notes", "zh-Hans": "注意事项", "zh-Hant": "注意事項", ko: "주의사항" },
+          items: [
+            { icon: "🔞", text: { ja: "試飲は20歳(又は各国の飲酒可能年齢)以上の方に限ります", en: "Tasting is limited to guests of legal drinking age", "zh-Hans": "试饮仅限法定饮酒年龄以上人士", "zh-Hant": "試飲僅限法定飲酒年齡以上人士", ko: "시음은 법정 음주 가능 연령 이상만 가능합니다" } },
+            { icon: "🚗", text: { ja: "試飲後の運転は固くお断りしております", en: "Driving after tasting is strictly prohibited", "zh-Hans": "试饮后严禁驾车", "zh-Hant": "試飲後嚴禁駕車", ko: "시음 후 운전은 절대 금지되어 있습니다" } },
+            { icon: "🌾", text: { ja: "商品には小麦・大豆等のアレルゲンを含む場合があります", en: "Products may contain allergens such as wheat and soy", "zh-Hans": "商品可能含有小麦・大豆等过敏原", "zh-Hant": "商品可能含有小麥・大豆等過敏原", ko: "상품에는 밀・대두 등 알레르기 유발 성분이 포함될 수 있습니다" } },
+            { icon: "📸", text: { ja: "製造エリアでの撮影は一部制限がございます", en: "Photography is restricted in some production areas", "zh-Hans": "部分制造区域限制拍照", "zh-Hant": "部分製造區域限制拍照", ko: "제조 구역 내 일부 촬영이 제한됩니다" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "購入方法を教えてください", en: "How do I purchase items?", "zh-Hans": "请问如何购买？", "zh-Hant": "請問如何購買？", ko: "구매 방법을 알려주세요" },
+              a: { ja: "試飲後、気に入った商品をレジにてご購入いただけます。現金・クレジットカードに対応しています。", en: "After tasting, you can purchase your favorite at the register. We accept cash and credit cards.", "zh-Hans": "试饮后可在收银台购买喜欢的商品，支持现金及信用卡。", "zh-Hant": "試飲後可在收銀台購買喜歡的商品，支援現金及信用卡。", ko: "시음 후 마음에 드는 상품을 계산대에서 구매하실 수 있습니다. 현금・신용카드 모두 가능합니다." } },
+            { q: { ja: "その場で持ち帰れますか？", en: "Can I take it with me right away?", "zh-Hans": "可以当场带走吗？", "zh-Hant": "可以當場帶走嗎？", ko: "그 자리에서 가져갈 수 있나요?" },
+              a: { ja: "はい、購入商品はその場でお持ち帰りいただけます。", en: "Yes, purchased items can be taken home immediately.", "zh-Hans": "可以，购买的商品可当场带走。", "zh-Hant": "可以，購買的商品可當場帶走。", ko: "네, 구매하신 상품은 그 자리에서 가져가실 수 있습니다." } },
+            { q: { ja: "海外への発送はできますか？", en: "Can you ship internationally?", "zh-Hans": "可以配送到海外吗？", "zh-Hant": "可以配送到海外嗎？", ko: "해외 배송이 가능한가요?" },
+              a: { ja: "国により酒類の輸入規制がございますので、発送可否は事前にご確認ください。", en: "Alcohol import regulations vary by country, so please check with us before ordering.", "zh-Hans": "酒类进口规定因国家而异，请提前确认是否可配送。", "zh-Hant": "酒類進口規定因國家而異，請提前確認是否可配送。", ko: "국가별 주류 수입 규제가 있으므로 배송 가능 여부를 사전에 확인해 주세요." } },
+            { q: { ja: "購入した商品の保存方法は？", en: "How should I store what I bought?", "zh-Hans": "购买的商品应如何保存？", "zh-Hant": "購買的商品應如何保存？", ko: "구매한 상품은 어떻게 보관하나요?" },
+              a: { ja: "直射日光を避け、冷暗所での保管をおすすめします。商品ラベルにも記載しています。", en: "We recommend storing in a cool, dark place away from direct sunlight — details are also on the label.", "zh-Hans": "建议避光低温保存，商品标签上也有详细说明。", "zh-Hant": "建議避光低溫保存，商品標籤上也有詳細說明。", ko: "직사광선을 피해 서늘하고 어두운 곳에 보관하시길 권장하며, 상품 라벨에도 안내되어 있습니다." } }
+          ]
+        }
+      ]
+    }
+  },
+
+  handmade: {
+    label: "ものづくり体験",
+    icon: "🏺",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample ものづくり工房", en: "Sample Handmade Studio", "zh-Hans": "Sample 手作工坊", "zh-Hant": "Sample 手作工坊", ko: "Sample 핸드메이드 공방" },
+      plans: {
+        categories: [
+          { id: "plan", name: { ja: "体験プラン", en: "Experience Plans", "zh-Hans": "体验套餐", "zh-Hant": "體驗方案", ko: "체험 플랜" } },
+          { id: "option", name: { ja: "受取オプション", en: "Delivery Options", "zh-Hans": "领取选项", "zh-Hant": "領取選項", ko: "수령 옵션" } }
+        ],
+        items: [
+          { id: "h-001", published: true, category: "plan", icon: "🏺",
+            name: { ja: "陶芸体験(ろくろ)", en: "Pottery Experience (Wheel)", "zh-Hans": "陶艺体验(拉坯)", "zh-Hant": "陶藝體驗(拉坯)", ko: "도예 체험(물레)" },
+            description: { ja: "電動ろくろで器を成形(所要約60分)", en: "Shape your own piece on an electric pottery wheel (approx. 60 min)", "zh-Hans": "用电动拉坯机制作器皿(约60分钟)", "zh-Hant": "用電動拉坯機製作器皿(約60分鐘)", ko: "전동 물레로 그릇 성형(약 60분)" },
+            price: 4000, image: null },
+          { id: "h-002", published: true, category: "plan", icon: "🖐",
+            name: { ja: "手びねり体験", en: "Hand-Building Experience", "zh-Hans": "手捏体验", "zh-Hant": "手捏體驗", ko: "손빚기 체험" },
+            description: { ja: "ろくろを使わず手だけで成形(所要約45分)", en: "Shape clay by hand without a wheel (approx. 45 min)", "zh-Hans": "不使用拉坯机，纯手工成形(约45分钟)", "zh-Hant": "不使用拉坯機，純手工成形(約45分鐘)", ko: "물레 없이 손으로만 성형(약 45분)" },
+            price: 3000, image: null },
+          { id: "h-003", published: true, category: "plan", icon: "🔥",
+            name: { ja: "ガラス工芸体験", en: "Glasswork Experience", "zh-Hans": "玻璃工艺体验", "zh-Hant": "玻璃工藝體驗", ko: "유리 공예 체험" },
+            description: { ja: "とんぼ玉や小皿を制作(所要約50分)", en: "Make a glass bead or small dish (approx. 50 min)", "zh-Hans": "制作琉璃珠或小盘(约50分钟)", "zh-Hant": "製作琉璃珠或小盤(約50分鐘)", ko: "유리구슬 또는 작은 접시 제작(약 50분)" },
+            price: 4500, image: null },
+          { id: "h-101", published: true, category: "option", icon: "🏠",
+            name: { ja: "国内発送", en: "Domestic Shipping", "zh-Hans": "日本国内配送", "zh-Hant": "日本國內配送", ko: "일본 국내 배송" },
+            description: { ja: "焼成完了後、ご自宅までお届け", en: "Delivered to your address once firing is complete", "zh-Hans": "烧制完成后配送至您的住址", "zh-Hant": "燒製完成後配送至您的住址", ko: "소성 완료 후 자택으로 배송" },
+            price: 800, image: null },
+          { id: "h-102", published: true, category: "option", icon: "🌏",
+            name: { ja: "海外発送", en: "International Shipping", "zh-Hans": "海外配送", "zh-Hant": "海外配送", ko: "해외 배송" },
+            description: { ja: "海外のご自宅までお届け(国により金額変動)", en: "We ship overseas (fee varies by country)", "zh-Hans": "配送至海外住址(费用因国家而异)", "zh-Hant": "配送至海外住址(費用因國家而異)", ko: "해외 자택으로 배송(국가에 따라 금액 변동)" },
+            price: 3000, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "🏺",
+          title: { ja: "体験の流れ", en: "How It Works", "zh-Hans": "体验流程", "zh-Hant": "體驗流程", ko: "체험 흐름" },
+          items: [
+            { text: { ja: "受付・プラン選択", en: "Check-in & choose your plan", "zh-Hans": "受理・选择套餐", "zh-Hant": "受理・選擇方案", ko: "접수・플랜 선택" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "作り方の説明", en: "Technique explanation", "zh-Hans": "制作方法说明", "zh-Hant": "製作方法說明", ko: "제작 방법 설명" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "制作体験", en: "Hands-on making", "zh-Hans": "制作体验", "zh-Hant": "製作體驗", ko: "제작 체험" }, desc: { ja: "スタッフがそばで見守りながらサポートします。", en: "Staff will be by your side to assist throughout.", "zh-Hans": "工作人员将全程在旁协助。", "zh-Hant": "工作人員將全程在旁協助。", ko: "스태프가 옆에서 지켜보며 도와드립니다." } },
+            { text: { ja: "仕上げ・お会計", en: "Finishing & checkout", "zh-Hans": "收尾・结账", "zh-Hant": "收尾・結帳", ko: "마무리・계산" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "rules", type: "rules", icon: "⚠️",
+          title: { ja: "服装・安全上の注意", en: "Attire & Safety Notes", "zh-Hans": "服装・安全注意事项", "zh-Hant": "服裝・安全注意事項", ko: "복장・안전 주의사항" },
+          items: [
+            { icon: "👕", text: { ja: "汚れてもよい服装でお越しください(エプロン貸出あり)", en: "Please wear clothes you don't mind getting dirty (aprons available)", "zh-Hans": "请穿着不介意弄脏的服装(可租借围裙)", "zh-Hant": "請穿著不介意弄髒的服裝(可租借圍裙)", ko: "더러워져도 괜찮은 복장으로 와주세요(앞치마 대여 가능)" } },
+            { icon: "💍", text: { ja: "指輪・腕時計は事前に外してください", en: "Please remove rings and watches beforehand", "zh-Hans": "请提前取下戒指・手表", "zh-Hant": "請提前取下戒指・手錶", ko: "반지・손목시계는 미리 빼주세요" } },
+            { icon: "🔥", text: { ja: "ガラス体験は炉を使用するため火傷にご注意ください", en: "The glasswork course uses a furnace — please be careful of burns", "zh-Hans": "玻璃工艺体验使用炉具，请注意防止烫伤", "zh-Hant": "玻璃工藝體驗使用爐具，請注意防止燙傷", ko: "유리 공예 체험은 화로를 사용하므로 화상에 주의해 주세요" } },
+            { icon: "🧑‍🤝‍🧑", text: { ja: "道具はスタッフの指示に従ってお使いください", en: "Please use tools only as instructed by staff", "zh-Hans": "请按照工作人员指示使用工具", "zh-Hant": "請按照工作人員指示使用工具", ko: "도구는 스태프의 지시에 따라 사용해 주세요" } }
+          ]
+        },
+        { id: "afterexp", type: "notice", icon: "🔥",
+          title: { ja: "焼成・仕上げについて", en: "About Firing & Finishing", "zh-Hans": "关于烧制・收尾", "zh-Hant": "關於燒製・收尾", ko: "소성・마무리 안내" },
+          items: [
+            { text: { ja: "陶芸・ガラス作品は当日お渡しできません", en: "Pottery and glass pieces cannot be handed over the same day", "zh-Hans": "陶艺・玻璃作品无法当日交付", "zh-Hant": "陶藝・玻璃作品無法當日交付", ko: "도예・유리 작품은 당일 수령이 불가능합니다" } },
+            { text: { ja: "焼成・冷却には2〜4週間ほどかかります", en: "Firing and cooling take about 2 to 4 weeks", "zh-Hans": "烧制及冷却约需2〜4周", "zh-Hant": "燒製及冷卻約需2〜4週", ko: "소성 및 냉각에는 2〜4주 정도 소요됩니다" } },
+            { text: { ja: "完成後、店頭受取または発送でお渡しします", en: "Once finished, pick up in-store or have it shipped", "zh-Hans": "完成后可到店领取或选择配送", "zh-Hant": "完成後可到店領取或選擇配送", ko: "완성 후 매장 수령 또는 배송으로 받으실 수 있습니다" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "作品はいつ完成しますか？", en: "When will my piece be finished?", "zh-Hans": "作品什么时候完成？", "zh-Hant": "作品什麼時候完成？", ko: "작품은 언제 완성되나요?" },
+              a: { ja: "焼成が必要な作品は2〜4週間後の完成となります。", en: "Pieces that require firing are ready in 2 to 4 weeks.", "zh-Hans": "需要烧制的作品将在2〜4周后完成。", "zh-Hant": "需要燒製的作品將在2〜4週後完成。", ko: "소성이 필요한 작품은 2〜4주 후 완성됩니다." } },
+            { q: { ja: "焼成とは何ですか？", en: "What does \"firing\" mean?", "zh-Hans": "什么是烧制？", "zh-Hant": "什麼是燒製？", ko: "소성이란 무엇인가요?" },
+              a: { ja: "成形した粘土を高温の窯で焼き固める工程です。作品の耐久性と発色を出すために必要です。", en: "It's the process of hardening the shaped clay in a high-temperature kiln, needed for durability and color.", "zh-Hans": "是将成形黏土放入高温窑中烧硬的工序，为作品带来耐久性与发色效果。", "zh-Hant": "是將成形黏土放入高溫窯中燒硬的工序，為作品帶來耐久性與發色效果。", ko: "성형한 점토를 고온 가마에서 구워 굳히는 공정으로, 작품의 내구성과 발색을 위해 필요합니다." } },
+            { q: { ja: "受取方法を教えてください", en: "How do I receive my finished piece?", "zh-Hans": "请问如何领取作品？", "zh-Hant": "請問如何領取作品？", ko: "수령 방법을 알려주세요" },
+              a: { ja: "完成後にメールでご連絡します。店頭受取または発送(国内/海外)からお選びいただけます。", en: "We'll email you once it's ready. You can choose in-store pickup or shipping (domestic or international).", "zh-Hans": "完成后将通过邮件通知，可选择到店领取或配送(国内/海外)。", "zh-Hant": "完成後將透過郵件通知，可選擇到店領取或配送(國內/海外)。", ko: "완성 후 이메일로 안내해 드립니다. 매장 수령 또는 배송(국내/해외) 중 선택하실 수 있습니다." } },
+            { q: { ja: "海外への発送はできますか？", en: "Can you ship internationally?", "zh-Hans": "可以配送到海外吗？", "zh-Hant": "可以配送到海外嗎？", ko: "해외 배송이 가능한가요?" },
+              a: { ja: "可能です。割れ物のため専用の梱包で発送し、追加料金がかかります。", en: "Yes, fragile items are shipped with special packaging for an additional fee.", "zh-Hans": "可以，易碎品将使用专用包装配送，需另收费用。", "zh-Hant": "可以，易碎品將使用專用包裝配送，需另收費用。", ko: "가능합니다. 파손 위험이 있어 전용 포장으로 발송하며 추가 요금이 발생합니다." } }
+          ]
+        }
+      ]
+    }
+  },
+
+  culture: {
+    label: "日本文化体験",
+    icon: "🍵",
+    products: {
+      isFictionalDemo: true,
+      store_name: { ja: "Sample 日本文化体験処", en: "Sample Japanese Culture House", "zh-Hans": "Sample 日本文化体验处", "zh-Hant": "Sample 日本文化體驗處", ko: "Sample 일본 문화 체험관" },
+      plans: {
+        categories: [{ id: "plan", name: { ja: "体験プラン", en: "Experience Plans", "zh-Hans": "体验套餐", "zh-Hant": "體驗方案", ko: "체험 플랜" } }],
+        items: [
+          { id: "cu-001", published: true, category: "plan", icon: "🍵",
+            name: { ja: "茶道体験プラン", en: "Tea Ceremony Experience", "zh-Hans": "茶道体验套餐", "zh-Hant": "茶道體驗方案", ko: "다도 체험 플랜" },
+            description: { ja: "抹茶と和菓子付き(所要約45分)", en: "Includes matcha tea and a Japanese sweet (approx. 45 min)", "zh-Hans": "含抹茶与日式点心(约45分钟)", "zh-Hant": "含抹茶與日式點心(約45分鐘)", ko: "말차와 화과자 포함(약 45분)" },
+            price: 3000, image: null },
+          { id: "cu-002", published: true, category: "plan", icon: "🖌",
+            name: { ja: "書道体験プラン", en: "Calligraphy Experience", "zh-Hans": "书法体验套餐", "zh-Hant": "書法體驗方案", ko: "서예 체험 플랜" },
+            description: { ja: "好きな漢字・言葉を清書してお持ち帰り(所要約40分)", en: "Write and take home your chosen kanji or word (approx. 40 min)", "zh-Hans": "书写喜欢的汉字或词语并带走(约40分钟)", "zh-Hant": "書寫喜歡的漢字或詞語並帶走(約40分鐘)", ko: "원하는 한자・문구를 써서 가져가기(약 40분)" },
+            price: 2500, image: null },
+          { id: "cu-003", published: true, category: "plan", icon: "🧘",
+            name: { ja: "座禅体験プラン", en: "Zen Meditation Experience", "zh-Hans": "座禅体验套餐", "zh-Hant": "座禪體驗方案", ko: "좌선 체험 플랜" },
+            description: { ja: "僧侶による指導付き(所要約30分)", en: "Guided by a Buddhist monk (approx. 30 min)", "zh-Hans": "由僧侣亲自指导(约30分钟)", "zh-Hant": "由僧侶親自指導(約30分鐘)", ko: "스님의 지도 포함(약 30분)" },
+            price: 2000, image: null },
+          { id: "cu-101", published: true, category: "plan", icon: "👘",
+            name: { ja: "着物着用オプション", en: "Kimono Wearing Add-on", "zh-Hans": "和服着装追加选项", "zh-Hant": "和服著裝追加選項", ko: "기모노 착용 옵션" },
+            description: { ja: "体験中のみ着物を着用できます", en: "Wear a kimono during your experience", "zh-Hans": "体验期间可着和服", "zh-Hant": "體驗期間可著和服", ko: "체험 중에만 기모노를 착용할 수 있습니다" },
+            price: 1500, image: null }
+        ]
+      },
+      sections: [
+        { id: "flow", type: "steps", icon: "🍵",
+          title: { ja: "体験の流れ", en: "How It Works", "zh-Hans": "体验流程", "zh-Hant": "體驗流程", ko: "체험 흐름" },
+          items: [
+            { text: { ja: "受付・プラン選択", en: "Check-in & choose your plan", "zh-Hans": "受理・选择套餐", "zh-Hant": "受理・選擇方案", ko: "접수・플랜 선택" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "準備・着替え(希望者のみ)", en: "Preparation & changing (optional)", "zh-Hans": "准备・更衣(可选)", "zh-Hant": "準備・更衣(可選)", ko: "준비・환복(희망자만)" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "作法の説明", en: "Introduction to the etiquette", "zh-Hans": "礼仪说明", "zh-Hant": "禮儀說明", ko: "예법 설명" }, desc: { ja: "先生が基本的な作法をわかりやすくご案内します。", en: "Our instructor will explain the basic etiquette in simple terms.", "zh-Hans": "老师将以浅显易懂的方式讲解基本礼仪。", "zh-Hant": "老師將以淺顯易懂的方式講解基本禮儀。", ko: "선생님이 기본 예법을 알기 쉽게 안내해 드립니다." } },
+            { text: { ja: "体験開始", en: "Begin the experience", "zh-Hans": "开始体验", "zh-Hant": "開始體驗", ko: "체험 시작" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } },
+            { text: { ja: "終了・記念撮影", en: "Wrap-up & photo", "zh-Hans": "结束・纪念拍照", "zh-Hant": "結束・紀念拍照", ko: "종료・기념 촬영" }, desc: { ja: "", en: "", "zh-Hans": "", "zh-Hant": "", ko: "" } }
+          ]
+        },
+        { id: "manner", type: "rules", icon: "⚠️",
+          title: { ja: "作法・マナー・禁止事項", en: "Etiquette, Manners & Prohibitions", "zh-Hans": "作法・礼仪・禁止事项", "zh-Hant": "作法・禮儀・禁止事項", ko: "예법・매너・금지사항" },
+          items: [
+            { icon: "🤫", text: { ja: "体験中は静かにお過ごしください", en: "Please remain quiet during the experience", "zh-Hans": "体验期间请保持安静", "zh-Hant": "體驗期間請保持安靜", ko: "체험 중에는 조용히 해주세요" } },
+            { icon: "📵", text: { ja: "先生の説明中はスマートフォンの使用をお控えください", en: "Please refrain from using your phone while the instructor is speaking", "zh-Hans": "老师讲解时请勿使用手机", "zh-Hant": "老師講解時請勿使用手機", ko: "선생님이 설명하는 동안 스마트폰 사용을 자제해 주세요" } },
+            { icon: "🍵", text: { ja: "指示があるまでお茶・お菓子に手を付けないでください", en: "Please wait for instructions before touching the tea or sweets", "zh-Hans": "请在得到指示前不要动用茶点", "zh-Hant": "請在得到指示前不要動用茶點", ko: "안내가 있을 때까지 차・과자에 손대지 말아 주세요" } },
+            { icon: "🚶", text: { ja: "畳・茶室内では靴下着用でお願いします(裸足不可)", en: "Please wear socks (bare feet are not allowed) on tatami and in the tea room", "zh-Hans": "榻榻米・茶室内请穿着袜子(不可赤脚)", "zh-Hant": "榻榻米・茶室內請穿著襪子(不可赤腳)", ko: "다다미・다실 내에서는 양말을 착용해 주세요(맨발 불가)" } }
+          ]
+        },
+        { id: "faq", type: "faq", icon: "❓",
+          title: { ja: "よくある質問", en: "FAQ", "zh-Hans": "常见问题", "zh-Hant": "常見問題", ko: "자주 묻는 질문" },
+          items: [
+            { q: { ja: "服装の決まりはありますか？", en: "Is there a dress code?", "zh-Hans": "对服装有要求吗？", "zh-Hant": "對服裝有要求嗎？", ko: "복장 규정이 있나요?" },
+              a: { ja: "普段着で構いませんが、靴下の着用をお願いしています。着物オプションもございます。", en: "Casual clothing is fine, but please wear socks. A kimono option is also available.", "zh-Hans": "便服即可，但请穿着袜子。也提供和服体验选项。", "zh-Hant": "便服即可，但請穿著襪子。也提供和服體驗選項。", ko: "평상복도 괜찮지만 양말은 착용해 주세요. 기모노 옵션도 있습니다." } },
+            { q: { ja: "写真撮影はできますか？", en: "Can I take photos?", "zh-Hans": "可以拍照吗？", "zh-Hant": "可以拍照嗎？", ko: "사진 촬영이 가능한가요?" },
+              a: { ja: "体験の前後は撮影可能です。作法説明・体験中はご遠慮いただいています。", en: "Photos are allowed before and after the experience, but not during the etiquette lesson or the experience itself.", "zh-Hans": "体验前后可以拍照，讲解与体验过程中请勿拍照。", "zh-Hant": "體驗前後可以拍照，講解與體驗過程中請勿拍照。", ko: "체험 전후에는 촬영 가능하지만, 예법 설명・체험 중에는 삼가주세요." } },
+            { q: { ja: "子供も参加できますか？", en: "Can children participate?", "zh-Hans": "儿童也可以参加吗？", "zh-Hant": "兒童也可以參加嗎？", ko: "어린이도 참여할 수 있나요?" },
+              a: { ja: "小学生以上から参加可能です。未就学のお子様は保護者様のみのご参加となります。", en: "Children of elementary school age and up may participate. Younger children cannot join, but parents may still attend.", "zh-Hans": "小学生以上可参加，学龄前儿童仅限监护人参加。", "zh-Hant": "國小以上可參加，學齡前兒童僅限監護人參加。", ko: "초등학생 이상부터 참여 가능하며, 미취학 아동은 보호자만 참여하실 수 있습니다." } },
+            { q: { ja: "予約は必要ですか？", en: "Do I need a reservation?", "zh-Hans": "需要预约吗？", "zh-Hant": "需要預約嗎？", ko: "예약이 필요한가요?" },
+              a: { ja: "事前予約を推奨していますが、空きがあれば当日受付も可能です。", en: "Reservations are recommended, but same-day walk-ins are welcome if space is available.", "zh-Hans": "建议提前预约，如有空位当日也可受理。", "zh-Hant": "建議提前預約，如有空位當日也可受理。", ko: "사전 예약을 권장하지만, 자리가 있으면 당일 접수도 가능합니다." } },
+            { q: { ja: "遅刻した場合はどうなりますか？", en: "What if I'm late?", "zh-Hans": "迟到了怎么办？", "zh-Hant": "遲到了怎麼辦？", ko: "지각하면 어떻게 되나요?" },
+              a: { ja: "15分を超える遅刻の場合、体験時間が短縮される場合がございます。事前にご連絡ください。", en: "If you're more than 15 minutes late, your session time may be shortened. Please contact us in advance if possible.", "zh-Hans": "迟到超过15分钟，体验时间可能会缩短，请提前联系我们。", "zh-Hant": "遲到超過15分鐘，體驗時間可能會縮短，請提前聯繫我們。", ko: "15분 이상 지각하시면 체험 시간이 단축될 수 있습니다. 가능하면 사전에 연락해 주세요." } }
+          ]
+        }
+      ]
+    }
   }
 
 };
 
-var PRIMARY_TYPES = ["kimono", "bike", "animalcafe"];
+var PRIMARY_TYPES = ["kimono", "bike", "animalcafe", "craft", "brewery", "handmade", "culture"];
 var DEFAULT_TYPE = "kimono";
 var currentType = DEFAULT_TYPE;
 
