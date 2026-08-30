@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>MELA! — Experiment 001</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;800&family=Noto+Sans+JP:wght@400;600;800&family=Noto+Sans+SC:wght@400;600;800&family=Noto+Sans+KR:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E10;
+    --paper:#F6F4EF;
+    --ink:#141414;
+    --muted:#8C8880;
+    --accent:#FF5A2E;
+    --line:rgba(20,20,20,0.10);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);}
+  body{
+    min-height:100dvh;
+    font-family:'Noto Sans','Noto Sans JP','Noto Sans SC','Noto Sans KR',-apple-system,system-ui,sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .sheet{
+    width:100%;
+    max-width:460px;
+    min-height:100dvh;
+    background:var(--paper);
+    padding:0 26px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ===== 言語切替(常時表示・手動優先) ===== */
+  .langbar{
+    display:flex;justify-content:center;gap:4px;
+    padding:18px 0 0;flex-wrap:wrap;
+  }
+  .langbtn{
+    font-family:inherit;font-size:0.72rem;font-weight:600;letter-spacing:0.02em;
+    padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;color:var(--muted);cursor:pointer;
+  }
+  .langbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+  /* ===== 本体 ===== */
+  .stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:34px;
+    padding:20px 0 40px;
+  }
+
+  .block{opacity:0;transform:translateY(8px);animation:reveal 0.55s ease forwards;}
+  .block.b2{animation-delay:0.28s;}
+  .block.b3{animation-delay:0.62s;}
+  @keyframes reveal{to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){
+    .block{animation:none;opacity:1;transform:none;}
+  }
+
+  .eyebrow{
+    font-size:0.68rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 10px;
+  }
+  .said{
+    font-family:'Space Grotesk','Noto Sans JP','Noto Sans SC','Noto Sans KR',sans-serif;
+    font-size:1.7rem;font-weight:700;line-height:1.32;letter-spacing:-0.01em;
+    margin:0;
+  }
+  .said .quote{color:var(--accent);}
+
+  .divider{width:34px;height:2px;background:var(--ink);opacity:0.15;margin:2px 0;}
+
+  .point{
+    font-size:1.06rem;line-height:1.62;color:var(--ink);margin:0;
+  }
+  .point strong{color:var(--accent);font-weight:700;}
+
+  .footer{
+    padding:0 0 28px;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:7px;opacity:0.7;
+  }
+  .brand img{width:15px;height:15px;border-radius:4px;object-fit:cover;}
+  .brand span{font-size:0.72rem;font-weight:800;letter-spacing:0.03em;color:var(--ink);}
+  .tagline{font-size:0.68rem;color:var(--muted);text-align:center;line-height:1.5;max-width:280px;}
+  .more{font-size:0.68rem;color:var(--muted);text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="langbar" id="langbar" role="group" aria-label="Language"></div>
+
+  <div class="stage">
+    <div class="block b1">
+      <p class="eyebrow" id="eyebrow">It said</p>
+      <p class="said" id="saidText"></p>
+    </div>
+
+    <div class="block b2">
+      <div class="divider"></div>
+      <p class="point" id="pointText"></p>
+    </div>
+
+    <div class="block b3" id="microBlock">
+      <p class="point" id="microText" style="font-size:0.92rem;color:var(--muted);"></p>
+    </div>
+  </div>
+
+  <div class="footer block b3">
+    <div class="brand"><img src="../../images/mela-logo.jpg" alt=""><span>MELA!</span></div>
+    <p class="tagline" id="taglineText"></p>
+    <a class="more" id="moreLink" href="../../menu-demo-view.html" target="_blank" rel="noopener"></a>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   EXPERIMENT CONFIG — Experiment #002以降を作る際はこのファイルを
+   丸ごとコピーし、EXPERIMENT オブジェクトの中身だけを書き換える。
+   ページ構造・ロジックは変更不要。
+============================================================ */
+var EXPERIMENT = {
+  id: "001",
+  streetMessageJa: "この意味が分かりますか？", // 街中カード(card.html)に表示される日本語の元ネタ
+
+  copy: {
+    en: {
+      eyebrow: "It said",
+      said: "“Do you understand what this means?”",
+      point: "That feeling — not understanding something in Japan, then suddenly <strong>getting it</strong> — is exactly what MELA! is for.",
+      micro: "A QR code that turns “huh?” into “oh, I see.” — for shops and experiences across Japan.",
+      tagline: "Explaining things to foreign guests, in one QR.",
+      more: "See how it works →"
+    },
+    "zh-Hans": {
+      eyebrow: "刚才那句话是",
+      said: "“你看得懂这是什么意思吗？”",
+      point: "在日本看不懂、然后突然<strong>看懂了</strong>的那种感觉——正是 MELA! 想要带来的体验。",
+      micro: "一个把「看不懂」变成「原来如此」的二维码，用于日本各地的店铺与体验。",
+      tagline: "把给外国客人的说明，交给一个二维码。",
+      more: "查看示例 →"
+    },
+    ko: {
+      eyebrow: "방금 그 문장은",
+      said: "“이 뜻을 이해하시나요?”",
+      point: "일본에서 이해하지 못하다가, 갑자기 <strong>이해하게 되는</strong> 그 순간 — 그게 바로 MELA!가 만들어진 이유예요.",
+      micro: "“어?”를 “아하!”로 바꿔주는 QR코드. 일본 곳곳의 매장과 체험에서 사용됩니다.",
+      tagline: "외국인 손님을 위한 설명을, QR 하나로.",
+      more: "샘플 보기 →"
+    },
+    ja: {
+      eyebrow: "先ほどの文章の意味",
+      said: "「この意味が分かりますか？」",
+      point: "今、日本語が分からない状態から、<strong>一瞬で分かる</strong>状態に変わりました。これがMELA!の目指す体験です。",
+      micro: "「？」を「なるほど」に変えるQRコード。日本各地の店舗・体験施設向けです。",
+      tagline: "外国人のお客様への説明を、QRひとつに。",
+      more: "サンプルを見る →"
+    }
+  }
+};
+
+var LANGS = [
+  { code: "en", label: "English" },
+  { code: "zh-Hans", label: "中文" },
+  { code: "ko", label: "한국어" },
+  { code: "ja", label: "日本語" }
+];
+
+function detectInitialLang() {
+  try {
+    var nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+    if (nav.indexOf("zh") === 0) return "zh-Hans";
+    if (nav.indexOf("ko") === 0) return "ko";
+    if (nav.indexOf("ja") === 0) return "ja";
+    return "en";
+  } catch (e) { return "en"; }
+}
+
+function render(lang) {
+  var c = EXPERIMENT.copy[lang] || EXPERIMENT.copy.en;
+  document.documentElement.lang = lang === "zh-Hans" ? "zh-Hans" : lang;
+  document.getElementById("eyebrow").textContent = c.eyebrow;
+  document.getElementById("saidText").textContent = c.said;
+  document.getElementById("pointText").innerHTML = c.point;
+  document.getElementById("microText").textContent = c.micro;
+  document.getElementById("taglineText").textContent = c.tagline;
+  var more = document.getElementById("moreLink");
+  more.textContent = c.more;
+
+  document.querySelectorAll(".langbtn").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false");
+  });
+
+  track("lang_view", { lang: lang });
+}
+
+function buildLangBar(current) {
+  var bar = document.getElementById("langbar");
+  bar.innerHTML = "";
+  LANGS.forEach(function (l) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "langbtn";
+    b.dataset.lang = l.code;
+    b.textContent = l.label;
+    b.setAttribute("aria-pressed", l.code === current ? "true" : "false");
+    b.addEventListener("click", function () { render(l.code); });
+    bar.appendChild(b);
+  });
+}
+
+/* ============================================================
+   計測(最小構成)
+   現時点ではバックエンドを持たないため、コンソール出力と
+   localStorageへの蓄積のみを行う。将来、実際のアクセス数を
+   集計したくなった場合は、track() の中身だけを書き換えて
+   任意のエンドポイント(例: 独立したGoogle Apps Script Web App等。
+   営業管理台帳とは別系統にすること)へ送信するように差し替える。
+============================================================ */
+var STORAGE_KEY = "mela_experiment_events_v1";
+
+function track(eventName, data) {
+  var payload = {
+    experimentId: EXPERIMENT.id,
+    event: eventName,
+    data: data || {},
+    ts: new Date().toISOString(),
+    ref: document.referrer || null
+  };
+  try {
+    console.log("[mela-experiment]", payload);
+    var raw = localStorage.getItem(STORAGE_KEY);
+    var list = raw ? JSON.parse(raw) : [];
+    list.push(payload);
+    if (list.length > 200) list = list.slice(list.length - 200);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch (e) {
+    // 計測失敗は体験を止めない
+  }
+}
+
+function markReachedEnd() {
+  track("reached_final_message", {});
+}
+
+function init() {
+  var initialLang = detectInitialLang();
+  buildLangBar(initialLang);
+  render(initialLang);
+  track("page_view", { initialLang: initialLang, ua: navigator.userAgent });
+
+  // 最終メッセージ(micro)まで表示された = 体験完了とみなす
+  window.setTimeout(markReachedEnd, 900);
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) track("leave", {});
+  });
+}
+
+init();
+</script>
+</body>
+</html>

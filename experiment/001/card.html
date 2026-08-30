@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>MELA! Experiment 001 — Print Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#141414; --paper:#F6F4EF; --muted:#9A9589; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#3a3a3a;}
+  body{font-family:'Noto Sans JP',sans-serif;}
+
+  /* ===== 操作パネル(画面表示専用、印刷時は消える) ===== */
+  .toolbar{
+    position:sticky;top:0;z-index:10;
+    display:flex;justify-content:center;gap:10px;padding:14px;
+    background:#222;color:#fff;font-size:0.8rem;
+  }
+  .toolbar button, .toolbar a{
+    font-family:inherit;font-size:0.8rem;font-weight:700;color:#fff;background:#FF5A2E;
+    border:none;border-radius:8px;padding:9px 16px;cursor:pointer;text-decoration:none;
+  }
+  .toolbar .note{color:#aaa;align-self:center;}
+
+  /* ===== A4カード本体 ===== */
+  .page{
+    width:210mm;height:297mm;
+    margin:20px auto;
+    background:var(--paper);
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+    padding:26mm 18mm 16mm;
+    box-shadow:0 8px 30px rgba(0,0,0,0.35);
+  }
+  .headline{
+    text-align:center;font-weight:900;color:var(--ink);
+    font-size:15mm;line-height:1.5;letter-spacing:0.01em;
+    margin:auto 0;
+  }
+  .qrwrap{ display:flex;flex-direction:column;align-items:center;gap:8mm; margin-bottom:6mm; }
+  .qrwrap img{ width:70mm;height:70mm; }
+  .fallback{ font-size:3.4mm; color:var(--muted); letter-spacing:0.02em; }
+  .mark{
+    display:flex;align-items:center;gap:2.5mm; opacity:0.55;
+  }
+  .mark img{ width:5mm;height:5mm;border-radius:1.2mm; }
+  .mark span{ font-size:3.6mm; font-weight:900; color:var(--ink); }
+
+  @media print{
+    body{background:#fff;}
+    .toolbar{display:none;}
+    .page{margin:0;box-shadow:none;}
+    @page{ size:A4 portrait; margin:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="note">MELA! Experiment 001 — 印刷用カード</span>
+  <button onclick="window.print()">印刷 / PDF保存</button>
+  <a href="index.html" target="_blank" rel="noopener">体験ページを開く ↗</a>
+</div>
+
+<div class="page">
+  <div class="headline" id="headline">この意味が<br>分かりますか？</div>
+
+  <div class="qrwrap">
+    <img id="qrImg" alt="QR code" width="264" height="264">
+    <div class="fallback" id="fallbackUrl"></div>
+  </div>
+
+  <div class="mark">
+    <img src="../../images/mela-logo.jpg" alt="">
+    <span>MELA!</span>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* card.html も index.html と同じ EXPERIMENT.id / streetMessageJa を参照する。
+   Experiment #002を作る場合、このファイルをコピーし、
+   下の PAGE_URL とヘッドラインだけを書き換えれば良い。 */
+var EXPERIMENT_ID = "001";
+var HEADLINE_JA = "この意味が\n分かりますか？";
+var PAGE_URL = "https://unknow-777.github.io/ai-eigyou-sample-menu/experiment/001/index.html";
+
+document.getElementById("headline").innerHTML = HEADLINE_JA.split("\n").join("<br>");
+document.getElementById("fallbackUrl").textContent = PAGE_URL.replace("https://", "");
+
+var qrSrc = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=6&data=" + encodeURIComponent(PAGE_URL);
+document.getElementById("qrImg").src = qrSrc;
+</script>
+</body>
+</html>
