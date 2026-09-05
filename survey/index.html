@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>30秒アンケート | MELA!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;
+  --text:#242220;
+  --text-muted:#757068;
+  --line:#E9E6E1;
+  --brand:#2540E8;
+  --brand-soft:#EEF0FE;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Noto Sans JP',-apple-system,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column;
+  min-height:100vh;
+}
+.wrap{
+  width:100%; max-width:440px; margin:0 auto;
+  padding:20px 20px 32px;
+  flex:1; display:flex; flex-direction:column;
+}
+
+/* 進捗 */
+.progress-row{display:flex; align-items:center; gap:10px; margin-bottom:28px;}
+.progress-label{font-size:0.78rem; color:var(--text-muted); font-weight:700; white-space:nowrap;}
+.progress-dots{display:flex; gap:6px;}
+.dot{width:8px; height:8px; border-radius:50%; background:var(--line); transition:background .2s;}
+.dot.done{background:var(--brand);}
+.dot.current{background:var(--brand); transform:scale(1.3);}
+
+/* 質問画面 */
+.screen{display:none; flex:1; flex-direction:column;}
+.screen.active{display:flex; animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.q-eyebrow{font-size:0.72rem; letter-spacing:0.1em; color:var(--brand); font-weight:800; text-transform:uppercase; margin-bottom:10px;}
+.q-title{font-size:1.28rem; font-weight:700; line-height:1.5; margin:0 0 26px;}
+
+.choices{display:flex; flex-direction:column; gap:10px;}
+.choice{
+  display:flex; align-items:center; gap:12px;
+  padding:16px 16px; border:1.5px solid var(--line); border-radius:14px;
+  background:var(--bg); font-size:0.98rem; font-weight:600; color:var(--text);
+  cursor:pointer; text-align:left; width:100%;
+  -webkit-tap-highlight-color:transparent;
+  transition:border-color .12s, background .12s, transform .08s;
+}
+.choice:active{transform:scale(0.98); background:var(--brand-soft); border-color:var(--brand);}
+.choice.selected{border-color:var(--brand); background:var(--brand-soft);}
+.choice .icon{
+  flex-shrink:0; width:8px; height:8px; border-radius:50%; border:1.5px solid var(--line);
+}
+.choice.selected .icon{background:var(--brand); border-color:var(--brand);}
+
+/* 開始画面 */
+.intro{flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;}
+.intro-logo{width:48px; height:48px; margin:0 auto 18px; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(37,64,232,0.18);}
+.intro-logo img{width:100%; height:100%; object-fit:cover; display:block;}
+.intro-title{font-size:1.3rem; font-weight:700; line-height:1.55; margin:0 0 12px;}
+.intro-sub{font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0 0 30px;}
+.intro-meta{display:flex; justify-content:center; gap:18px; margin-bottom:30px;}
+.intro-meta-item{font-size:0.76rem; color:var(--text-muted); display:flex; flex-direction:column; align-items:center; gap:4px;}
+.intro-meta-num{font-size:1.1rem; font-weight:800; color:var(--brand);}
+.start-btn{
+  display:block; width:100%; padding:16px; border-radius:999px; border:none;
+  background:var(--brand); color:#fff; font-size:1rem; font-weight:700;
+  font-family:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.start-btn:active{opacity:0.85;}
+
+/* 完了画面 */
+.done-screen{flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;}
+.done-check{
+  width:56px; height:56px; margin:0 auto 18px; border-radius:50%; background:var(--brand-soft);
+  display:flex; align-items:center; justify-content:center;
+}
+.done-check svg{width:28px; height:28px;}
+.done-title{font-size:1.22rem; font-weight:700; margin:0 0 14px;}
+.done-msg{font-size:0.9rem; color:var(--text-muted); line-height:1.75; margin:0 0 28px;}
+.done-msg strong{color:var(--text); font-weight:700;}
+.sample-cta{
+  display:block; width:100%; padding:16px; border-radius:999px;
+  background:var(--brand); color:#fff; font-size:0.98rem; font-weight:700;
+  text-decoration:none; -webkit-tap-highlight-color:transparent;
+}
+.sample-cta:active{opacity:0.85;}
+.done-footer{font-size:0.72rem; color:var(--text-muted); margin-top:20px;}
+
+.foot{text-align:center; padding-top:18px; font-size:0.7rem; color:var(--text-muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 開始画面 -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro">
+      <div class="intro-logo"><img src="../images/mela-logo.jpg" alt="MELA!" onerror="this.parentElement.style.display='none'"></div>
+      <div class="intro-title">外国人対応、実際どうですか？</div>
+      <div class="intro-sub">お店・施設向けの簡単なアンケートです。<br>タップするだけ、30秒で終わります。</div>
+      <div class="intro-meta">
+        <div class="intro-meta-item"><span class="intro-meta-num">3問</span>すべて選択式</div>
+        <div class="intro-meta-item"><span class="intro-meta-num">30秒</span>目安時間</div>
+      </div>
+      <button class="start-btn" id="startBtn" type="button">はじめる</button>
+    </div>
+  </div>
+
+  <!-- 質問画面(共通の進捗バー付き) -->
+  <div id="screen-questions" class="screen">
+    <div class="progress-row">
+      <span class="progress-label" id="progressLabel">1 / 3</span>
+      <div class="progress-dots" id="progressDots">
+        <span class="dot current" data-i="0"></span>
+        <span class="dot" data-i="1"></span>
+        <span class="dot" data-i="2"></span>
+      </div>
+    </div>
+    <div id="qEyebrow" class="q-eyebrow">Q1</div>
+    <h1 class="q-title" id="qTitle"></h1>
+    <div class="choices" id="qChoices"></div>
+  </div>
+
+  <!-- 完了画面 -->
+  <div id="screen-done" class="screen">
+    <div class="done-screen">
+      <div class="done-check">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2540E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="done-title">ご回答ありがとうございます！</div>
+      <div class="done-msg">ちなみに、今回答いただいたような外国人向けの説明をQRひとつにまとめる仕組みとして、<strong>MELA!</strong>を作っています。</div>
+      <a href="#" id="sampleBtn" class="sample-cta">実際のサンプルを見てみる</a>
+      <div class="done-footer">回答内容は今後のサービス改善のみに使用します</div>
+    </div>
+  </div>
+
+  <div class="foot">MELA! — 多言語QR案内</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ==== 設定(このApps Script Web AppはA/B/Cのクリック計測と共用) ====
+  var EVENT_URL = "https://script.google.com/macros/s/AKfycbxwvlnROPVnGnNun0vwz8bNcKNYIa4u5xX3nCFy79_03tJXDAuLeLRSRlKRq6-MVQK5/exec";
+  var SAMPLE_URL = "https://unknow-777.github.io/ai-eigyou-sample-menu/menu-demo-view.html";
+
+  var params = new URLSearchParams(window.location.search);
+  var leadId = params.get("lead") || params.get("id") || "";
+
+  var questions = [
+    {
+      key: "q1",
+      title: "外国人のお客様への対応で、\n一番大変なのは？",
+      choices: ["商品・サービスの説明","料金の説明","ルール・注意事項の説明","利用方法・体験の流れ","言葉が通じないこと","特に困っていない"]
+    },
+    {
+      key: "q2",
+      title: "外国人のお客様への説明は、\n今どうしていますか？",
+      choices: ["スタッフが英語などで説明","翻訳アプリ","外国語の紙・案内","身振り手振り","特に対応していない","その他"]
+    },
+    {
+      key: "q3",
+      title: "こうした説明を、QRから\nお客様自身に確認してもらえたら？",
+      choices: ["使ってみたい","少し興味がある","どちらとも言えない","今は必要ない"]
+    }
+  ];
+
+  var currentQ = 0;
+  var startedAt = null;
+
+  function sendEvent(eventName, value){
+    if (!leadId) return;
+    try {
+      var url = EVENT_URL + "?lead=" + encodeURIComponent(leadId) + "&event=" + encodeURIComponent(eventName);
+      if (value) url += "&value=" + encodeURIComponent(value);
+      fetch(url, { mode: "no-cors" }).catch(function(){});
+    } catch (err) { /* 計測失敗でもアンケート進行は止めない */ }
+  }
+
+  function show(id){
+    document.querySelectorAll(".screen").forEach(function(el){ el.classList.remove("active"); });
+    document.getElementById(id).classList.add("active");
+  }
+
+  function renderQuestion(i){
+    var q = questions[i];
+    document.getElementById("progressLabel").textContent = (i+1) + " / " + questions.length;
+    document.getElementById("qEyebrow").textContent = "Q" + (i+1);
+    document.getElementById("qTitle").innerHTML = q.title.replace(/\n/g, "<br>");
+
+    document.querySelectorAll("#progressDots .dot").forEach(function(dot, idx){
+      dot.classList.remove("current", "done");
+      if (idx < i) dot.classList.add("done");
+      else if (idx === i) dot.classList.add("current");
+    });
+
+    var box = document.getElementById("qChoices");
+    box.innerHTML = "";
+    q.choices.forEach(function(label){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice";
+      btn.innerHTML = '<span class="icon"></span><span>' + label + '</span>';
+      btn.addEventListener("click", function(){
+        btn.classList.add("selected");
+        sendEvent(q.key, label);
+        setTimeout(function(){ advance(); }, 180);
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  function advance(){
+    currentQ++;
+    if (currentQ >= questions.length) {
+      finish();
+    } else {
+      renderQuestion(currentQ);
+    }
+  }
+
+  function finish(){
+    show("screen-done");
+  }
+
+  document.getElementById("startBtn").addEventListener("click", function(){
+    startedAt = new Date();
+    sendEvent("start");
+    show("screen-questions");
+    renderQuestion(0);
+  });
+
+  document.getElementById("sampleBtn").addEventListener("click", function(e){
+    e.preventDefault();
+    sendEvent("sample_click");
+    window.location.href = SAMPLE_URL;
+  });
+})();
+</script>
+</body>
+</html>
