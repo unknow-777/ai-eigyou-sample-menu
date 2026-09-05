@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MELA! Dダッシュボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F7F5;
+    --panel:#FFFFFF;
+    --text:#242220;
+    --text-muted:#757068;
+    --line:#E9E6E1;
+    --brand:#2540E8;
+    --brand-soft:#EEF0FE;
+    --good:#0F8A3C;
+    --good-soft:#E6F6EB;
+    --warn:#B8860B;
+    --warn-soft:#FBF3DE;
+    --bad:#B3261E;
+    --bad-soft:#FBEAE9;
+    --mute-soft:#EFEEEC;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Noto Sans JP", -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+    font-variant-numeric:tabular-nums;
+    min-height:100vh;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* --- ゲート画面 --- */
+  #gate{
+    max-width:420px;margin:14vh auto 0;padding:32px 28px;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+  }
+  #gate h1{font-size:17px;margin:0 0 6px;}
+  #gate p{color:var(--text-muted);font-size:13px;line-height:1.7;margin:0 0 18px;}
+  #gate input{
+    width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:8px;
+    font-size:14px;font-family:inherit;margin-bottom:12px;
+  }
+  #gate button{
+    width:100%;padding:11px;border:none;border-radius:8px;background:var(--brand);
+    color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  #gate button:hover{background:#1c33c9;}
+  #gateError{color:var(--bad);font-size:12.5px;margin-top:10px;min-height:1em;}
+
+  /* --- ヘッダー --- */
+  header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand .mark{font-weight:900;font-size:19px;letter-spacing:-0.02em;}
+  .brand .mark span{color:var(--brand);}
+  .brand .sub{color:var(--text-muted);font-size:13px;}
+  .status{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted);}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);flex:none;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .dot.stale{background:var(--warn);animation:none;}
+  .dot.error{background:var(--bad);animation:none;}
+
+  /* --- 注意事項バー --- */
+  .notice{
+    background:var(--brand-soft);border:1px solid #d7ddfb;border-radius:10px;
+    padding:12px 16px;font-size:12.5px;color:#33389a;line-height:1.7;margin-bottom:22px;
+  }
+
+  /* --- KPIカード --- */
+  .kpi-section{margin-bottom:8px;}
+  .kpi-title{font-size:11.5px;font-weight:700;color:var(--text-muted);letter-spacing:.04em;margin:22px 0 10px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:10px;}
+  .kpi{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:14px 14px 12px;
+  }
+  .kpi .num{font-size:26px;font-weight:900;line-height:1.1;}
+  .kpi .label{font-size:12px;color:var(--text-muted);margin-top:4px;}
+  .kpi.accent .num{color:var(--brand);}
+  .kpi.good .num{color:var(--good);}
+
+  /* --- 判定内訳ピル --- */
+  .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 24px;}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;
+    font-size:12.5px;font-weight:500;border:1px solid var(--line);background:var(--panel);
+  }
+  .pill b{font-weight:900;}
+  .pill.human{background:var(--good-soft);border-color:#c9ead2;color:#0d6b30;}
+  .pill.auto{background:var(--mute-soft);border-color:var(--line);color:var(--text-muted);}
+  .pill.unknown{background:#fff;border-color:var(--line);color:var(--text-muted);}
+
+  /* --- テーブル --- */
+  .table-wrap{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    overflow-x:auto;
+  }
+  table{border-collapse:collapse;width:100%;min-width:920px;font-size:12.5px;}
+  thead th{
+    text-align:left;padding:10px 12px;font-size:11px;color:var(--text-muted);
+    font-weight:700;letter-spacing:.03em;border-bottom:1px solid var(--line);
+    white-space:nowrap;position:sticky;top:0;background:var(--panel);
+  }
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr.fresh{background:#FBFCFF;}
+  .store{font-weight:700;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .muted{color:var(--text-muted);}
+  .badge{
+    display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;
+  }
+  .badge.human{background:var(--good-soft);color:#0d6b30;}
+  .badge.auto{background:var(--mute-soft);color:var(--text-muted);}
+  .badge.unknown{background:#fff;color:var(--text-muted);border:1px solid var(--line);}
+  .badge.pos{background:var(--good-soft);color:#0d6b30;}
+  .badge.neu{background:var(--warn-soft);color:#8a6300;}
+  .badge.neg{background:var(--bad-soft);color:#9a2a24;}
+  .check{color:var(--good);font-weight:900;}
+  .dash{color:var(--line);}
+  .empty{padding:60px 20px;text-align:center;color:var(--text-muted);font-size:13px;}
+  footer{margin-top:20px;text-align:center;color:var(--text-muted);font-size:11.5px;}
+  [hidden]{display:none!important;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <h1>MELA! Dダッシュボード</h1>
+  <p>このページは非公開です。アクセスキーを入力してください。<br>一度入力すればこの端末では次回から自動的に表示されます。</p>
+  <input type="password" id="keyInput" placeholder="アクセスキー" autocomplete="off">
+  <button id="keySubmit">開く</button>
+  <div id="gateError"></div>
+</div>
+
+<div class="wrap" id="dash" hidden>
+  <header>
+    <div class="brand">
+      <div class="mark">MELA<span>!</span></div>
+      <div class="sub">パターンD リアルタイムダッシュボード</div>
+    </div>
+    <div class="status">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">読み込み中…</span>
+    </div>
+  </header>
+
+  <div class="notice">
+    「ページ表示」はメールリンクが開かれた回数、「能動操作」は実際にタップ操作があった件数です。<br>
+    これらはあくまで観測可能な行動であり、「本人が見た」「興味を持った」ことを断定するものではありません。
+  </div>
+
+  <div class="kpi-section">
+    <div class="kpi-title">送信 → アクセス</div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="num" id="k-sent">–</div><div class="label">送信済み</div></div>
+      <div class="kpi"><div class="num" id="k-open">–</div><div class="label">URLアクセス</div></div>
+      <div class="kpi"><div class="num" id="k-interact">–</div><div class="label">能動操作</div></div>
+      <div class="kpi"><div class="num" id="k-valid">–</div><div class="label">有効回答</div></div>
+      <div class="kpi accent"><div class="num" id="k-complete">–</div><div class="label">回答完了</div></div>
+      <div class="kpi good"><div class="num" id="k-sample">–</div><div class="label">サンプル閲覧(高関心)</div></div>
+    </div>
+
+    <div class="kpi-title">Q3反応(解決方法そのものへの反応。契約意思ではない)</div>
+    <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr));">
+      <div class="kpi good"><div class="num" id="k-pos">–</div><div class="label">便利/興味あり</div></div>
+      <div class="kpi"><div class="num" id="k-neu">–</div><div class="label">どちらとも</div></div>
+      <div class="kpi"><div class="num" id="k-neg">–</div><div class="label">今は不要</div></div>
+    </div>
+
+    <div class="kpi-title">アクセス種別判定(断定ではなく傾向)</div>
+    <div class="pillrow">
+      <span class="pill human">LIKELY_HUMAN <b id="p-human">–</b></span>
+      <span class="pill auto">LIKELY_AUTOMATED <b id="p-auto">–</b></span>
+      <span class="pill unknown">UNKNOWN <b id="p-unknown">–</b></span>
+    </div>
+  </div>
+
+  <div class="kpi-title">個別店舗の状況(直近の動きが上)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>店舗名</th>
+          <th>送信日</th>
+          <th>ページ表示</th>
+          <th>最終アクセス</th>
+          <th>Q1</th>
+          <th>Q2</th>
+          <th>Q3(反応)</th>
+          <th>所要秒</th>
+          <th>サンプル閲覧</th>
+          <th>判定</th>
+        </tr>
+      </thead>
+      <tbody id="leadsBody"></tbody>
+    </table>
+    <div class="empty" id="emptyState" hidden>まだパターンDの活動データがありません。</div>
+  </div>
+
+  <footer>約15秒ごとに自動更新 / 最終更新: <span id="lastUpdated">–</span></footer>
+</div>
+
+<script>
+(function(){
+  var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxwvlnROPVnGnNun0vwz8bNcKNYIa4u5xX3nCFy79_03tJXDAuLeLRSRlKRq6-MVQK5/exec";
+  var STORAGE_KEY = "mela_dashboard_key";
+  var POLL_MS = 15000;
+  var pollTimer = null;
+
+  var gate = document.getElementById("gate");
+  var dash = document.getElementById("dash");
+
+  function getStoredKey(){
+    try { return localStorage.getItem(STORAGE_KEY) || ""; } catch(e){ return ""; }
+  }
+  function storeKey(k){
+    try { localStorage.setItem(STORAGE_KEY, k); } catch(e){}
+  }
+
+  function initKeyFromUrl(){
+    var params = new URLSearchParams(window.location.search);
+    var urlKey = params.get("key");
+    if (urlKey) {
+      storeKey(urlKey);
+      // URLからキーを消してブラウザ履歴・共有時にキーが残らないようにする
+      history.replaceState({}, "", window.location.pathname);
+      return urlKey;
+    }
+    return getStoredKey();
+  }
+
+  function showGate(message){
+    gate.hidden = false;
+    dash.hidden = true;
+    document.getElementById("gateError").textContent = message || "";
+  }
+  function showDash(){
+    gate.hidden = true;
+    dash.hidden = false;
+  }
+
+  function setStatus(state, text){
+    var dot = document.getElementById("statusDot");
+    dot.className = "dot" + (state === "error" ? " error" : state === "stale" ? " stale" : "");
+    document.getElementById("statusText").textContent = text;
+  }
+
+  function fmtRelative(iso){
+    if (!iso) return { text: "–", fresh: false };
+    var t = new Date(iso).getTime();
+    var diffSec = Math.max(0, Math.round((Date.now() - t) / 1000));
+    var fresh = diffSec < 120;
+    var text;
+    if (diffSec < 60) text = diffSec + "秒前";
+    else if (diffSec < 3600) text = Math.floor(diffSec/60) + "分前";
+    else if (diffSec < 86400) text = Math.floor(diffSec/3600) + "時間前";
+    else text = Math.floor(diffSec/86400) + "日前";
+    return { text: text, fresh: fresh };
+  }
+  function fmtDate(iso){
+    if (!iso) return "–";
+    var d = new Date(iso);
+    return (d.getMonth()+1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  }
+
+  function classBadge(cls){
+    if (cls === "LIKELY_HUMAN") return '<span class="badge human">人の操作の可能性</span>';
+    if (cls === "LIKELY_AUTOMATED") return '<span class="badge auto">自動アクセスの疑い</span>';
+    return '<span class="badge unknown">判定不能</span>';
+  }
+  function demandBadge(demand, text){
+    if (!text) return '<span class="dash">–</span>';
+    var cls = demand === "POSITIVE" ? "pos" : demand === "NEGATIVE" ? "neg" : "neu";
+    return escapeHtml(text) + ' <span class="badge ' + cls + '">' + escapeHtml(text) + '</span>';
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function tick(v){ return v ? '<span class="check">✓</span>' : '<span class="dash">–</span>'; }
+
+  function render(data){
+    var s = data.summary;
+    document.getElementById("k-sent").textContent = s.dSent;
+    document.getElementById("k-open").textContent = s.pageOpen;
+    document.getElementById("k-interact").textContent = s.interaction;
+    document.getElementById("k-valid").textContent = s.validResponse;
+    document.getElementById("k-complete").textContent = s.completed;
+    document.getElementById("k-sample").textContent = s.sampleView;
+    document.getElementById("k-pos").textContent = s.q3Positive;
+    document.getElementById("k-neu").textContent = s.q3Neutral;
+    document.getElementById("k-neg").textContent = s.q3Negative;
+    document.getElementById("p-human").textContent = s.likelyHuman;
+    document.getElementById("p-auto").textContent = s.likelyAutomated;
+    document.getElementById("p-unknown").textContent = s.unknown;
+
+    var body = document.getElementById("leadsBody");
+    var empty = document.getElementById("emptyState");
+    body.innerHTML = "";
+    if (!data.leads || data.leads.length === 0) {
+      empty.hidden = false;
+    } else {
+      empty.hidden = true;
+      data.leads.forEach(function(lead){
+        var rel = fmtRelative(lead.lastActivityAt);
+        var tr = document.createElement("tr");
+        if (rel.fresh) tr.className = "fresh";
+        tr.innerHTML =
+          '<td class="store">' + escapeHtml(lead.storeName) + '</td>' +
+          '<td class="muted">' + fmtDate(lead.mailSentAt) + '</td>' +
+          '<td>' + (lead.pageOpenCount || 0) + '回</td>' +
+          '<td>' + (lead.lastAccessAt ? rel.text : '<span class="dash">–</span>') + '</td>' +
+          '<td>' + (lead.q1 ? tick(true) : tick(false)) + '</td>' +
+          '<td>' + (lead.q2 ? tick(true) : tick(false)) + '</td>' +
+          '<td>' + demandBadge(lead.q3Demand, lead.q3) + '</td>' +
+          '<td class="muted">' + (typeof lead.durationSec === "number" ? lead.durationSec + "秒" : "–") + '</td>' +
+          '<td>' + tick(!!lead.sampleViewAt) + '</td>' +
+          '<td>' + classBadge(lead.classification) + '</td>';
+        body.appendChild(tr);
+      });
+    }
+
+    var now = new Date();
+    document.getElementById("lastUpdated").textContent =
+      String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0") + ":" + String(now.getSeconds()).padStart(2,"0");
+    setStatus("ok", "接続中(自動更新)");
+  }
+
+  function poll(key){
+    fetch(WEB_APP_URL + "?action=dashboard&key=" + encodeURIComponent(key), { cache: "no-store" })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (data.authorized === false) {
+          if (pollTimer) clearInterval(pollTimer);
+          showGate("アクセスキーが正しくありません。");
+          return;
+        }
+        showDash();
+        render(data);
+      })
+      .catch(function(err){
+        setStatus("error", "取得に失敗しました(次回再試行)");
+      });
+  }
+
+  function startPolling(key){
+    poll(key);
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(function(){ poll(key); }, POLL_MS);
+  }
+
+  document.getElementById("keySubmit").addEventListener("click", function(){
+    var v = document.getElementById("keyInput").value.trim();
+    if (!v) return;
+    storeKey(v);
+    startPolling(v);
+  });
+  document.getElementById("keyInput").addEventListener("keydown", function(ev){
+    if (ev.key === "Enter") document.getElementById("keySubmit").click();
+  });
+
+  var initialKey = initKeyFromUrl();
+  if (initialKey) {
+    startPolling(initialKey);
+  } else {
+    showGate("");
+  }
+})();
+</script>
+
+</body>
+</html>
