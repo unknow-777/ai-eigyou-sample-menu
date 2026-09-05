@@ -53,7 +53,7 @@
     color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
   }
   #gate button:hover{background:#1c33c9;}
-  #gateError{color:var(--bad);font-size:12.5px;margin-top:10px;min-height:1em;}
+  #gateError{color:var(--bad);font-size:12.5px;margin-top:10px;min-height:1em;white-space:pre-line;line-height:1.6;}
 
   /* --- ヘッダー --- */
   header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
@@ -334,20 +334,36 @@
     setStatus("ok", "接続中(自動更新)");
   }
 
+  var everShownDash = false;
+
   function poll(key){
     fetch(WEB_APP_URL + "?action=dashboard&key=" + encodeURIComponent(key), { cache: "no-store" })
-      .then(function(r){ return r.json(); })
+      .then(function(r){
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
       .then(function(data){
         if (data.authorized === false) {
           if (pollTimer) clearInterval(pollTimer);
           showGate("アクセスキーが正しくありません。");
           return;
         }
+        everShownDash = true;
         showDash();
         render(data);
       })
       .catch(function(err){
-        setStatus("error", "取得に失敗しました(次回再試行)");
+        if (!everShownDash) {
+          if (pollTimer) clearInterval(pollTimer);
+          showGate(
+            "データ取得に失敗しました。以下を確認してください。\n" +
+            "・Apps Scriptの「デプロイを管理」で最新コードとして再デプロイ済みか\n" +
+            "・アクセスキーが正しいか\n" +
+            "(詳細: " + (err && err.message ? err.message : err) + ")"
+          );
+        } else {
+          setStatus("error", "取得に失敗しました(次回再試行)");
+        }
       });
   }
 
