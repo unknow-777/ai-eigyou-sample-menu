@@ -143,7 +143,7 @@
   <header>
     <div class="brand">
       <div class="mark">MELA<span>!</span></div>
-      <div class="sub">パターンD リアルタイムダッシュボード</div>
+      <div class="sub">全パターン(A/B/C/D) リアルタイムダッシュボード</div>
     </div>
     <div class="status">
       <span class="dot" id="statusDot"></span>
@@ -157,7 +157,22 @@
   </div>
 
   <div class="kpi-section">
-    <div class="kpi-title">送信 → アクセス</div>
+    <div class="kpi-title">パターン別 送信・クリック状況</div>
+    <div class="table-wrap" style="margin-bottom:22px;">
+      <table style="min-width:0;">
+        <thead>
+          <tr>
+            <th>パターン</th>
+            <th>送信済み</th>
+            <th>クリック/アクセスあり</th>
+            <th>返信あり</th>
+          </tr>
+        </thead>
+        <tbody id="patternSummaryBody"></tbody>
+      </table>
+    </div>
+
+    <div class="kpi-title">パターンD詳細: 送信 → アクセス(30秒アンケート専用)</div>
     <div class="kpi-grid">
       <div class="kpi"><div class="num" id="k-sent">–</div><div class="label">送信済み</div></div>
       <div class="kpi"><div class="num" id="k-open">–</div><div class="label">URLアクセス</div></div>
@@ -167,14 +182,14 @@
       <div class="kpi good"><div class="num" id="k-sample">–</div><div class="label">サンプル閲覧(高関心)</div></div>
     </div>
 
-    <div class="kpi-title">Q3反応(解決方法そのものへの反応。契約意思ではない)</div>
+    <div class="kpi-title">パターンD詳細: Q3反応(解決方法そのものへの反応。契約意思ではない)</div>
     <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr));">
       <div class="kpi good"><div class="num" id="k-pos">–</div><div class="label">便利/興味あり</div></div>
       <div class="kpi"><div class="num" id="k-neu">–</div><div class="label">どちらとも</div></div>
       <div class="kpi"><div class="num" id="k-neg">–</div><div class="label">今は不要</div></div>
     </div>
 
-    <div class="kpi-title">アクセス種別判定(断定ではなく傾向)</div>
+    <div class="kpi-title">パターンD詳細: アクセス種別判定(断定ではなく傾向)</div>
     <div class="pillrow">
       <span class="pill human">LIKELY_HUMAN <b id="p-human">–</b></span>
       <span class="pill auto">LIKELY_AUTOMATED <b id="p-auto">–</b></span>
@@ -182,14 +197,15 @@
     </div>
   </div>
 
-  <div class="kpi-title">個別店舗の状況(直近の動きが上)</div>
+  <div class="kpi-title">個別店舗の状況(全パターン、直近の動きが上)</div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>店舗名</th>
+          <th>パターン</th>
           <th>送信日</th>
-          <th>ページ表示</th>
+          <th>クリック/表示回数</th>
           <th>最終アクセス</th>
           <th>Q1</th>
           <th>Q2</th>
@@ -201,7 +217,7 @@
       </thead>
       <tbody id="leadsBody"></tbody>
     </table>
-    <div class="empty" id="emptyState" hidden>まだパターンDの活動データがありません。</div>
+    <div class="empty" id="emptyState" hidden>まだ活動データがありません。</div>
   </div>
 
   <footer>約15秒ごとに自動更新 / 最終更新: <span id="lastUpdated">–</span></footer>
@@ -273,12 +289,17 @@
   function classBadge(cls){
     if (cls === "LIKELY_HUMAN") return '<span class="badge human">人の操作の可能性</span>';
     if (cls === "LIKELY_AUTOMATED") return '<span class="badge auto">自動アクセスの疑い</span>';
-    return '<span class="badge unknown">判定不能</span>';
+    if (cls === "LEAD_CLICK") return '<span class="badge human">送信後クリック</span>';
+    if (cls === "TEST_CLICK") return '<span class="badge auto">下書き確認クリック</span>';
+    return '<span class="badge unknown">' + (cls === "UNKNOWN" ? "未クリック" : "判定不能") + '</span>';
+  }
+  function patternBadge(p){
+    return '<span class="badge unknown" style="font-weight:900;">' + escapeHtml(p) + '</span>';
   }
   function demandBadge(demand, text){
     if (!text) return '<span class="dash">–</span>';
     var cls = demand === "POSITIVE" ? "pos" : demand === "NEGATIVE" ? "neg" : "neu";
-    return escapeHtml(text) + ' <span class="badge ' + cls + '">' + escapeHtml(text) + '</span>';
+    return '<span class="badge ' + cls + '">' + escapeHtml(text) + '</span>';
   }
   function escapeHtml(s){
     return String(s).replace(/[&<>"]/g, function(c){
@@ -302,6 +323,19 @@
     document.getElementById("p-auto").textContent = s.likelyAutomated;
     document.getElementById("p-unknown").textContent = s.unknown;
 
+    var patBody = document.getElementById("patternSummaryBody");
+    patBody.innerHTML = "";
+    ["A","B","C","D"].forEach(function(p){
+      var pc = (s.byPattern && s.byPattern[p]) || { sent:0, clicked:0, replied:0 };
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td>' + patternBadge(p) + '</td>' +
+        '<td>' + pc.sent + '</td>' +
+        '<td>' + pc.clicked + '</td>' +
+        '<td>' + pc.replied + '</td>';
+      patBody.appendChild(tr);
+    });
+
     var body = document.getElementById("leadsBody");
     var empty = document.getElementById("emptyState");
     body.innerHTML = "";
@@ -315,6 +349,7 @@
         if (rel.fresh) tr.className = "fresh";
         tr.innerHTML =
           '<td class="store">' + escapeHtml(lead.storeName) + '</td>' +
+          '<td>' + patternBadge(lead.pattern) + '</td>' +
           '<td class="muted">' + fmtDate(lead.mailSentAt) + '</td>' +
           '<td>' + (lead.pageOpenCount || 0) + '回</td>' +
           '<td>' + (lead.lastAccessAt ? rel.text : '<span class="dash">–</span>') + '</td>' +
