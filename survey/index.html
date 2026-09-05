@@ -32,12 +32,20 @@ body{
 }
 
 /* 進捗 */
-.progress-row{display:flex; align-items:center; gap:10px; margin-bottom:28px;}
+.progress-row{display:flex; align-items:center; gap:10px; margin-bottom:18px;}
 .progress-label{font-size:0.78rem; color:var(--text-muted); font-weight:700; white-space:nowrap;}
 .progress-dots{display:flex; gap:6px;}
 .dot{width:8px; height:8px; border-radius:50%; background:var(--line); transition:background .2s;}
 .dot.done{background:var(--brand);}
 .dot.current{background:var(--brand); transform:scale(1.3);}
+
+/* Q1のみに出す安心材料(旧トップ画面の代わり) */
+.q1-hint{
+  font-size:0.76rem; color:var(--text-muted); font-weight:600; margin:0 0 12px;
+  display:flex; align-items:center; gap:6px;
+}
+.q1-hint[hidden]{display:none;}
+.q1-hint .dot-sep{width:3px; height:3px; border-radius:50%; background:var(--text-muted); flex-shrink:0;}
 
 /* 質問画面 */
 .screen{display:none; flex:1; flex-direction:column;}
@@ -63,7 +71,7 @@ body{
 }
 .choice.selected .icon{background:var(--brand); border-color:var(--brand);}
 
-/* 開始画面 */
+/* 開始画面(既定では使わない。?variant=introの時だけ表示するA/Bテスト用の旧フロー) */
 .intro{flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center;}
 .intro-logo{width:48px; height:48px; margin:0 auto 18px; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(37,64,232,0.18);}
 .intro-logo img{width:100%; height:100%; object-fit:cover; display:block;}
@@ -103,8 +111,8 @@ body{
 <body>
 <div class="wrap">
 
-  <!-- 開始画面 -->
-  <div id="screen-intro" class="screen active">
+  <!-- 開始画面: 既定では非表示(V2ではリンク→直接Q1)。?variant=introの時だけ使う -->
+  <div id="screen-intro" class="screen">
     <div class="intro">
       <div class="intro-logo"><img src="../images/mela-logo.jpg" alt="MELA!" onerror="this.parentElement.style.display='none'"></div>
       <div class="intro-title">外国人対応、実際どうですか？</div>
@@ -117,7 +125,7 @@ body{
     </div>
   </div>
 
-  <!-- 質問画面(共通の進捗バー付き) -->
+  <!-- 質問画面(共通の進捗バー付き)。V2の既定入口 -->
   <div id="screen-questions" class="screen">
     <div class="progress-row">
       <span class="progress-label" id="progressLabel">1 / 3</span>
@@ -127,6 +135,7 @@ body{
         <span class="dot" data-i="2"></span>
       </div>
     </div>
+    <div id="q1Hint" class="q1-hint" hidden>3問だけ<span class="dot-sep"></span>約30秒<span class="dot-sep"></span>すべて選択式</div>
     <div id="qEyebrow" class="q-eyebrow">Q1</div>
     <h1 class="q-title" id="qTitle"></h1>
     <div class="choices" id="qChoices"></div>
@@ -158,6 +167,13 @@ body{
 
   var params = new URLSearchParams(window.location.search);
   var leadId = params.get("lead") || params.get("id") || "";
+  // test=1は「自分自身の確認アクセス」を明示する専用パラメータ。営業メールを送った
+  // 本人が動作確認のためにリンクを開いた場合はこれを付けて開くことで、台帳の
+  // 集計(需要シグナル)を汚さずに済む(サーバー側はtest=1受信時、書き込みを行わない)。
+  var isTest = params.get("test") === "1";
+  // V2の既定は「リンク→直接Q1」。将来のA/Bテスト用に?variant=introで旧フロー
+  // (トップ画面→はじめる→Q1)へ切り替えられるようにしてある。
+  var variant = params.get("variant") === "intro" ? "intro" : "direct";
 
   var questions = [
     {
@@ -173,22 +189,29 @@ body{
     {
       key: "q3",
       title: "こうした説明を、QRから\nお客様自身に確認してもらえたら？",
-      choices: ["使ってみたい","少し興味がある","どちらとも言えない","今は必要ない"]
+      choices: ["便利だと思う","少し興味がある","どちらとも言えない","今は必要ない"]
     }
   ];
 
   var currentQ = 0;
-  var startedAt = null;
-  // test=1は「自分自身の確認アクセス」を明示する専用パラメータ。営業メールを送った
-  // 本人が動作確認のためにリンクを開いた場合はこれを付けて開くことで、台帳の
-  // 集計(需要シグナル)を汚さずに済む(サーバー側はtest=1受信時、書き込みを行わない)。
-  var isTest = params.get("test") === "1";
+  var hasFirstInteraction = false;
+  var pageOpenAt = new Date();
+  var lastStepAt = pageOpenAt;
 
+  /**
+   * elapsedSec: 直前のステップからの経過秒数(page_open→Q1、Q1→Q2、Q2→Q3等)。
+   * サーバー側の各イベントのtimestampからも同じ差分は再計算できるが、
+   * ここでも明示的に渡しておくとイベントログを読むだけで一目で分かる。
+   */
   function sendEvent(eventName, value){
+    var now = new Date();
+    var elapsedSec = Math.round((now.getTime() - lastStepAt.getTime()) / 1000);
+    lastStepAt = now;
     if (!leadId) return;
     try {
       var url = EVENT_URL + "?lead=" + encodeURIComponent(leadId) + "&event=" + encodeURIComponent(eventName);
       if (value) url += "&value=" + encodeURIComponent(value);
+      url += "&elapsed=" + elapsedSec;
       if (isTest) url += "&test=1";
       fetch(url, { mode: "no-cors" }).catch(function(){});
     } catch (err) { /* 計測失敗でもアンケート進行は止めない */ }
@@ -199,11 +222,20 @@ body{
     document.getElementById(id).classList.add("active");
   }
 
+  function markFirstInteractionIfNeeded(){
+    if (hasFirstInteraction) return;
+    hasFirstInteraction = true;
+    // 「はじめる」ボタン、またはQ1の選択肢タップ=ページ上での最初の能動操作。
+    // ページが開かれただけのsurvey_page_openとは別イベントとして明確に分離する。
+    sendEvent("first_interaction");
+  }
+
   function renderQuestion(i){
     var q = questions[i];
     document.getElementById("progressLabel").textContent = (i+1) + " / " + questions.length;
     document.getElementById("qEyebrow").textContent = "Q" + (i+1);
     document.getElementById("qTitle").innerHTML = q.title.replace(/\n/g, "<br>");
+    document.getElementById("q1Hint").hidden = (i !== 0) || (variant === "intro");
 
     document.querySelectorAll("#progressDots .dot").forEach(function(dot, idx){
       dot.classList.remove("current", "done");
@@ -220,6 +252,7 @@ body{
       btn.innerHTML = '<span class="icon"></span><span>' + label + '</span>';
       btn.addEventListener("click", function(){
         btn.classList.add("selected");
+        if (i === 0) markFirstInteractionIfNeeded(); // 直接Q1フローでは、Q1タップそのものが最初の能動操作
         sendEvent(q.key, label);
         if (q.key === "q3") sendEvent("complete"); // Q1〜Q3すべて回答=完了(q3応答とは別イベントとして明示送信)
         setTimeout(function(){ advance(); }, 180);
@@ -242,10 +275,7 @@ body{
   }
 
   document.getElementById("startBtn").addEventListener("click", function(){
-    startedAt = new Date();
-    // 「はじめる」タップ=ページ上での最初の能動操作(survey_first_interaction)。
-    // ページが開かれただけのsurvey_page_openとは別イベントとして明確に分離する。
-    sendEvent("first_interaction");
+    markFirstInteractionIfNeeded(); // 旧フロー(variant=intro)ではボタン押下が最初の能動操作
     show("screen-questions");
     renderQuestion(0);
   });
@@ -260,6 +290,14 @@ body{
   // これはリンクを開いただけで発生し、まだ「人間が操作した」証拠にはならない
   // (メールセキュリティスキャナー等がJSを実行してページを事前取得する場合もあるため)。
   sendEvent("page_open");
+
+  if (variant === "intro") {
+    show("screen-intro");
+  } else {
+    // V2既定: リンクを開いたらそのままQ1を表示(操作を1つ減らす)
+    show("screen-questions");
+    renderQuestion(0);
+  }
 })();
 </script>
 </body>
