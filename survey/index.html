@@ -179,12 +179,17 @@ body{
 
   var currentQ = 0;
   var startedAt = null;
+  // test=1は「自分自身の確認アクセス」を明示する専用パラメータ。営業メールを送った
+  // 本人が動作確認のためにリンクを開いた場合はこれを付けて開くことで、台帳の
+  // 集計(需要シグナル)を汚さずに済む(サーバー側はtest=1受信時、書き込みを行わない)。
+  var isTest = params.get("test") === "1";
 
   function sendEvent(eventName, value){
     if (!leadId) return;
     try {
       var url = EVENT_URL + "?lead=" + encodeURIComponent(leadId) + "&event=" + encodeURIComponent(eventName);
       if (value) url += "&value=" + encodeURIComponent(value);
+      if (isTest) url += "&test=1";
       fetch(url, { mode: "no-cors" }).catch(function(){});
     } catch (err) { /* 計測失敗でもアンケート進行は止めない */ }
   }
@@ -216,6 +221,7 @@ body{
       btn.addEventListener("click", function(){
         btn.classList.add("selected");
         sendEvent(q.key, label);
+        if (q.key === "q3") sendEvent("complete"); // Q1〜Q3すべて回答=完了(q3応答とは別イベントとして明示送信)
         setTimeout(function(){ advance(); }, 180);
       });
       box.appendChild(btn);
@@ -237,7 +243,9 @@ body{
 
   document.getElementById("startBtn").addEventListener("click", function(){
     startedAt = new Date();
-    sendEvent("start");
+    // 「はじめる」タップ=ページ上での最初の能動操作(survey_first_interaction)。
+    // ページが開かれただけのsurvey_page_openとは別イベントとして明確に分離する。
+    sendEvent("first_interaction");
     show("screen-questions");
     renderQuestion(0);
   });
@@ -247,6 +255,11 @@ body{
     sendEvent("sample_click");
     window.location.href = SAMPLE_URL;
   });
+
+  // ページ読み込み完了(JSが実行された)時点で送るsurvey_page_open。
+  // これはリンクを開いただけで発生し、まだ「人間が操作した」証拠にはならない
+  // (メールセキュリティスキャナー等がJSを実行してページを事前取得する場合もあるため)。
+  sendEvent("page_open");
 })();
 </script>
 </body>
