@@ -153,7 +153,8 @@
 
   <div class="notice">
     「ページ表示」はメールリンクが開かれた回数、「能動操作」は実際にタップ操作があった件数です。<br>
-    これらはあくまで観測可能な行動であり、「本人が見た」「興味を持った」ことを断定するものではありません。
+    これらはあくまで観測可能な行動であり、「本人が見た」「興味を持った」ことを断定するものではありません。<br>
+    「【テスト】」と付いた行は動作確認専用のダミー店舗です。上のKPI集計には含まれていません。
   </div>
 
   <div class="kpi-section">
@@ -347,8 +348,9 @@
         var rel = fmtRelative(lead.lastActivityAt);
         var tr = document.createElement("tr");
         if (rel.fresh) tr.className = "fresh";
+        var nameLabel = (lead.isTestLead ? "【テスト】" : "") + escapeHtml(lead.storeName);
         tr.innerHTML =
-          '<td class="store">' + escapeHtml(lead.storeName) + '</td>' +
+          '<td class="store">' + nameLabel + '</td>' +
           '<td>' + patternBadge(lead.pattern) + '</td>' +
           '<td class="muted">' + fmtDate(lead.mailSentAt) + '</td>' +
           '<td>' + (lead.pageOpenCount || 0) + '回</td>' +
