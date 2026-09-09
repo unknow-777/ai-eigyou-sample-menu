@@ -233,6 +233,9 @@
       <label><input type="checkbox" value="C" checked>C</label>
       <label><input type="checkbox" value="D" checked>D</label>
     </div>
+    <label style="display:flex;align-items:center;gap:4px;font-size:12.5px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel);cursor:pointer;user-select:none;">
+      <input type="checkbox" id="hideZeroToggle"><span>クリック/表示0件を隠す</span>
+    </label>
     <span class="filterCount" id="filterCount"></span>
   </div>
   <div class="table-wrap">
@@ -270,6 +273,7 @@
   var lastData = null;
   var filterText = "";
   var filterPatterns = { A: true, B: true, C: true, D: true };
+  var hideZero = false;
 
   var gate = document.getElementById("gate");
   var dash = document.getElementById("dash");
@@ -363,6 +367,7 @@
     return (leads || []).filter(function(lead){
       if (!filterPatterns[lead.pattern]) return false;
       if (q && lead.storeName.toLowerCase().indexOf(q) === -1) return false;
+      if (hideZero && !(lead.pageOpenCount > 0)) return false;
       return true;
     });
   }
@@ -527,6 +532,10 @@
     if (cb.tagName !== "INPUT") return;
     filterPatterns[cb.value] = cb.checked;
     cb.closest("label").classList.toggle("off", !cb.checked);
+    if (lastData) render(lastData);
+  });
+  document.getElementById("hideZeroToggle").addEventListener("change", function(ev){
+    hideZero = ev.target.checked;
     if (lastData) render(lastData);
   });
 
