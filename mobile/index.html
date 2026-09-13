@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MELA!">
+<meta name="theme-color" content="#2540E8">
+<link rel="apple-touch-icon" href="../images/mela-logo.jpg">
+<title>MELA! MOBILE SALES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --panel:#FFFFFF; --sub-bg:#F7F5F2;
+    --text:#242220; --text-muted:#757068; --line:#E9E6E1;
+    --brand:#2540E8; --brand-soft:#EEF0FE;
+    --good:#0F8A3C; --good-soft:#E6F6EB;
+    --warn:#B8860B; --warn-soft:#FBF3DE;
+    --bad:#B3261E; --bad-soft:#FBEAE9;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;overscroll-behavior-y:contain;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;
+    font-variant-numeric:tabular-nums;
+    display:flex; flex-direction:column; min-height:100vh;
+  }
+  [hidden]{display:none!important;}
+  button{font-family:inherit;}
+
+  /* --- ゲート --- */
+  #gate{max-width:380px;margin:20vh auto 0;padding:28px 24px;width:100%;}
+  #gate h1{font-size:18px;margin:0 0 6px;}
+  #gate p{color:var(--text-muted);font-size:12.5px;line-height:1.7;margin:0 0 16px;}
+  #gate input{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;margin-bottom:10px;}
+  #gate button{width:100%;padding:13px;border:none;border-radius:10px;background:var(--brand);color:#fff;font-size:14px;font-weight:700;cursor:pointer;}
+  #gateError{color:var(--bad);font-size:12px;margin-top:8px;min-height:1em;}
+
+  /* --- ヘッダー --- */
+  header{
+    position:sticky; top:0; z-index:10; background:var(--bg);
+    border-bottom:1px solid var(--line); padding:12px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  header .mark{font-weight:900; font-size:16px; letter-spacing:-0.02em;}
+  header .mark span{color:var(--brand);}
+  header .refresh{background:none;border:none;color:var(--brand);font-size:12.5px;font-weight:700;cursor:pointer;padding:6px 8px;}
+  header .status{font-size:10.5px;color:var(--text-muted);}
+
+  main{flex:1; padding:14px 16px 90px; max-width:520px; width:100%; margin:0 auto; box-sizing:border-box;}
+
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* --- 汎用カード/セクション --- */
+  .section-title{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.04em;margin:20px 0 8px;}
+  .section-title:first-child{margin-top:0;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .kpi{background:var(--sub-bg);border-radius:12px;padding:14px;}
+  .kpi .num{font-size:24px;font-weight:900;line-height:1.1;}
+  .kpi .label{font-size:11.5px;color:var(--text-muted);margin-top:4px;}
+  .kpi.accent .num{color:var(--brand);}
+  .kpi.good .num{color:var(--good);}
+
+  .cta-btn{
+    display:block; width:100%; padding:16px; border-radius:999px; border:none;
+    background:var(--brand); color:#fff; font-size:15px; font-weight:800; cursor:pointer; margin-top:4px;
+  }
+  .cta-btn:active{opacity:.85;}
+  .cta-btn.secondary{background:var(--brand-soft); color:var(--brand);}
+  .cta-btn.ghost{background:var(--sub-bg); color:var(--text);}
+  .cta-btn:disabled{opacity:.5;}
+
+  .list-item{padding:12px 0;border-bottom:1px solid var(--line);}
+  .list-item:last-child{border-bottom:none;}
+  .list-item .name{font-weight:700;font-size:14.5px;}
+  .list-item .meta{color:var(--text-muted);font-size:12px;margin-top:2px;}
+  .badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;}
+  .badge.ready{background:var(--brand-soft);color:var(--brand);}
+  .badge.sent{background:var(--good-soft);color:var(--good);}
+  .badge.dnc{background:var(--bad-soft);color:var(--bad);}
+  .badge.other{background:var(--sub-bg);color:var(--text-muted);}
+  .badge.gen{background:#3A3630;color:#fff;}
+
+  .chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;}
+  .chip{flex:none;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12.5px;font-weight:600;color:var(--text-muted);cursor:pointer;white-space:nowrap;}
+  .chip.on{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+  .empty{padding:40px 10px;text-align:center;color:var(--text-muted);font-size:13px;}
+
+  /* --- 営業カード --- */
+  .sales-card{text-align:left;}
+  .sales-card .badges{margin-bottom:10px;}
+  .sales-card .store{font-size:19px;font-weight:800;margin-bottom:2px;}
+  .sales-card .handle{font-size:16px;font-weight:700;color:var(--brand);margin-bottom:2px;}
+  .sales-card .sub{color:var(--text-muted);font-size:12.5px;margin-bottom:14px;}
+  .sales-card .draft{white-space:pre-wrap;background:var(--sub-bg);border-radius:10px;padding:12px;font-size:12.5px;line-height:1.6;margin-bottom:14px;max-height:180px;overflow-y:auto;}
+  .btnrow{display:flex;gap:8px;}
+  .btnrow .cta-btn{margin-top:0;}
+  .like-picker{display:flex;gap:6px;margin:10px 0;}
+  .like-picker button{flex:1;padding:10px 0;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:700;cursor:pointer;}
+  .like-picker button.on{background:var(--brand);color:#fff;border-color:var(--brand);}
+  .precheck-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;}
+  #recordMsg{margin-top:10px;font-size:12.5px;text-align:center;min-height:1.4em;}
+  #recordMsg.err{color:var(--bad);font-weight:700;}
+  #recordMsg.ok{color:var(--good);font-weight:700;}
+
+  /* --- 下部ナビ --- */
+  nav.bottomnav{
+    position:fixed; bottom:0; left:0; right:0; z-index:20;
+    background:var(--panel); border-top:1px solid var(--line);
+    display:flex; padding-bottom:env(safe-area-inset-bottom);
+  }
+  nav.bottomnav button{
+    flex:1; background:none; border:none; padding:9px 4px 8px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--text-muted); font-size:10.5px; font-weight:700;
+  }
+  nav.bottomnav button .ic{font-size:19px;line-height:1;}
+  nav.bottomnav button.on{color:var(--brand);}
+
+  .funnel{display:flex;flex-direction:column;gap:0;}
+  .funnel-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line);}
+  .funnel-row:last-child{border-bottom:none;}
+  .funnel-row .fname{font-size:13px;color:var(--text-muted);}
+  .funnel-row .fnum{font-size:17px;font-weight:800;}
+  .funnel-arrow{text-align:center;color:var(--line);font-size:12px;padding:2px 0;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <h1>MELA! MOBILE SALES</h1>
+  <p>スマホ専用の営業アプリです。アクセスキーを入力してください（PCのDダッシュボードと同じキーです）。一度入力すればこの端末では次回から自動的に表示されます。</p>
+  <input type="password" id="keyInput" placeholder="アクセスキー" autocomplete="off">
+  <button id="keySubmit">開く</button>
+  <div id="gateError"></div>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <div class="mark">MELA<span>!</span> <span style="font-weight:700;">SALES</span></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="status" id="statusText"></span>
+      <button class="refresh" id="refreshBtn">更新</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ホーム -->
+    <section class="screen active" id="screen-home">
+      <div class="section-title">TODAY</div>
+      <div class="kpi-grid">
+        <div class="kpi accent"><div class="num" id="h-sent">–</div><div class="label">DM送信(累計)</div></div>
+        <div class="kpi good"><div class="num" id="h-reply">–</div><div class="label">返信</div></div>
+        <div class="kpi"><div class="num" id="h-ready">–</div><div class="label">未対応 Instagram店舗</div></div>
+        <div class="kpi accent"><div class="num" id="h-pc">–</div><div class="label">Problem Confirmed</div></div>
+      </div>
+
+      <button class="cta-btn" id="startSalesBtn">今日の営業を始める</button>
+
+      <div class="section-title">最近の返信</div>
+      <div class="card"><div id="h-recent-replies"></div></div>
+    </section>
+
+    <!-- 巡回 -->
+    <section class="screen" id="screen-patrol">
+      <div class="chiprow" id="patrolStatusChips">
+        <span class="chip on" data-v="ALL">すべて</span>
+        <span class="chip" data-v="READY">未送信</span>
+        <span class="chip" data-v="SENT">送信済み</span>
+        <span class="chip" data-v="DNC">DNC</span>
+      </div>
+      <div class="chiprow" id="patrolGenChips">
+        <span class="chip on" data-v="ALL">Phase3B + V2</span>
+        <span class="chip" data-v="Phase3B">Phase3B</span>
+        <span class="chip" data-v="IG_V2">Instagram V2</span>
+      </div>
+      <div class="card"><div id="patrolList"></div></div>
+    </section>
+
+    <!-- 営業 -->
+    <section class="screen" id="screen-sales">
+      <div id="salesProgress" style="text-align:center;color:var(--text-muted);font-size:12px;margin-bottom:10px;"></div>
+      <div class="card sales-card" id="salesCard"></div>
+      <div id="recordMsg"></div>
+    </section>
+
+    <!-- 反応 -->
+    <section class="screen" id="screen-reactions">
+      <div class="chiprow" id="reactionChips"></div>
+      <div class="card"><div id="reactionList"></div></div>
+    </section>
+
+    <!-- 分析 -->
+    <section class="screen" id="screen-analysis">
+      <div class="section-title">TOTAL FUNNEL</div>
+      <div class="card"><div class="funnel" id="funnelBox"></div></div>
+
+      <div class="section-title">Problem Test（実験世代別）</div>
+      <div class="card"><div id="problemTestBox"></div></div>
+
+      <div class="section-title">Instagram Survey（アンケート）</div>
+      <div class="card"><div id="surveyBox"></div></div>
+
+      <div class="section-title">チャネル別 送信・反応</div>
+      <div class="card"><div id="patternBox"></div></div>
+    </section>
+  </main>
+
+  <nav class="bottomnav">
+    <button class="navbtn on" data-screen="home"><span class="ic">◆</span>ホーム</button>
+    <button class="navbtn" data-screen="patrol"><span class="ic">◎</span>巡回</button>
+    <button class="navbtn" data-screen="sales"><span class="ic">▶</span>営業</button>
+    <button class="navbtn" data-screen="reactions"><span class="ic">✉</span>反応</button>
+    <button class="navbtn" data-screen="analysis"><span class="ic">■</span>分析</button>
+  </nav>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxwvlnROPVnGnNun0vwz8bNcKNYIa4u5xX3nCFy79_03tJXDAuLeLRSRlKRq6-MVQK5/exec";
+  var STORAGE_KEY = "mela_mobile_key";
+  var CACHE_KEY = "mela_mobile_cache";
+
+  var gate = document.getElementById("gate");
+  var app = document.getElementById("app");
+  var apiKey = "";
+  var data = null;
+
+  // 営業画面のローカルqueue(サーバーへの書き込みは「送った」を押した時の1回のみ)
+  var queue = [];
+  var recording = false;
+  var patrolStatusFilter = "ALL";
+  var patrolGenFilter = "ALL";
+  var reactionFilter = "ALL";
+  var preChecked = false;
+  var likeSelected = null;
+
+  function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function igUrl(handle){ return "https://instagram.com/" + encodeURIComponent(handle || ""); }
+
+  function getStoredKey(){ try { return localStorage.getItem(STORAGE_KEY) || ""; } catch(e){ return ""; } }
+  function storeKey(k){ try { localStorage.setItem(STORAGE_KEY, k); } catch(e){} }
+  function getCachedData(){ try { var raw = localStorage.getItem(CACHE_KEY); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
+  function setCachedData(d){ try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch(e){} }
+
+  function showGate(msg){ gate.hidden = false; app.hidden = true; document.getElementById("gateError").textContent = msg || ""; }
+  function showApp(){ gate.hidden = true; app.hidden = false; }
+
+  function fmtDate(iso){
+    if (!iso) return "–";
+    var s = String(iso);
+    var d = s.indexOf("T") !== -1 ? new Date(s) : null;
+    if (d && !isNaN(d.getTime())) return (d.getMonth()+1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    return s; // 既にyyyy-MM-dd文字列の場合はそのまま
+  }
+
+  function buildQueue(){
+    var q = [];
+    (data.phase3bQueue && data.phase3bQueue.queue || []).forEach(function(l){ q.push(Object.assign({ gen: "Phase3B" }, l)); });
+    (data.v2Queue && data.v2Queue.queue || []).forEach(function(l){ q.push(Object.assign({ gen: "IG_V2" }, l)); });
+    return q;
+  }
+
+  // ================= 初期化・データ取得 =================
+  function initKeyFromUrl(){
+    var params = new URLSearchParams(window.location.search);
+    var urlKey = params.get("key");
+    if (urlKey) { storeKey(urlKey); history.replaceState({}, "", window.location.pathname); return urlKey; }
+    return getStoredKey();
+  }
+
+  function loadData(key, opts){
+    opts = opts || {};
+    document.getElementById("statusText").textContent = "更新中…";
+    return fetch(WEB_APP_URL + "?action=mobileData&key=" + encodeURIComponent(key), { cache: "no-store" })
+      .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(json){
+        if (json.authorized === false) {
+          if (!opts.silent) showGate("アクセスキーが正しくありません。");
+          throw new Error("unauthorized");
+        }
+        data = json;
+        setCachedData(json);
+        queue = buildQueue();
+        renderAll();
+        document.getElementById("statusText").textContent = "更新: " + fmtDate(json.generatedAt);
+        showApp();
+      })
+      .catch(function(err){
+        if (err.message !== "unauthorized") {
+          document.getElementById("statusText").textContent = "取得失敗(前回データを表示中)";
+        }
+      });
+  }
+
+  document.getElementById("keySubmit").addEventListener("click", function(){
+    var v = document.getElementById("keyInput").value.trim();
+    if (!v) return;
+    apiKey = v; storeKey(v);
+    document.getElementById("gateError").textContent = "";
+    loadData(v);
+  });
+  document.getElementById("keyInput").addEventListener("keydown", function(ev){ if (ev.key === "Enter") document.getElementById("keySubmit").click(); });
+  document.getElementById("refreshBtn").addEventListener("click", function(){ if (apiKey) loadData(apiKey); });
+
+  // ================= 下部ナビ =================
+  document.querySelectorAll(".navbtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".navbtn").forEach(function(b){ b.classList.remove("on"); });
+      btn.classList.add("on");
+      document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
+      document.getElementById("screen-" + btn.dataset.screen).classList.add("active");
+    });
+  });
+  function goToScreen(name){
+    document.querySelectorAll(".navbtn").forEach(function(b){ b.classList.toggle("on", b.dataset.screen === name); });
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.toggle("active", s.id === "screen-" + name); });
+  }
+  document.getElementById("startSalesBtn").addEventListener("click", function(){ goToScreen("sales"); });
+
+  // ================= 描画 =================
+  function renderAll(){
+    if (!data) return;
+    renderHome();
+    renderPatrol();
+    renderSales();
+    renderReactions();
+    renderAnalysis();
+  }
+
+  function renderHome(){
+    var pt = data.problemTest || {};
+    var sentTotal = (pt.Phase3B ? pt.Phase3B.sent : 0) + (pt.IG_V2 ? pt.IG_V2.sent : 0);
+    var replyTotal = (pt.Phase3B ? pt.Phase3B.replied : 0) + (pt.IG_V2 ? pt.IG_V2.replied : 0);
+    var pcTotal = (pt.Phase3B ? pt.Phase3B.problemConfirmed : 0) + (pt.IG_V2 ? pt.IG_V2.problemConfirmed : 0);
+    var readyCount = (data.browseList || []).filter(function(r){ return r.status === "READY"; }).length;
+    document.getElementById("h-sent").textContent = sentTotal;
+    document.getElementById("h-reply").textContent = replyTotal;
+    document.getElementById("h-ready").textContent = readyCount;
+    document.getElementById("h-pc").textContent = pcTotal;
+
+    var recentBox = document.getElementById("h-recent-replies");
+    var replies = (data.replies || []).slice(0, 5);
+    if (replies.length === 0) {
+      recentBox.innerHTML = "<div class=\"empty\">まだ返信がありません。</div>";
+    } else {
+      recentBox.innerHTML = replies.map(function(r){
+        return "<div class=\"list-item\"><div class=\"name\">" + esc(r.storeName) + "</div>" +
+          "<div class=\"meta\">" + esc(r.replyClassification || "分類未設定") + (r.problemConfirmed ? " ・ Problem Confirmed: " + esc(r.problemConfirmed) : "") + "</div></div>";
+      }).join("");
+    }
+  }
+
+  function statusBadge(status){
+    var map = { READY: ["ready","未送信"], SENT: ["sent","送信済み"], DNC: ["dnc","DNC"], OTHER: ["other","対象外"] };
+    var m = map[status] || map.OTHER;
+    return "<span class=\"badge " + m[0] + "\">" + m[1] + "</span>";
+  }
+
+  function renderPatrol(){
+    var list = (data.browseList || []).filter(function(r){
+      if (patrolStatusFilter !== "ALL" && r.status !== patrolStatusFilter) return false;
+      if (patrolGenFilter !== "ALL" && r.gen !== patrolGenFilter) return false;
+      return true;
+    });
+    var box = document.getElementById("patrolList");
+    if (list.length === 0) { box.innerHTML = "<div class=\"empty\">対象の店舗がありません。</div>"; return; }
+    box.innerHTML = list.map(function(r){
+      return "<div class=\"list-item\">" +
+        "<div class=\"badges\">" + statusBadge(r.status) + " <span class=\"badge gen\">" + esc(r.gen) + "</span></div>" +
+        "<div class=\"name\">" + esc(r.storeName) + "</div>" +
+        "<div class=\"meta\">@" + esc(r.instagramHandle || "(不明)") + " ・ " + esc(r.industry || "") + "</div>" +
+        (r.instagramHandle ? "<a href=\"" + igUrl(r.instagramHandle) + "\" target=\"_blank\" rel=\"noopener\" style=\"font-size:12px;color:var(--brand);font-weight:700;\">Instagramを見る →</a>" : "") +
+        "</div>";
+    }).join("");
+  }
+  document.getElementById("patrolStatusChips").addEventListener("click", function(ev){
+    if (ev.target.classList.contains("chip")) {
+      document.querySelectorAll("#patrolStatusChips .chip").forEach(function(c){ c.classList.remove("on"); });
+      ev.target.classList.add("on");
+      patrolStatusFilter = ev.target.dataset.v;
+      renderPatrol();
+    }
+  });
+  document.getElementById("patrolGenChips").addEventListener("click", function(ev){
+    if (ev.target.classList.contains("chip")) {
+      document.querySelectorAll("#patrolGenChips .chip").forEach(function(c){ c.classList.remove("on"); });
+      ev.target.classList.add("on");
+      patrolGenFilter = ev.target.dataset.v;
+      renderPatrol();
+    }
+  });
+
+  function renderSales(){
+    var progressEl = document.getElementById("salesProgress");
+    var cardEl = document.getElementById("salesCard");
+    document.getElementById("recordMsg").textContent = "";
+    document.getElementById("recordMsg").className = "";
+
+    if (queue.length === 0) {
+      progressEl.textContent = "";
+      cardEl.innerHTML = "<div class=\"empty\">今回対応できる新規Instagram対象がありません。<br>「巡回」で状況を確認してください。</div>";
+      return;
+    }
+    var lead = queue[0];
+    progressEl.textContent = "残り " + queue.length + "件";
+    preChecked = false; likeSelected = null;
+
+    var html = "";
+    html += "<div class=\"badges\"><span class=\"badge ready\">" + esc(lead.channelType) + "</span> <span class=\"badge gen\">" + esc(lead.gen) + "</span></div>";
+    html += "<div class=\"store\">" + esc(lead.storeName) + "</div>";
+    html += "<div class=\"handle\">@" + esc(lead.instagramHandle || "(不明)") + "</div>";
+    html += "<div class=\"sub\">" + esc(lead.industry || "") + "</div>";
+    html += "<div class=\"draft\" id=\"draftText\">" + esc(lead.draft || "(下書き未確定)") + "</div>";
+
+    if (lead.gen === "IG_V2") {
+      html += "<div class=\"precheck-row\"><input type=\"checkbox\" id=\"preCheck\"><label for=\"preCheck\">投稿を確認した</label></div>";
+      html += "<div style=\"font-size:12px;color:var(--text-muted);margin-bottom:4px;\">いいね(自然な範囲だけ。0でも可)</div>";
+      html += "<div class=\"like-picker\" id=\"likePicker\">" + [0,1,2,3,4,5].map(function(n){ return "<button type=\"button\" data-n=\"" + n + "\">" + n + "</button>"; }).join("") + "</div>";
+    }
+
+    html += "<a class=\"cta-btn\" style=\"display:block;text-align:center;text-decoration:none;\" href=\"" + igUrl(lead.instagramHandle) + "\" target=\"_blank\" rel=\"noopener\">Instagramを開く</a>";
+    html += "<div class=\"btnrow\" style=\"margin-top:8px;\">";
+    html += "<button class=\"cta-btn\" id=\"markSentBtn\" style=\"background:var(--good);\">送った</button>";
+    html += "<button class=\"cta-btn ghost\" id=\"skipBtn\">スキップ</button>";
+    html += "</div>";
+    cardEl.innerHTML = html;
+
+    if (lead.gen === "IG_V2") {
+      document.getElementById("preCheck").addEventListener("change", function(e){ preChecked = e.target.checked; });
+      document.getElementById("likePicker").addEventListener("click", function(ev){
+        if (ev.target.tagName !== "BUTTON") return;
+        likeSelected = Number(ev.target.dataset.n);
+        document.querySelectorAll("#likePicker button").forEach(function(b){ b.classList.toggle("on", Number(b.dataset.n) === likeSelected); });
+      });
+    }
+    document.getElementById("skipBtn").addEventListener("click", function(){ queue.shift(); renderSales(); });
+    document.getElementById("markSentBtn").addEventListener("click", function(){ markSent(lead); });
+  }
+
+  function markSent(lead){
+    if (recording) return;
+    if (!window.confirm("Instagramで実際にDMを送信しましたか？")) return;
+    recording = true;
+    var btn = document.getElementById("markSentBtn");
+    if (btn) { btn.disabled = true; btn.textContent = "記録中…"; }
+    var msgEl = document.getElementById("recordMsg");
+    msgEl.className = ""; msgEl.textContent = "記録しています…";
+
+    var url = WEB_APP_URL + "?action=mobileMarkSent&key=" + encodeURIComponent(apiKey) +
+      "&storeId=" + encodeURIComponent(lead.storeId) +
+      "&sheetRow=" + encodeURIComponent(lead.sheetRow) +
+      "&storeName=" + encodeURIComponent(lead.storeName) +
+      "&channelType=" + encodeURIComponent(lead.channelType) +
+      "&gen=" + encodeURIComponent(lead.gen);
+    if (lead.gen === "IG_V2") {
+      url += "&preEngagement=" + (preChecked ? "1" : "0") + "&likeCount=" + (likeSelected == null ? "0" : likeSelected);
+    }
+
+    fetch(url, { cache: "no-store" })
+      .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(res){
+        recording = false;
+        if (res.authorized === false) { msgEl.className = "err"; msgEl.textContent = "アクセスキーが正しくありません。"; if (btn){ btn.disabled=false; btn.textContent="送った"; } return; }
+        if (res.success && res.succeeded && res.succeeded.length > 0) {
+          // サーバーで実際に記録できたことを確認できた場合のみqueueを進める(フロント側だけでSENT扱いにしない)
+          queue.shift();
+          msgEl.className = "ok"; msgEl.textContent = "✓ 記録しました";
+          setTimeout(function(){ renderSales(); }, 600);
+        } else {
+          var reason = (res.failed && res.failed[0] && res.failed[0].reason) || res.error || "不明なエラー";
+          msgEl.className = "err"; msgEl.textContent = "× 記録に失敗しました: " + reason;
+          if (btn) { btn.disabled = false; btn.textContent = "送った"; }
+        }
+      })
+      .catch(function(err){
+        recording = false;
+        msgEl.className = "err"; msgEl.textContent = "× 通信エラー: " + err.message + "(もう一度お試しください)";
+        if (btn) { btn.disabled = false; btn.textContent = "送った"; }
+      });
+  }
+
+  function renderReactions(){
+    var replies = data.replies || [];
+    var classifications = {};
+    replies.forEach(function(r){ if (r.replyClassification) classifications[r.replyClassification] = true; });
+    var chipsEl = document.getElementById("reactionChips");
+    var chipsHtml = "<span class=\"chip" + (reactionFilter === "ALL" ? " on" : "") + "\" data-v=\"ALL\">すべて</span>";
+    chipsHtml += "<span class=\"chip" + (reactionFilter === "PC" ? " on" : "") + "\" data-v=\"PC\">Problem Confirmed</span>";
+    Object.keys(classifications).sort().forEach(function(c){
+      chipsHtml += "<span class=\"chip" + (reactionFilter === c ? " on" : "") + "\" data-v=\"" + esc(c) + "\">" + esc(c) + "</span>";
+    });
+    chipsEl.innerHTML = chipsHtml;
+
+    var filtered = replies.filter(function(r){
+      if (reactionFilter === "ALL") return true;
+      if (reactionFilter === "PC") return !!r.problemConfirmed;
+      return r.replyClassification === reactionFilter;
+    });
+    var box = document.getElementById("reactionList");
+    if (filtered.length === 0) { box.innerHTML = "<div class=\"empty\">該当する店舗がありません。</div>"; return; }
+    box.innerHTML = filtered.map(function(r){
+      return "<div class=\"list-item\">" +
+        "<div class=\"name\">" + esc(r.storeName) + " <span class=\"badge gen\">" + esc(r.gen || "") + "</span></div>" +
+        "<div class=\"meta\">@" + esc(r.instagramHandle || "(不明)") + " ・ 送信日: " + esc(r.igSentDate || r.mailSentDate || "-") + "</div>" +
+        "<div class=\"meta\">返信分類: " + esc(r.replyClassification || "-") + "</div>" +
+        (r.problemConfirmed ? "<div class=\"meta\">Problem Confirmed: " + esc(r.problemConfirmed) + "</div>" : "") +
+        (r.problemDetail ? "<div class=\"meta\">詳細: " + esc(r.problemDetail) + "</div>" : "") +
+        (r.frequency ? "<div class=\"meta\">頻度: " + esc(r.frequency) + "</div>" : "") +
+        (r.currentWorkaround ? "<div class=\"meta\">現状の対処: " + esc(r.currentWorkaround) + "</div>" : "") +
+        "</div>";
+    }).join("");
+  }
+  document.getElementById("reactionChips").addEventListener("click", function(ev){
+    if (ev.target.classList.contains("chip")) { reactionFilter = ev.target.dataset.v; renderReactions(); }
+  });
+
+  function renderAnalysis(){
+    var f = data.funnel || {};
+    var steps = [["Lead","lead"],["Contactable","contactable"],["Sent","sent"],["Reply","reply"],["Problem Confirmed","problemConfirmed"],["Purchase","purchase"]];
+    document.getElementById("funnelBox").innerHTML = steps.map(function(s, i){
+      return "<div class=\"funnel-row\"><span class=\"fname\">" + s[0] + "</span><span class=\"fnum\">" + (f[s[1]] || 0) + "</span></div>" +
+        (i < steps.length - 1 ? "<div class=\"funnel-arrow\">↓</div>" : "");
+    }).join("");
+
+    var pt = data.problemTest || {};
+    var ptHtml = "";
+    ["Phase3B","IG_V2"].forEach(function(g){
+      var s = pt[g] || { sent:0, replied:0, answer1:0, answer2:0, answer3:0, problemConfirmed:0 };
+      var rate = s.sent > 0 ? Math.round(s.problemConfirmed / s.sent * 100) : 0;
+      ptHtml += "<div style=\"margin-bottom:14px;\"><div style=\"font-weight:800;margin-bottom:6px;\">" + esc(g) + "</div>" +
+        "<div class=\"meta\">送信 " + s.sent + " / 返信 " + s.replied + "</div>" +
+        "<div class=\"meta\">①よくある " + s.answer1 + " ・ ②たまにある " + s.answer2 + " ・ ③特に困っていない " + s.answer3 + "</div>" +
+        "<div class=\"meta\">Problem Confirmed " + s.problemConfirmed + "件(" + rate + "%)</div></div>";
+    });
+    document.getElementById("problemTestBox").innerHTML = ptHtml;
+
+    var channels = data.channels || [];
+    var qr = channels.filter(function(c){ return c.source === "instagram_post_qr" && c.campaign === "ig_v2"; })[0];
+    var surveyBox = document.getElementById("surveyBox");
+    if (!qr) {
+      surveyBox.innerHTML = "<div class=\"empty\">source=instagram_post_qr / campaign=ig_v2 のデータがまだありません。</div>";
+    } else {
+      var rate = qr.pageOpen > 0 ? Math.round(qr.complete / qr.pageOpen * 100) : 0;
+      var sSteps = [["閲覧","pageOpen"],["回答開始","firstInteraction"],["Q1","q1"],["Q2","q2"],["Q3","q3"],["完了","complete"]];
+      surveyBox.innerHTML = "<div class=\"meta\" style=\"margin-bottom:8px;\">source=instagram_post_qr / campaign=ig_v2</div>" +
+        sSteps.map(function(s, i){
+          return "<div class=\"funnel-row\"><span class=\"fname\">" + s[0] + "</span><span class=\"fnum\">" + (qr[s[1]] || 0) + "</span></div>" +
+            (i < sSteps.length - 1 ? "<div class=\"funnel-arrow\">↓</div>" : "");
+        }).join("") +
+        "<div class=\"meta\" style=\"margin-top:8px;\">完了率(閲覧→完了): " + rate + "%</div>";
+      if (channels.length > 1) {
+        surveyBox.innerHTML += "<div class=\"section-title\" style=\"margin-top:14px;\">その他のチャネル</div>" +
+          channels.filter(function(c){ return c !== qr; }).map(function(c){
+            return "<div class=\"list-item\"><div class=\"name\">" + esc(c.source) + (c.campaign ? " / " + esc(c.campaign) : "") + "</div>" +
+              "<div class=\"meta\">閲覧" + c.pageOpen + " 開始" + c.firstInteraction + " 完了" + c.complete + "</div></div>";
+          }).join("");
+      }
+    }
+
+    var s = data.summary || {};
+    var patBody = "<table style=\"width:100%;border-collapse:collapse;font-size:12.5px;\"><tr style=\"color:var(--text-muted);text-align:left;\"><th style=\"padding:6px 0;\">パターン</th><th>送信</th><th>クリック</th><th>返信</th></tr>";
+    ["A","B","C","D"].forEach(function(p){
+      var pc = (s.byPattern && s.byPattern[p]) || { sent:0, clicked:0, replied:0 };
+      patBody += "<tr style=\"border-top:1px solid var(--line);\"><td style=\"padding:6px 0;font-weight:700;\">" + p + "</td><td>" + pc.sent + "</td><td>" + pc.clicked + "</td><td>" + pc.replied + "</td></tr>";
+    });
+    patBody += "</table>";
+    document.getElementById("patternBox").innerHTML = patBody;
+  }
+
+  // ================= 起動 =================
+  var cached = getCachedData();
+  if (cached) { data = cached; queue = buildQueue(); renderAll(); showApp(); document.getElementById("statusText").textContent = "前回データを表示中…"; }
+  var initialKey = initKeyFromUrl();
+  if (initialKey) { apiKey = initialKey; loadData(initialKey, { silent: !!cached }); }
+  else if (!cached) { showGate(""); }
+})();
+</script>
+</body>
+</html>
