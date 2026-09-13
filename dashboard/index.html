@@ -199,6 +199,26 @@
       </table>
     </div>
 
+    <div class="kpi-title">チャネル別(店舗に紐づかないアクセス。Instagram投稿QR等)</div>
+    <div class="table-wrap" style="margin-bottom:22px;">
+      <table style="min-width:0;">
+        <thead>
+          <tr>
+            <th>チャネル</th>
+            <th>表示</th>
+            <th>能動操作</th>
+            <th>Q1</th>
+            <th>Q2</th>
+            <th>Q3</th>
+            <th>完了</th>
+            <th>最終回答</th>
+          </tr>
+        </thead>
+        <tbody id="channelSummaryBody"></tbody>
+      </table>
+      <div class="empty" id="channelEmptyState" hidden>まだ店舗に紐づかないアクセスはありません。</div>
+    </div>
+
     <div class="kpi-title">パターンD詳細: 送信 → アクセス(30秒アンケート専用)</div>
     <div class="kpi-grid">
       <div class="kpi"><div class="num" id="k-sent">–</div><div class="label">送信済み</div></div>
@@ -388,6 +408,32 @@
     document.getElementById("p-human").textContent = s.likelyHuman;
     document.getElementById("p-auto").textContent = s.likelyAutomated;
     document.getElementById("p-unknown").textContent = s.unknown;
+
+    var chBody = document.getElementById("channelSummaryBody");
+    var chEmpty = document.getElementById("channelEmptyState");
+    if (chBody) {
+      chBody.innerHTML = "";
+      var channels = data.channels || [];
+      if (channels.length === 0) {
+        if (chEmpty) chEmpty.hidden = false;
+      } else {
+        if (chEmpty) chEmpty.hidden = true;
+        channels.forEach(function(c){
+          var tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td class="store">' + escapeHtml(c.source) +
+            (c.campaign ? '<div class="muted" style="font-weight:400;font-size:11px;">' + escapeHtml(c.campaign) + '</div>' : '') + '</td>' +
+            '<td>' + c.pageOpen + '回</td>' +
+            '<td>' + c.firstInteraction + '回</td>' +
+            '<td>' + tick(c.q1 > 0) + (c.q1 > 0 ? ' ' + c.q1 : '') + '</td>' +
+            '<td>' + tick(c.q2 > 0) + (c.q2 > 0 ? ' ' + c.q2 : '') + '</td>' +
+            '<td>' + tick(c.q3 > 0) + (c.q3 > 0 ? ' ' + c.q3 : '') + '</td>' +
+            '<td>' + c.complete + '</td>' +
+            '<td class="muted">' + fmtDate(c.lastEventAt) + '</td>';
+          chBody.appendChild(tr);
+        });
+      }
+    }
 
     var patBody = document.getElementById("patternSummaryBody");
     patBody.innerHTML = "";
